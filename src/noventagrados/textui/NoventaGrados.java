@@ -22,7 +22,7 @@ import noventagrados.util.Coordenada;
  * invocaciones a métodos del árbitro.
  *
  * @author <a href="rmartico@ubu.es">Raúl Marticorena</a>
- * @author AÑADIR COAUTOR/A
+ * @author <a href="mailto:aab1027@alu.ubu.es">Antonio Alonso Briones</a>
  * @since 1.0
  * @version 1.0
  * @see noventagrados.Celda
