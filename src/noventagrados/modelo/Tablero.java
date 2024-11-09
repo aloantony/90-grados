@@ -8,7 +8,7 @@ import noventagrados.util.Coordenada;
  *         Contiene una matriz de celdas de 7x7.
  */
 public class Tablero {
-    private static final int TAMANIO = 7;
+    private static final int TAMAÑO = 7;
     private final Celda[][] celdas;
 
     /**
@@ -16,9 +16,9 @@ public class Tablero {
      * Inicializa el tablero con celdas vacías.
      */
     public Tablero() {
-        celdas = new Celda[TAMANIO][TAMANIO];
-        for (int fila = 0; fila < TAMANIO; fila++) {
-            for (int columna = 0; columna < TAMANIO; columna++) {
+        celdas = new Celda[TAMAÑO][TAMAÑO];
+        for (int fila = 0; fila < TAMAÑO; fila++) {
+            for (int columna = 0; columna < TAMAÑO; columna++) {
                 celdas[fila][columna] = new Celda(new Coordenada(fila, columna));
             }
         }
@@ -75,13 +75,12 @@ public class Tablero {
      * @return Celda o null si la coordenada es inválida.
      */
     public Celda obtenerCelda(Coordenada coordenada) {
-        if (coordenada == null) {
-            return null;
-        }
-        int fila = coordenada.fila();
-        int columna = coordenada.columna();
-        if (fila >= 0 && fila < TAMANIO && columna >= 0 && columna < TAMANIO) {
-            return celdas[fila][columna];
+        if (coordenada != null) {
+            int fila = coordenada.fila();
+            int columna = coordenada.columna();
+            if (fila >= 0 && fila < TAMAÑO && columna >= 0 && columna < TAMAÑO) {
+                return celdas[fila][columna];
+            }
         }
         return null;
     }
@@ -92,10 +91,10 @@ public class Tablero {
      * @return Array de celdas.
      */
     public Celda[] consultarCeldas() {
-        Celda[] todasLasCeldas = new Celda[TAMANIO * TAMANIO];
+        Celda[] todasLasCeldas = new Celda[TAMAÑO * TAMAÑO];
         int indice = 0;
-        for (int fila = 0; fila < TAMANIO; fila++) {
-            for (int columna = 0; columna < TAMANIO; columna++) {
+        for (int fila = 0; fila < TAMAÑO; fila++) {
+            for (int columna = 0; columna < TAMAÑO; columna++) {
                 todasLasCeldas[indice++] = celdas[fila][columna].clonar();
             }
         }
@@ -108,7 +107,7 @@ public class Tablero {
      * @return Número de filas.
      */
     public int consultarNumeroFilas() {
-        return TAMANIO;
+        return TAMAÑO;
     }
 
     /**
@@ -117,7 +116,7 @@ public class Tablero {
      * @return Número de columnas.
      */
     public int consultarNumeroColumnas() {
-        return TAMANIO;
+        return TAMAÑO;
     }
 
     /**
@@ -127,8 +126,8 @@ public class Tablero {
      */
     public Tablero clonar() {
         Tablero clon = new Tablero();
-        for (int fila = 0; fila < TAMANIO; fila++) {
-            for (int columna = 0; columna < TAMANIO; columna++) {
+        for (int fila = 0; fila < TAMAÑO; fila++) {
+            for (int columna = 0; columna < TAMAÑO; columna++) {
                 Celda celdaOriginal = this.celdas[fila][columna];
                 Celda celdaClonada = celdaOriginal.clonar();
                 clon.celdas[fila][columna] = celdaClonada;
@@ -144,23 +143,23 @@ public class Tablero {
      */
     public String aTexto() {
         StringBuilder sb = new StringBuilder();
-        for (int fila = 0; fila < TAMANIO; fila++) {
+        for (int fila = 0; fila < TAMAÑO; fila++) {
             sb.append(fila).append(" ");
-            for (int columna = 0; columna < TAMANIO; columna++) {
+            for (int columna = 0; columna < TAMAÑO; columna++) {
                 Celda celda = celdas[fila][columna];
                 if (celda.estaVacia()) {
                     sb.append("--");
                 } else {
                     sb.append(celda.consultarPieza().aTexto());
                 }
-                if (columna < TAMANIO - 1) {
+                if (columna < TAMAÑO - 1) {
                     sb.append(" ");
                 }
             }
             sb.append("\n");
         }
         sb.append("  ");
-        for (int columna = 0; columna < TAMANIO; columna++) {
+        for (int columna = 0; columna < TAMAÑO; columna++) {
             sb.append(columna).append("  ");
         }
         return sb.toString().trim();
@@ -174,8 +173,8 @@ public class Tablero {
     @Override
     public int hashCode() {
         int resultado = 17;
-        for (int fila = 0; fila < TAMANIO; fila++) {
-            for (int columna = 0; columna < TAMANIO; columna++) {
+        for (int fila = 0; fila < TAMAÑO; fila++) {
+            for (int columna = 0; columna < TAMAÑO; columna++) {
                 resultado = 31 * resultado + celdas[fila][columna].hashCode();
             }
         }
@@ -195,8 +194,8 @@ public class Tablero {
         if (obj == null || !(obj instanceof Tablero))
             return false;
         Tablero otro = (Tablero) obj;
-        for (int fila = 0; fila < TAMANIO; fila++) {
-            for (int columna = 0; columna < TAMANIO; columna++) {
+        for (int fila = 0; fila < TAMAÑO; fila++) {
+            for (int columna = 0; columna < TAMAÑO; columna++) {
                 Celda celdaThis = this.celdas[fila][columna];
                 Celda celdaOtro = otro.celdas[fila][columna];
                 if (!celdaThis.equals(celdaOtro)) {

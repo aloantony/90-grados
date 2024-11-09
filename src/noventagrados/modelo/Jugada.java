@@ -1,5 +1,7 @@
 package noventagrados.modelo;
 
+import java.util.Objects;
+
 import noventagrados.util.Coordenada;
 
 /**
@@ -25,39 +27,24 @@ public record Jugada(Celda origen, Celda destino) {
     }
 
     @Override
-    public int hashCode() {
-        int resultado = 17;
-        resultado = 31 * resultado + origen.hashCode();
-        resultado = 31 * resultado + destino.hashCode();
-        return resultado;
-    }
+	public int hashCode() {
+		return Objects.hash(destino, origen);
+	}
 
-    /**
-     * Compara si dos jugadas son iguales.
-     *
-     * @param obj Objeto a comparar.
-     * @return true si son iguales, false en caso contrario.
-     */
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null || !(obj instanceof Jugada))
-            return false;
-        Jugada otra = (Jugada) obj;
-        return this.origen.equals(otra.origen) && this.destino.equals(otra.destino);
-    }
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Jugada other = (Jugada) obj;
+		return Objects.equals(destino, other.destino) && Objects.equals(origen, other.origen);
+	}
 
-    /**
-     * Devuelve la representación en texto de la jugada.
-     *
-     * @return Representación textual.
-     */
     @Override
-    public String toString() {
-        return "Jugada{" +
-                "origen=" + origen +
-                ", destino=" + destino +
-                '}';
-    }
+	public String toString() {
+		return "Jugada [origen=" + origen + ", destino=" + destino + "]";
+	}
 }

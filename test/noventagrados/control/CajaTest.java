@@ -30,22 +30,23 @@ import noventagrados.util.TipoPieza;
  */
 @DisplayName("Tests sobre Caja (depende de las implementaciones reales de Pieza, TipoPieza y Color")
 @Tag("IntegrationTest")
-@Timeout(value = 2, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD) // Time out global para todos los tests salvo los de ciclo de vida
+@Timeout(value = 2, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD) // Time out global para todos los tests salvo
+																			// los de ciclo de vida
 public class CajaTest {
-	
+
 	/** Texto de número de peones incorrectos. */
 	private static final String NÚMERO_DE_PEONES_INCORRECTO = "Número de peones incorrecto";
-	
+
 	/** Texto de número incorrecto de piezas iniciales en caja. */
 	private static final String INCORRECTO_NÚMERO_DE_PIEZAS_INICIALES_EN_LA_CAJA = "Incorrecto número de piezas iniciales en la caja.";
-	
+
 	/** Texto de no están todas las piezas en la caja. */
 	private static final String NO_ESTÁN_TODAS_LAS_PIEZAS_EN_LA_CAJA = "No están todas las piezas en la caja.";
-	
+
 	/** Texto de número de reinas incorrecto. */
-	
+
 	private static final String NÚMERO_DE_REINAS_INCORRECTO = "Número de reinas incorrecto";
-	/** Texto de color mal inicializado en caja.*/
+	/** Texto de color mal inicializado en caja. */
 	private static final String COLOR_MAL_INICIALIZADO_EN_LA_CAJA = "Color mal inicializado en la caja.";
 
 	/**
@@ -65,7 +66,7 @@ public class CajaTest {
 				() -> assertThat(INCORRECTO_NÚMERO_DE_PIEZAS_INICIALES_EN_LA_CAJA,
 						cajaLocal.consultarPiezas().length, is(0)));
 	}
-	
+
 	/**
 	 * Comprueba que se llena la caja con peones.
 	 * 
@@ -93,10 +94,8 @@ public class CajaTest {
 								new Pieza(TipoPieza.PEON, color),
 								new Pieza(TipoPieza.PEON, color),
 								new Pieza(TipoPieza.PEON, color),
-								new Pieza(TipoPieza.PEON, color)))
-				);
+								new Pieza(TipoPieza.PEON, color))));
 	}
-	
 
 	/**
 	 * Comprueba que no deja añadir piezas de color contrario al de la caja.
@@ -117,10 +116,9 @@ public class CajaTest {
 				() -> assertThat(INCORRECTO_NÚMERO_DE_PIEZAS_INICIALES_EN_LA_CAJA,
 						cajaLocal.consultarPiezas().length, is(0)),
 				() -> assertThat(NÚMERO_DE_PEONES_INCORRECTO, cajaLocal.contarPiezas(TipoPieza.PEON), is(0)),
-				() -> assertThat(NÚMERO_DE_REINAS_INCORRECTO, cajaLocal.contarPiezas(TipoPieza.REINA), is(0))
-				);
+				() -> assertThat(NÚMERO_DE_REINAS_INCORRECTO, cajaLocal.contarPiezas(TipoPieza.REINA), is(0)));
 	}
-	
+
 	/**
 	 * Comprueba que se añaden a la caja tres peones y una reina.
 	 * 
@@ -146,12 +144,12 @@ public class CajaTest {
 								new Pieza(TipoPieza.PEON, color),
 								new Pieza(TipoPieza.PEON, color),
 								new Pieza(TipoPieza.PEON, color),
-								new Pieza(TipoPieza.REINA, color)))
-				);
+								new Pieza(TipoPieza.REINA, color))));
 	}
-	
+
 	/**
-	 * Comprueba que una vez llena la caja con siete peones no tiene efecto añadir una reina.
+	 * Comprueba que una vez llena la caja con siete peones no tiene efecto añadir
+	 * una reina.
 	 * 
 	 * @param color color
 	 */
@@ -180,10 +178,9 @@ public class CajaTest {
 								new Pieza(TipoPieza.PEON, color),
 								new Pieza(TipoPieza.PEON, color),
 								new Pieza(TipoPieza.PEON, color),
-								new Pieza(TipoPieza.PEON, color)))
-				);
+								new Pieza(TipoPieza.PEON, color))));
 	}
-	
+
 	/**
 	 * Comprueba que la clonación de una caja vaíca recién inicializada es correcta.
 	 * 
@@ -198,14 +195,16 @@ public class CajaTest {
 		Pieza[] disponiblesEnCajaLocal = cajaLocal.consultarPiezas();
 		Pieza[] disponiblesEnCajaClon = cajaClon.consultarPiezas();
 		assertAll("comprobando clonación de caja vacia",
-			() -> assertNotSame(cajaLocal, cajaClon, "No deberían tener la misma referencia el original y el clon"),
-			() -> assertThat("El contenido de las cajas debería ser equivalente", cajaLocal, is(cajaClon)),
-			() -> assertThat("El número de piezas disponibles en el clon es incorrecto.", disponiblesEnCajaClon.length,is(0)),
-			() -> assertNotSame(disponiblesEnCajaLocal, disponiblesEnCajaClon, "No deberían tener la misma referencia."),
-			() -> assertArrayEquals(disponiblesEnCajaLocal, disponiblesEnCajaClon,"Los arrays de piezas disponibles no son iguales en contenido.")
-			);
+				() -> assertNotSame(cajaLocal, cajaClon, "No deberían tener la misma referencia el original y el clon"),
+				() -> assertThat("El contenido de las cajas debería ser equivalente", cajaLocal, is(cajaClon)),
+				() -> assertThat("El número de piezas disponibles en el clon es incorrecto.",
+						disponiblesEnCajaClon.length, is(0)),
+				() -> assertNotSame(disponiblesEnCajaLocal, disponiblesEnCajaClon,
+						"No deberían tener la misma referencia."),
+				() -> assertArrayEquals(disponiblesEnCajaLocal, disponiblesEnCajaClon,
+						"Los arrays de piezas disponibles no son iguales en contenido."));
 	}
-	
+
 	/**
 	 * Comprueba la clonación de una caja llena de peones y una reina.
 	 * 
@@ -220,22 +219,24 @@ public class CajaTest {
 			cajaLocal.añadir(new Pieza(TipoPieza.PEON, color));
 		}
 		cajaLocal.añadir(new Pieza(TipoPieza.REINA, color));
-		
+
 		Caja cajaClon = cajaLocal.clonar();
 		Pieza[] disponiblesEnCajaLocal = cajaLocal.consultarPiezas();
 		Pieza[] disponiblesEnCajaClon = cajaClon.consultarPiezas();
 		assertAll("comprobando clonación de caja llena",
-			() -> assertNotSame(cajaLocal, cajaClon, "No deberían tener la misma referencia el original y el clon"),
-			() -> assertThat("El contenido de las cajas debería ser equivalente", cajaLocal, is(cajaClon)),
-			() -> assertThat("El número de piezas disponibles en el clon es incorrecto.", disponiblesEnCajaClon.length,is(7)),
-			() -> assertNotSame(disponiblesEnCajaLocal, disponiblesEnCajaClon, "No deberían tener la misma referencia."),
-			() -> assertArrayEquals(disponiblesEnCajaLocal, disponiblesEnCajaClon,"Los arrays de piezas disponibles no son iguales en contenido.")
-			);
+				() -> assertNotSame(cajaLocal, cajaClon, "No deberían tener la misma referencia el original y el clon"),
+				() -> assertThat("El contenido de las cajas debería ser equivalente", cajaLocal, is(cajaClon)),
+				() -> assertThat("El número de piezas disponibles en el clon es incorrecto.",
+						disponiblesEnCajaClon.length, is(7)),
+				() -> assertNotSame(disponiblesEnCajaLocal, disponiblesEnCajaClon,
+						"No deberían tener la misma referencia."),
+				() -> assertArrayEquals(disponiblesEnCajaLocal, disponiblesEnCajaClon,
+						"Los arrays de piezas disponibles no son iguales en contenido."));
 		// comprobando adicionalmente la clonación en profundidad de las piezas
-		for(int i = 0; i < disponiblesEnCajaLocal.length; i++) {
-			assertNotSame(disponiblesEnCajaLocal[i], disponiblesEnCajaClon[i], "No se han clonado en profundidad las piezas disponibles en la caja.");
+		for (int i = 0; i < disponiblesEnCajaLocal.length; i++) {
+			assertNotSame(disponiblesEnCajaLocal[i], disponiblesEnCajaClon[i],
+					"No se han clonado en profundidad las piezas disponibles en la caja.");
 		}
 	}
 
 }
-

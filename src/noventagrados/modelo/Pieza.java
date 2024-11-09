@@ -1,5 +1,7 @@
 package noventagrados.modelo;
 
+import java.util.Objects;
+
 import noventagrados.util.Color;
 import noventagrados.util.TipoPieza;
 
@@ -17,7 +19,6 @@ public class Pieza {
      *
      * @param tipoPieza Tipo de la pieza (no nulo).
      * @param color     Color de la pieza (no nulo).
-     * @throws IllegalArgumentException si el tipo de pieza o el color son nulos.
      */
     public Pieza(TipoPieza tipoPieza, Color color) {
         if (tipoPieza == null || color == null) {
@@ -63,45 +64,27 @@ public class Pieza {
         return this.color;
     }
 
-    /**
-     * Genera un código hash para la pieza.
-     *
-     * @return Código hash.
-     */
-    @Override
-    public int hashCode() {
-        int resultado = 17;
-        resultado = 31 * resultado + tipoPieza.hashCode();
-        resultado = 31 * resultado + color.hashCode();
-        return resultado;
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(color, tipoPieza);
+	}
 
-    /**
-     * Compara si dos piezas son iguales.
-     *
-     * @param obj Objeto a comparar.
-     * @return true si son iguales, false en caso contrario.
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null || !(obj instanceof Pieza))
-            return false;
-        Pieza otra = (Pieza) obj;
-        return this.tipoPieza == otra.tipoPieza && this.color == otra.color;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Pieza other = (Pieza) obj;
+		return color == other.color && tipoPieza == other.tipoPieza;
+	}
 
-    /**
-     * Devuelve la representación en texto de la pieza.
-     *
-     * @return Representación textual.
-     */
-    @Override
-    public String toString() {
-        return "Pieza{" +
-                "tipoPieza=" + tipoPieza +
-                ", color=" + color +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "Pieza [tipoPieza=" + tipoPieza + ", color=" + color + "]";
+	}
+
+
 }
