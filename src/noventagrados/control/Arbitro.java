@@ -1,6 +1,10 @@
 package noventagrados.control;
 
 import noventagrados.modelo.Tablero;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import noventagrados.modelo.Celda;
 import noventagrados.modelo.Jugada;
 import noventagrados.modelo.Pieza;
@@ -202,7 +206,7 @@ public class Arbitro {
         Sentido sentido = consultor.calcularSentido(origen, destino);
 
         // Realizar el empuje de las piezas
-        empujarPiezas(origen, sentido);
+        empujarPiezas(origen, sentido, destino);
 
         // Incrementar el número de jugadas
         numeroJugada++;
@@ -218,51 +222,39 @@ public class Arbitro {
      *
      * @param origen  Coordenada de origen.
      * @param sentido Sentido del movimiento.
+     * @param destino Coordenada de destino.
      */
-    private void empujarPiezas(Coordenada origen, Sentido sentido) {
+    private void empujarPiezas(Coordenada origen, Sentido sentido, Coordenada destino) {
+        List<Pieza> piezas = new ArrayList<>();
         Coordenada actual = origen;
-        Pieza piezaMovida = tablero.obtenerCelda(actual).consultarPieza();
-        tablero.obtenerCelda(actual).eliminarPieza();
 
-        while (true) {
-            Coordenada siguiente = obtenerCoordenadaEnDireccion(actual, sentido);
+        // Recoger pieza inicial y las que encontramos en el camino
+        piezas.add(tablero.obtenerCelda(origen).consultarPieza());
+        tablero.eliminarPieza(origen);
 
-            // Si llegamos al borde del tablero
-            if (siguiente == null) {
-                // La pieza actual se expulsa
-                if (piezaMovida != null) {
-                    añadirPiezaACaja(piezaMovida);
-                }
-                break;
-            }
-
-            Celda celdaSiguiente = tablero.obtenerCelda(siguiente);
-            Pieza piezaEnSiguiente = celdaSiguiente.consultarPieza();
-
-            if (piezaEnSiguiente == null) {
-                // Si la siguiente celda está vacía, colocamos la pieza y terminamos
-                celdaSiguiente.colocar(piezaMovida);
-                break;
-            } else {
-                // Si la siguiente celda está ocupada, empujamos la pieza
-                celdaSiguiente.eliminarPieza();
-                celdaSiguiente.colocar(piezaMovida);
-                piezaMovida = piezaEnSiguiente;
-                actual = siguiente;
+        while (!actual.equals(destino)) {
+            actual = obtenerCoordenadaEnDireccion(actual, sentido);
+            Celda celda = tablero.obtenerCelda(actual);
+            if (celda.consultarPieza() != null) {
+                piezas.add(celda.consultarPieza());
+                tablero.eliminarPieza(actual);
             }
         }
-    }
 
-    /**
-     * Añade una pieza a la caja correspondiente según su color.
-     *
-     * @param pieza Pieza a añadir.
-     */
-    private void añadirPiezaACaja(Pieza pieza) {
-        if (pieza.consultarColor() == Color.BLANCO) {
-            cajaPiezasBlancas.añadir(pieza);
-        } else {
-            cajaPiezasNegras.añadir(pieza);
+        // Colocar piezas en nuevas posiciones o en cajas
+        Coordenada posicion = destino;
+        for (Pieza pieza : piezas) {
+            if (posicion == null) {
+                (pieza.consultarColor() == Color.BLANCO ? cajaPiezasBlancas : cajaPiezasNegras).añadir(pieza);
+            } else {
+                tablero.colocar(pieza, posicion);
+                posicion = obtenerCoordenadaEnDireccion(posicion, sentido);
+            }
+        }
+
+        // Verificar victoria si la reina llega al centro
+        if (piezas.get(0).consultarTipoPieza() == TipoPieza.REINA && destino.equals(new Coordenada(3, 3))) {
+            turnoGanador = piezas.get(0).consultarColor();
         }
     }
 
