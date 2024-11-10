@@ -45,13 +45,12 @@ public class Arbitro {
     }
 
     /**
-     * Cambia el turno al otro contrincante.
+     * Cambia el turno al otro contrincante si la partida no está finalizada
+     * y hay un turno actual asignado.
      */
     public void cambiarTurno() {
-        if (turnoActual == Color.BLANCO) {
-            turnoActual = Color.NEGRO;
-        } else if (turnoActual == Color.NEGRO) {
-            turnoActual = Color.BLANCO;
+        if (!estaFinalizadaPartida() && turnoActual != null) {
+            turnoActual = (turnoActual == Color.BLANCO) ? Color.NEGRO : Color.BLANCO;
         }
     }
 
@@ -208,10 +207,6 @@ public class Arbitro {
         // Incrementar el número de jugadas
         numeroJugada++;
 
-        // Comprobar si la partida ha finalizado
-        if (!estaFinalizadaPartida()) {
-            cambiarTurno();
-        }
     }
 
     /**
@@ -222,68 +217,36 @@ public class Arbitro {
      * @param destino Coordenada de destino.
      */
     private void empujarPiezas(Coordenada origen, Sentido sentido, Coordenada destino) {
-        // Arrays para almacenar las piezas y sus celdas
+        TableroConsultor consultor = new TableroConsultor(tablero);
+        // Recolectar piezas en el camino
         Pieza[] piezas = new Pieza[tablero.consultarNumeroFilas() * tablero.consultarNumeroColumnas()];
-        Celda[] celdas = new Celda[tablero.consultarNumeroFilas() * tablero.consultarNumeroColumnas()];
         int numPiezas = 0;
         Coordenada actual = origen;
 
-        // Primera pieza: guardar la pieza que inicia el movimiento
-        piezas[numPiezas] = tablero.obtenerCelda(origen).consultarPieza();
-        celdas[numPiezas] = tablero.obtenerCelda(origen);
-        numPiezas++;
-        tablero.eliminarPieza(origen);
-
-        // Recolectar todas las piezas que están en el camino hasta el destino
-        while (!actual.equals(destino)) {
-            actual = obtenerCoordenadaEnDireccion(actual, sentido);
+        // Recolectar piezas y eliminarlas del tablero
+        do {
             Celda celda = tablero.obtenerCelda(actual);
-            // Si hay una pieza en la celda, guardarla y eliminarla del tablero
             if (celda.consultarPieza() != null) {
-                piezas[numPiezas] = celda.consultarPieza();
-                celdas[numPiezas] = celda;
-                numPiezas++;
+                piezas[numPiezas++] = celda.consultarPieza();
                 tablero.eliminarPieza(actual);
             }
-        }
+            actual = actual.equals(destino) ? null : obtenerCoordenadaEnDireccion(actual, sentido);
+        } while (actual != null);
 
-        // Reubicar las piezas en sus nuevas posiciones
-        // Si una pieza no tiene posición válida, va a la caja correspondiente
+        // Reubicar piezas
         Coordenada posicion = destino;
         for (int i = 0; i < numPiezas; i++) {
             Pieza pieza = piezas[i];
             if (posicion == null) {
-                // La pieza es expulsada del tablero
-                if (pieza.consultarTipoPieza() == TipoPieza.REINA) {
-                    if (pieza.consultarColor() == Color.BLANCO) {
-                        cajaPiezasBlancas.añadir(pieza);
-                        turnoGanador = Color.NEGRO;
-                    } else {
-                        cajaPiezasNegras.añadir(pieza);
-                        turnoGanador = Color.BLANCO;
-                    }
-                } else {
-                    // Si no es reina, añadir a la caja según su color
-                    if (pieza.consultarColor() == Color.BLANCO) {
-                        cajaPiezasBlancas.añadir(pieza);
-                    } else {
-                        cajaPiezasNegras.añadir(pieza);
-                    }
-                }
+                // Expulsar pieza a la caja correspondiente
+                Caja caja = pieza.consultarColor() == Color.BLANCO ? cajaPiezasBlancas : cajaPiezasNegras;
+                caja.añadir(pieza);
             } else {
-                // Colocar la pieza en su nueva posición
                 tablero.colocar(pieza, posicion);
-                // Verificar si alguna reina llega al centro (incluso indirectamente)
-                if (pieza.consultarTipoPieza() == TipoPieza.REINA) {
-                    if (pieza.consultarColor() == Color.BLANCO &&
-                            posicion.equals(new Coordenada(3, 3))) {
-                        turnoGanador = Color.BLANCO;
-                    } else if (pieza.consultarColor() == Color.NEGRO &&
-                            posicion.equals(new Coordenada(3, 3))) {
-                        turnoGanador = Color.NEGRO;
-                    }
-                }
                 posicion = obtenerCoordenadaEnDireccion(posicion, sentido);
+            }
+            if (consultor.estaReinaEnElCentro(pieza.consultarColor())) {
+                turnoGanador = pieza.consultarColor();
             }
         }
     }
@@ -353,39 +316,39 @@ public class Arbitro {
     }
 
     /**
-     * Comprueba si se cumple alguna de las condiciones de finalización del juego.
+     * Comprueba si la partida ha finalizado.
      *
      * @return true si la partida ha finalizado, false en caso contrario.
      */
     public boolean estaFinalizadaPartida() {
-        // Instanciar un TableroConsultor para esta operación
         TableroConsultor consultor = new TableroConsultor(tablero);
+        boolean finalizada = false;
 
-        // Condición 1: La reina es expulsada del tablero
-        boolean reinaExpulsada = !consultor.hayReina(Color.BLANCO);
-        if (reinaExpulsada) {
-            turnoGanador = Color.NEGRO;
-            return true;
-        }
-        // Condición 2: La reina ocupa la celda central
-        boolean reinaEnCentro = consultor.estaReinaEnElCentro(Color.BLANCO);
-        if (reinaEnCentro) {
+        // Verificar si la reina blanca ha alcanzado el centro
+        if (consultor.estaReinaEnElCentro(Color.BLANCO)) {
             turnoGanador = Color.BLANCO;
-            return true;
+            finalizada = true;
         }
-        // Condición 3: Un bando no tiene más piezas
-        boolean sinPiezasBlancas = consultor.consultarNumeroPiezas(TipoPieza.PEON, Color.BLANCO) == 0
-                && !consultor.hayReina(Color.BLANCO);
-        boolean sinPiezasNegras = consultor.consultarNumeroPiezas(TipoPieza.PEON, Color.NEGRO) == 0;
-        if (sinPiezasBlancas) {
+
+        // Verificar si la reina negra ha alcanzado el centro
+        if (consultor.estaReinaEnElCentro(Color.NEGRO)) {
             turnoGanador = Color.NEGRO;
-            return true;
+            finalizada = true;
         }
-        if (sinPiezasNegras) {
+
+        // Verificar si la reina blanca ha sido expulsada del tablero
+        if (!consultor.hayReina(Color.BLANCO)) {
+            turnoGanador = Color.NEGRO;
+            finalizada = true;
+        }
+
+        // Verificar si la reina negra ha sido expulsada del tablero
+        if (!consultor.hayReina(Color.NEGRO)) {
             turnoGanador = Color.BLANCO;
-            return true;
+            finalizada = true;
         }
-        return false;
+
+        return finalizada;
     }
 
     @Override

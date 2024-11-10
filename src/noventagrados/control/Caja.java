@@ -1,5 +1,8 @@
 package noventagrados.control;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 import noventagrados.modelo.Pieza;
 import noventagrados.util.Color;
 import noventagrados.util.TipoPieza;
@@ -102,62 +105,29 @@ public class Caja {
         return clon;
     }
 
-    /**
-     * Genera un código hash para la caja.
-     *
-     * @return Código hash.
-     */
     @Override
-    public int hashCode() {
-        int resultado = 17;
-        resultado = 31 * resultado + color.hashCode();
-        for (int i = 0; i < numPiezas; i++) {
-            resultado = 31 * resultado + piezas[i].hashCode();
-        }
-        return resultado;
-    }
-
-    /**
-     * Compara si dos cajas son iguales.
-     *
-     * @param obj Objeto a comparar.
-     * @return true si son iguales, false en caso contrario.
-     */
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(piezas);
+		result = prime * result + Objects.hash(color, numPiezas);
+		return result;
+	}
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null || !(obj instanceof Caja))
-            return false;
-        Caja otra = (Caja) obj;
-        if (this.color != otra.color || this.numPiezas != otra.numPiezas) {
-            return false;
-        }
-        for (int i = 0; i < numPiezas; i++) {
-            if (!this.piezas[i].equals(otra.piezas[i])) {
-                return false;
-            }
-        }
-        return true;
-    }
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Caja other = (Caja) obj;
+		return color == other.color && numPiezas == other.numPiezas && Arrays.equals(piezas, other.piezas);
+	}
 
-    /**
-     * Devuelve la representación en texto de la caja.
-     *
-     * @return Representación textual.
-     */
     @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Caja{color=").append(color).append(", piezas=[");
-        for (int i = 0; i < numPiezas; i++) {
-            sb.append(piezas[i].aTexto());
-            if (i < numPiezas - 1) {
-                sb.append(", ");
-            }
-        }
-        sb.append("]}");
-        return sb.toString();
-    }
+	public String toString() {
+		return "Caja [color=" + color + ", piezas=" + Arrays.toString(piezas) + ", numPiezas=" + numPiezas + "]";
+	}
 }
