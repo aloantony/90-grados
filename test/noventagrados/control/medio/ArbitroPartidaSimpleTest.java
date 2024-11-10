@@ -27,15 +27,17 @@ import noventagrados.util.TipoPieza;
  * asumiendo que se han pasado los tests básicos previos.
  * 
  * Demuestra la posibilidad de jugar una partida mínima sin incluir
- * la funcionalidad de expulsar piezas fuera del tabblero ni comprobación de legalidad
+ * la funcionalidad de expulsar piezas fuera del tabblero ni comprobación de
+ * legalidad
  * de la jugada.
- *  
+ * 
  * @author <a href="rmartico@ubu.es">Raúl Marticorena</a>
  * @since 1.0
  * @version 1.0
  */
 @DisplayName("Tests del Arbitro sobre partidas simples.")
-@Timeout(value = 2, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD) // Time out global para todos los tests salvo los de ciclo de vida
+@Timeout(value = 2, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD) // Time out global para todos los tests salvo
+																			// los de ciclo de vida
 public class ArbitroPartidaSimpleTest {
 
 	/** Árbitro de testing. */
@@ -44,9 +46,11 @@ public class ArbitroPartidaSimpleTest {
 	/** Tablero de testing. */
 	private Tablero tablero;
 
-	/** Generación del árbitro para testing. 
-     * 	
-	 * <pre>  
+	/**
+	 * Generación del árbitro para testing.
+	 * 
+	 * <pre>
+	 *   
 	 * 	0 RB PB PB PB -- -- --
 	 *	1 PB -- -- -- -- -- --
 	 *	2 PB -- -- -- -- -- --
@@ -55,8 +59,8 @@ public class ArbitroPartidaSimpleTest {
 	 *  5 -- -- -- -- -- -- PN
 	 *	6 -- -- -- PN PN PN RN
 	 *    0  1  2  3  4  5  6
-	 * </pre>  
-     */
+	 * </pre>
+	 */
 	@BeforeEach
 	void inicializar() {
 		// Inyección de tablero para testing...
@@ -66,15 +70,16 @@ public class ArbitroPartidaSimpleTest {
 	}
 
 	/**
-	 * Comprueba una partida simple con victoria de blancas en el centro sin expulsiones del tablero.
+	 * Comprueba una partida simple con victoria de blancas en el centro sin
+	 * expulsiones del tablero.
 	 */
 	@Test
 	@DisplayName("Comprueba que hay victoria de blancas en el centro sin expulsar del tablero a ninguna pieza.")
-	void probarPartidaSimpleConVictoriaDeBlancasEnElCentroSinExpulsarPiezas() {
+	void testSimpleGameWithWhiteVictoryInCenterWithoutExpellingPieces() {
 
 		// given
 		arbitro.empujar(fabricarJugada(tablero, 0, 3, 4, 3)); // blancas
-		arbitro.cambiarTurno(); 
+		arbitro.cambiarTurno();
 		arbitro.empujar(fabricarJugada(tablero, 6, 4, 2, 4)); // negras
 		arbitro.cambiarTurno();
 		arbitro.empujar(fabricarJugada(tablero, 0, 0, 3, 0)); // blancas
@@ -84,7 +89,7 @@ public class ArbitroPartidaSimpleTest {
 		arbitro.empujar(fabricarJugada(tablero, 5, 0, 5, 4)); // blancas
 		arbitro.cambiarTurno();
 		arbitro.empujar(fabricarJugada(tablero, 2, 5, 0, 5)); // negras
-		arbitro.cambiarTurno();		
+		arbitro.cambiarTurno();
 
 		// @formatter:off
 		/* El estado del tablero antes del último movimiento debería ser:
@@ -101,7 +106,7 @@ public class ArbitroPartidaSimpleTest {
 
 		// when
 		arbitro.empujar(fabricarJugada(tablero, 3, 0, 3, 3)); // reina blanca alcanza el centro
-		
+
 		// then
 		final String cadenaEsperada = """
 				0 -- PB PB -- -- PN --
@@ -129,19 +134,21 @@ public class ArbitroPartidaSimpleTest {
 				() -> assertThat("La caja blanca debería estar vacía.",
 						arbitro.consultarCaja(Color.BLANCO).contarPiezas(), is(0)),
 				() -> assertThat("La caja negra debería estar vacía.",
-						arbitro.consultarCaja(Color.NEGRO).contarPiezas(), is(0)),			
+						arbitro.consultarCaja(Color.NEGRO).contarPiezas(), is(0)),
 				() -> assertThat("La partida se desarrolla en un número erróneo de jugadas.",
 						arbitro.consultarNumeroJugada(), is(7)),
 				() -> assertThat("El turno debería ser del jugador con blancas.", arbitro.consultarTurno(),
 						is(Color.BLANCO)),
-				() -> assertEquals(cadenaEsperada, cadenaObtenida, "Estado final del tablero en formato texto incorrecto")
-				);
+				() -> assertEquals(cadenaEsperada, cadenaObtenida,
+						"Estado final del tablero en formato texto incorrecto"));
 	}
-	
+
 	/**
-	 * Comprueba una partida simple con victoria de negras en el centro sin expulsiones del tablero.
+	 * Comprueba una partida simple con victoria de negras en el centro sin
+	 * expulsiones del tablero.
 	 * 
-	 * Algunos de los movimientos implican empujes más complejos con huecos entre piezas.
+	 * Algunos de los movimientos implican empujes más complejos con huecos entre
+	 * piezas.
 	 */
 	@Test
 	@DisplayName("Comprueba que hay victoria de negras en el centro sin expulsar del tablero a ninguna pieza.")
@@ -149,7 +156,7 @@ public class ArbitroPartidaSimpleTest {
 
 		// given
 		arbitro.empujar(fabricarJugada(tablero, 0, 1, 4, 1)); // blancas
-		arbitro.cambiarTurno(); 
+		arbitro.cambiarTurno();
 		arbitro.empujar(fabricarJugada(tablero, 6, 4, 2, 4)); // negras
 		arbitro.cambiarTurno();
 		arbitro.empujar(fabricarJugada(tablero, 3, 0, 3, 4)); // blancas
@@ -159,7 +166,7 @@ public class ArbitroPartidaSimpleTest {
 		arbitro.empujar(fabricarJugada(tablero, 2, 0, 2, 3)); // blancas
 		arbitro.cambiarTurno();
 		arbitro.empujar(fabricarJugada(tablero, 6, 6, 6, 3)); // negras
-		arbitro.cambiarTurno();		
+		arbitro.cambiarTurno();
 		arbitro.empujar(fabricarJugada(tablero, 4, 1, 4, 4)); // blancas
 		arbitro.cambiarTurno();
 
@@ -180,12 +187,12 @@ public class ArbitroPartidaSimpleTest {
 		arbitro.empujar(fabricarJugada(tablero, 6, 3, 3, 3)); // reina negra alcanza el centro
 		// then
 		final String cadenaEsperada = """
-				0 RB -- PB PB -- -- --  
+				0 RB -- PB PB -- -- --
 				1 PB -- -- -- -- -- --
-				2 -- -- -- PB PN -- -- 
-				3 -- PB PN RN -- -- -- 
+				2 -- -- -- PB PN -- --
+				3 -- PB PN RN -- -- --
 				4 -- -- -- -- PB -- PN
-				5 -- -- -- -- -- -- PN 
+				5 -- -- -- -- -- -- PN
 				6 -- PN PN -- -- -- --
 				  0  1  2  3  4  5  6  """.replaceAll("\\s", "");
 		String cadenaObtenida = arbitro.consultarTablero().aTexto().replaceAll("\\s", "");
@@ -205,14 +212,13 @@ public class ArbitroPartidaSimpleTest {
 				() -> assertThat("La caja blanca debería estar vacía.",
 						arbitro.consultarCaja(Color.BLANCO).contarPiezas(), is(0)),
 				() -> assertThat("La caja negra debería estar vacía.",
-						arbitro.consultarCaja(Color.NEGRO).contarPiezas(), is(0)),			
+						arbitro.consultarCaja(Color.NEGRO).contarPiezas(), is(0)),
 				() -> assertThat("La partida se desarrolla en un número erróneo de jugadas.",
 						arbitro.consultarNumeroJugada(), is(8)),
 				() -> assertThat("El turno debería ser del jugador con negras.", arbitro.consultarTurno(),
 						is(Color.NEGRO)),
-				() -> assertEquals(cadenaEsperada, cadenaObtenida, "Estado final del tablero en formato texto incorrecto")
-				);
+				() -> assertEquals(cadenaEsperada, cadenaObtenida,
+						"Estado final del tablero en formato texto incorrecto"));
 	}
 
-	
 }

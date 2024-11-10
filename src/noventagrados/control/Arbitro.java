@@ -2,9 +2,6 @@ package noventagrados.control;
 
 import noventagrados.modelo.Tablero;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import noventagrados.modelo.Celda;
 import noventagrados.modelo.Jugada;
 import noventagrados.modelo.Pieza;
@@ -225,36 +222,69 @@ public class Arbitro {
      * @param destino Coordenada de destino.
      */
     private void empujarPiezas(Coordenada origen, Sentido sentido, Coordenada destino) {
-        List<Pieza> piezas = new ArrayList<>();
+        // Arrays para almacenar las piezas y sus celdas
+        Pieza[] piezas = new Pieza[tablero.consultarNumeroFilas() * tablero.consultarNumeroColumnas()];
+        Celda[] celdas = new Celda[tablero.consultarNumeroFilas() * tablero.consultarNumeroColumnas()];
+        int numPiezas = 0;
         Coordenada actual = origen;
 
-        // Recoger pieza inicial y las que encontramos en el camino
-        piezas.add(tablero.obtenerCelda(origen).consultarPieza());
+        // Primera pieza: guardar la pieza que inicia el movimiento
+        piezas[numPiezas] = tablero.obtenerCelda(origen).consultarPieza();
+        celdas[numPiezas] = tablero.obtenerCelda(origen);
+        numPiezas++;
         tablero.eliminarPieza(origen);
 
+        // Recolectar todas las piezas que están en el camino hasta el destino
         while (!actual.equals(destino)) {
             actual = obtenerCoordenadaEnDireccion(actual, sentido);
             Celda celda = tablero.obtenerCelda(actual);
+            // Si hay una pieza en la celda, guardarla y eliminarla del tablero
             if (celda.consultarPieza() != null) {
-                piezas.add(celda.consultarPieza());
+                piezas[numPiezas] = celda.consultarPieza();
+                celdas[numPiezas] = celda;
+                numPiezas++;
                 tablero.eliminarPieza(actual);
             }
         }
 
-        // Colocar piezas en nuevas posiciones o en cajas
+        // Reubicar las piezas en sus nuevas posiciones
+        // Si una pieza no tiene posición válida, va a la caja correspondiente
         Coordenada posicion = destino;
-        for (Pieza pieza : piezas) {
+        for (int i = 0; i < numPiezas; i++) {
+            Pieza pieza = piezas[i];
             if (posicion == null) {
-                (pieza.consultarColor() == Color.BLANCO ? cajaPiezasBlancas : cajaPiezasNegras).añadir(pieza);
+                // La pieza es expulsada del tablero
+                if (pieza.consultarTipoPieza() == TipoPieza.REINA) {
+                    if (pieza.consultarColor() == Color.BLANCO) {
+                        cajaPiezasBlancas.añadir(pieza);
+                        turnoGanador = Color.NEGRO;
+                    } else {
+                        cajaPiezasNegras.añadir(pieza);
+                        turnoGanador = Color.BLANCO;
+                    }
+                } else {
+                    // Si no es reina, añadir a la caja según su color
+                    if (pieza.consultarColor() == Color.BLANCO) {
+                        cajaPiezasBlancas.añadir(pieza);
+                    } else {
+                        cajaPiezasNegras.añadir(pieza);
+                    }
+                }
             } else {
+                // Colocar la pieza en su nueva posición
                 tablero.colocar(pieza, posicion);
+                // Verificar si alguna reina llega al centro (incluso indirectamente)
+                if (pieza.consultarTipoPieza() == TipoPieza.REINA) {
+                    if (pieza.consultarColor() == Color.BLANCO &&
+                            posicion.equals(new Coordenada(3, 3))) {
+                        turnoGanador = Color.BLANCO;
+                    } else if (pieza.consultarColor() == Color.NEGRO &&
+                            posicion.equals(new Coordenada(3, 3))) {
+                        turnoGanador = Color.NEGRO;
+                    }
+                }
                 posicion = obtenerCoordenadaEnDireccion(posicion, sentido);
             }
-        }
-
-        // Verificar victoria si la reina llega al centro
-        if (piezas.get(0).consultarTipoPieza() == TipoPieza.REINA && destino.equals(new Coordenada(3, 3))) {
-            turnoGanador = piezas.get(0).consultarColor();
         }
     }
 
@@ -276,7 +306,6 @@ public class Arbitro {
         } else {
             return null;
         }
-
     }
 
     /**

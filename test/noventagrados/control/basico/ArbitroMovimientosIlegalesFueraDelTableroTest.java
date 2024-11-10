@@ -26,11 +26,10 @@ import noventagrados.util.Coordenada;
  *
  */
 @DisplayName("Tests del Arbitro sobre el control de movimientos ilegales fuera del tablero.")
-@Timeout(value = 2, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD) // Time out global para todos los tests salvo
-																			// los de ciclo de vida
+@Timeout(value = 2, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD) // Time out global para todos los tests salvo los de ciclo de vida
 public class ArbitroMovimientosIlegalesFueraDelTableroTest {
 
-	/** Texto movimiento ilegal. */
+	/** Texto movimiento ilegal.*/
 	private static final String EL_MOVIMIENTO_DEBERÍA_SER_ILEGAL_PARA = "El movimiento debería ser ilegal para ";
 
 	/** Árbitro de testing. */
@@ -61,31 +60,26 @@ public class ArbitroMovimientosIlegalesFueraDelTableroTest {
 	}
 
 	/**
-	 * Comprobacion de ilegalidad de intentar mover a una celda que no existe en el
-	 * tablero.
+	 * Comprobacion de ilegalidad de intentar mover a una celda que no existe en el tablero.
 	 */
 	@DisplayName("Comprueba el movimiento ilegal de mover a una celda que no existe en el tablero.")
 	@Test
 	void comprobaMovimientoImposible() {
-		Jugada jugada1 = new Jugada(new Celda(new Coordenada(0, 0)), new Celda(new Coordenada(-1, -1)));
-		Jugada jugada2 = new Jugada(new Celda(new Coordenada(-1, -1)), new Celda(new Coordenada(0, 0)));
-		Jugada jugada3 = new Jugada(new Celda(new Coordenada(0, 0)), new Celda(new Coordenada(0, -1)));
-		Jugada jugada4 = new Jugada(new Celda(new Coordenada(7, 0)), new Celda(new Coordenada(0, 0)));
-		Jugada jugada5 = new Jugada(new Celda(new Coordenada(0, 0)), new Celda(new Coordenada(0, 7)));
-		Jugada jugada6 = new Jugada(new Celda(new Coordenada(0, 0)), new Celda(new Coordenada(7, 7)));
+		Jugada jugada1 = new Jugada(new Celda(new Coordenada(0,0)), new Celda(new Coordenada(-1,-1)));
+		Jugada jugada2 = new Jugada(new Celda(new Coordenada(-1,-1)), new Celda(new Coordenada(0,0)));
+		Jugada jugada3 = new Jugada(new Celda(new Coordenada(0,0)), new Celda(new Coordenada(0,-1)));
+		Jugada jugada4 = new Jugada(new Celda(new Coordenada(7,0)), new Celda(new Coordenada(0,0)));
+		Jugada jugada5 = new Jugada(new Celda(new Coordenada(0,0)), new Celda(new Coordenada(0,7)));
+		Jugada jugada6 = new Jugada(new Celda(new Coordenada(0,0)), new Celda(new Coordenada(7,7)));
 		assertAll("movimiento ilegal fuera del tablero",
-				() -> assertThat(EL_MOVIMIENTO_DEBERÍA_SER_ILEGAL_PARA + jugada1, arbitro.esMovimientoLegal(jugada1),
-						is(false)),
-				() -> assertThat(EL_MOVIMIENTO_DEBERÍA_SER_ILEGAL_PARA + jugada2, arbitro.esMovimientoLegal(jugada2),
-						is(false)),
-				() -> assertThat(EL_MOVIMIENTO_DEBERÍA_SER_ILEGAL_PARA + jugada3, arbitro.esMovimientoLegal(jugada3),
-						is(false)),
-				() -> assertThat(EL_MOVIMIENTO_DEBERÍA_SER_ILEGAL_PARA + jugada4, arbitro.esMovimientoLegal(jugada4),
-						is(false)),
-				() -> assertThat(EL_MOVIMIENTO_DEBERÍA_SER_ILEGAL_PARA + jugada5, arbitro.esMovimientoLegal(jugada5),
-						is(false)),
-				() -> assertThat(EL_MOVIMIENTO_DEBERÍA_SER_ILEGAL_PARA + jugada6, arbitro.esMovimientoLegal(jugada6),
-						is(false)));
+				() -> assertThat(EL_MOVIMIENTO_DEBERÍA_SER_ILEGAL_PARA + jugada1, arbitro.esMovimientoLegal(jugada1), is(false)),
+				() -> assertThat(EL_MOVIMIENTO_DEBERÍA_SER_ILEGAL_PARA + jugada2, arbitro.esMovimientoLegal(jugada2), is(false)),
+				() -> assertThat(EL_MOVIMIENTO_DEBERÍA_SER_ILEGAL_PARA + jugada3, arbitro.esMovimientoLegal(jugada3), is(false)),
+				() -> assertThat(EL_MOVIMIENTO_DEBERÍA_SER_ILEGAL_PARA + jugada4, arbitro.esMovimientoLegal(jugada4), is(false)),
+				() -> assertThat(EL_MOVIMIENTO_DEBERÍA_SER_ILEGAL_PARA + jugada5, arbitro.esMovimientoLegal(jugada5), is(false)),
+				() -> assertThat(EL_MOVIMIENTO_DEBERÍA_SER_ILEGAL_PARA + jugada6, arbitro.esMovimientoLegal(jugada6), is(false))				
+				);
 	}
+	
 
 }
