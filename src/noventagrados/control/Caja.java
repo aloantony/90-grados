@@ -106,28 +106,28 @@ public class Caja {
     }
 
     @Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + Arrays.hashCode(piezas);
-		result = prime * result + Objects.hash(color, numPiezas);
-		return result;
-	}
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + Arrays.hashCode(piezas);
+        result = prime * result + Objects.hash(color, numPiezas);
+        return result;
+    }
 
     @Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Caja other = (Caja) obj;
-		return color == other.color && numPiezas == other.numPiezas && Arrays.equals(piezas, other.piezas);
-	}
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Caja other = (Caja) obj;
+        return color == other.color && numPiezas == other.numPiezas && Arrays.equals(piezas, other.piezas);
+    }
 
     @Override
-	public String toString() {
-		return "Caja [color=" + color + ", piezas=" + Arrays.toString(piezas) + ", numPiezas=" + numPiezas + "]";
-	}
+    public String toString() {
+        return "Caja [color=" + color + ", piezas=" + Arrays.toString(piezas) + ", numPiezas=" + numPiezas + "]";
+    }
 }

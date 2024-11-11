@@ -21,9 +21,6 @@ public class Pieza {
      * @param color     Color de la pieza (no nulo).
      */
     public Pieza(TipoPieza tipoPieza, Color color) {
-        if (tipoPieza == null || color == null) {
-            throw new IllegalArgumentException("El tipo de pieza y el color no pueden ser nulos.");
-        }
         this.tipoPieza = tipoPieza;
         this.color = color;
     }
@@ -64,27 +61,26 @@ public class Pieza {
         return this.color;
     }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(color, tipoPieza);
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(color, tipoPieza);
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Pieza other = (Pieza) obj;
-		return color == other.color && tipoPieza == other.tipoPieza;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Pieza other = (Pieza) obj;
+        return color == other.color && tipoPieza == other.tipoPieza;
+    }
 
-	@Override
-	public String toString() {
-		return "Pieza [tipoPieza=" + tipoPieza + ", color=" + color + "]";
-	}
-
+    @Override
+    public String toString() {
+        return "Pieza [tipoPieza=" + tipoPieza + ", color=" + color + "]";
+    }
 
 }

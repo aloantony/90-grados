@@ -59,8 +59,55 @@ public class NoventaGrados {
 	 * @param args argumentos de entrada en línea de comandos
 	 */
 	public static void main(String[] args) {
-		// COMPLETAR POR EL ALUMNADO
-		// REUTILIZAR AQUELLOS MÉTODOS YA PROPORCIONADOS QUE SEAN NECESARIOS
+		// Inicializar la partida y mostrar mensaje de bienvenida
+		inicializarPartida();
+		mostrarMensajeBienvenida();
+
+		// Bucle principal del juego
+		while (true) {
+			// Mostrar el estado actual del tablero
+			mostrarTablero();
+
+			// Recoger la jugada del usuario
+			String textoJugada = recogerTextoDeJugadaPorTeclado();
+
+			// Comprobar si el usuario desea salir
+			if (comprobarSalir(textoJugada)) {
+				finalizarPartida();
+				break;
+			}
+
+			// Validar el formato de la jugada
+			if (!validarFormato(textoJugada)) {
+				mostrarErrorEnFormatoDeEntrada();
+				continue; // Volver a pedir jugada
+			}
+
+			// Extraer la jugada
+			Jugada jugada = extraerJugada(textoJugada);
+
+			// Comprobar si la jugada es legal
+			if (!esLegal(jugada)) {
+				mostrarErrorPorMovimientoIlegal(textoJugada);
+				continue; // Volver a pedir jugada
+			}
+
+			// Realizar el empujón
+			realizarEmpujón(jugada);
+
+			// Comprobar si la partida ha finalizado
+			if (comprobarFinalizacionPartida()) {
+				// Mostrar el estado final del tablero
+				mostrarTablero();
+				// Mostrar el ganador
+				mostrarGanador();
+				finalizarPartida();
+				break;
+			}
+
+			// Cambiar el turno
+			cambiarTurnoPartida();
+		}
 	}
 
 	/**

@@ -49,9 +49,7 @@ public class Arbitro {
      * y hay un turno actual asignado.
      */
     public void cambiarTurno() {
-        if (!estaFinalizadaPartida() && turnoActual != null) {
-            turnoActual = (turnoActual == Color.BLANCO) ? Color.NEGRO : Color.BLANCO;
-        }
+        turnoActual = (turnoActual == Color.BLANCO) ? Color.NEGRO : Color.BLANCO;
     }
 
     /**
@@ -65,12 +63,6 @@ public class Arbitro {
      *                                  tienen diferente longitud
      */
     public void colocarPiezas(Pieza[] piezas, Coordenada[] coordenadas, Color turnoActual) {
-        if (piezas == null || coordenadas == null || turnoActual == null) {
-            throw new IllegalArgumentException("Los parámetros no pueden ser nulos.");
-        }
-        if (piezas.length != coordenadas.length) {
-            throw new IllegalArgumentException("Los arrays de piezas y coordenadas deben tener la misma longitud.");
-        }
 
         // Colocar las piezas en las coordenadas especificadas
         for (int i = 0; i < piezas.length; i++) {
@@ -133,9 +125,7 @@ public class Arbitro {
      * @throws IllegalArgumentException si el color es nulo.
      */
     public Caja consultarCaja(Color color) {
-        if (color == null) {
-            throw new IllegalArgumentException("El color no puede ser nulo.");
-        }
+
         if (color == Color.BLANCO) {
             return cajaPiezasBlancas.clonar();
         } else {
@@ -189,10 +179,6 @@ public class Arbitro {
      * @throws IllegalArgumentException si la jugada es nula.
      */
     public void empujar(Jugada jugada) {
-        if (jugada == null) {
-            throw new IllegalArgumentException("La jugada no puede ser nula.");
-        }
-
         // Instanciar un TableroConsultor para esta operación
         TableroConsultor consultor = new TableroConsultor(tablero);
 
@@ -201,12 +187,18 @@ public class Arbitro {
         Coordenada destino = jugada.destino().consultarCoordenada();
         Sentido sentido = consultor.calcularSentido(origen, destino);
 
+        // System.out.println("Origen" + origen + "Destino" + destino);
+
         // Realizar el empuje de las piezas
         empujarPiezas(origen, sentido, destino);
 
         // Incrementar el número de jugadas
         numeroJugada++;
 
+        // System.out.println(tablero.aTexto());
+        // System.out.println(
+        // "cajaPiezasBlancas" + cajaPiezasBlancas.toString() + "cajaPiezasNegras" +
+        // cajaPiezasNegras.toString());
     }
 
     /**
@@ -217,7 +209,6 @@ public class Arbitro {
      * @param destino Coordenada de destino.
      */
     private void empujarPiezas(Coordenada origen, Sentido sentido, Coordenada destino) {
-        TableroConsultor consultor = new TableroConsultor(tablero);
         // Recolectar piezas en el camino
         Pieza[] piezas = new Pieza[tablero.consultarNumeroFilas() * tablero.consultarNumeroColumnas()];
         int numPiezas = 0;
@@ -225,29 +216,33 @@ public class Arbitro {
 
         // Recolectar piezas y eliminarlas del tablero
         do {
-            Celda celda = tablero.obtenerCelda(actual);
-            if (celda.consultarPieza() != null) {
+            // Celda celda = tablero.obtenerCelda(actual);
+            Celda celda = tablero.consultarCelda(actual);
+            if (!celda.estaVacia()) {
+                // System.out.println(celda.consultarPieza());
+                // System.out.println(" ");
                 piezas[numPiezas++] = celda.consultarPieza();
                 tablero.eliminarPieza(actual);
             }
-            actual = actual.equals(destino) ? null : obtenerCoordenadaEnDireccion(actual, sentido);
+            actual = actual.equals(destino) ? null : consultarCoordenadaEnDireccion(actual, sentido);
+
         } while (actual != null);
 
         // Reubicar piezas
         Coordenada posicion = destino;
         for (int i = 0; i < numPiezas; i++) {
+            // System.out.println(piezas[i]);
             Pieza pieza = piezas[i];
             if (posicion == null) {
                 // Expulsar pieza a la caja correspondiente
-                Caja caja = pieza.consultarColor() == Color.BLANCO ? cajaPiezasBlancas : cajaPiezasNegras;
+                Caja caja = pieza.consultarColor().equals(Color.BLANCO) ? cajaPiezasBlancas : cajaPiezasNegras;
                 caja.añadir(pieza);
             } else {
                 tablero.colocar(pieza, posicion);
-                posicion = obtenerCoordenadaEnDireccion(posicion, sentido);
+                posicion = consultarCoordenadaEnDireccion(posicion, sentido);
             }
-            if (consultor.estaReinaEnElCentro(pieza.consultarColor())) {
-                turnoGanador = pieza.consultarColor();
-            }
+
+            estaFinalizadaPartida();
         }
     }
 
@@ -259,7 +254,7 @@ public class Arbitro {
      * @return La siguiente coordenada en la dirección dada, o null si está fuera
      *         del tablero.
      */
-    private Coordenada obtenerCoordenadaEnDireccion(Coordenada coordenada, Sentido sentido) {
+    private Coordenada consultarCoordenadaEnDireccion(Coordenada coordenada, Sentido sentido) {
         int fila = coordenada.fila() + sentido.consultarDesplazamientoEnFilas();
         int columna = coordenada.columna() + sentido.consultarDesplazamientoEnColumnas();
 
@@ -336,16 +331,24 @@ public class Arbitro {
             finalizada = true;
         }
 
-        // Verificar si la reina blanca ha sido expulsada del tablero
-        if (!consultor.hayReina(Color.BLANCO)) {
-            turnoGanador = Color.NEGRO;
-            finalizada = true;
-        }
+        // Verificar si ambas reinas han sido expulsadas del tablero
 
-        // Verificar si la reina negra ha sido expulsada del tablero
-        if (!consultor.hayReina(Color.NEGRO)) {
-            turnoGanador = Color.BLANCO;
-            finalizada = true;
+        if (!consultor.hayReina(Color.BLANCO) && !consultor.hayReina(Color.NEGRO)) {
+            turnoGanador = null;
+            finalizada = true; // Empate
+        } else {
+            // Verificar si la reina blanca ha sido expulsada del tablero
+            if (!consultor.hayReina(Color.BLANCO)) {
+                turnoGanador = Color.NEGRO;
+                finalizada = true;
+            }
+
+            // Verificar si la reina negra ha sido expulsada del tablero
+            if (!consultor.hayReina(Color.NEGRO)) {
+                turnoGanador = Color.BLANCO;
+                finalizada = true;
+            }
+            ;
         }
 
         return finalizada;

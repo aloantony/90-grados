@@ -25,9 +25,6 @@ public class TableroConsultor {
      * @throws IllegalArgumentException si el tablero es nulo.
      */
     public TableroConsultor(Tablero tablero) {
-        if (tablero == null) {
-            throw new IllegalArgumentException("El tablero no puede ser nulo.");
-        }
         this.tablero = tablero;
     }
 
@@ -40,9 +37,6 @@ public class TableroConsultor {
      * @throws IllegalArgumentException si alguna coordenada es nula.
      */
     public Sentido calcularSentido(Coordenada origen, Coordenada destino) {
-        if (origen == null || destino == null) {
-            throw new IllegalArgumentException("Las coordenadas no pueden ser nulas.");
-        }
         int diferenciaFila = destino.fila() - origen.fila();
         int diferenciaColumna = destino.columna() - origen.columna();
         Sentido resultado = null;
@@ -64,9 +58,7 @@ public class TableroConsultor {
      * @throws IllegalArgumentException si alguna coordenada es nula.
      */
     public int consultarDistanciaEnHorizontal(Coordenada origen, Coordenada destino) {
-        if (origen == null || destino == null) {
-            throw new IllegalArgumentException("Las coordenadas no pueden ser nulas.");
-        }
+
         if (origen.fila() == destino.fila()) {
             int diferencia = destino.columna() - origen.columna();
             return diferencia < 0 ? -diferencia : diferencia;
@@ -83,9 +75,6 @@ public class TableroConsultor {
      * @throws IllegalArgumentException si alguna coordenada es nula.
      */
     public int consultarDistanciaEnVertical(Coordenada origen, Coordenada destino) {
-        if (origen == null || destino == null) {
-            throw new IllegalArgumentException("Las coordenadas no pueden ser nulas.");
-        }
         if (origen.columna() == destino.columna()) {
             int diferencia = destino.fila() - origen.fila();
             return diferencia < 0 ? -diferencia : diferencia;
@@ -102,9 +91,6 @@ public class TableroConsultor {
      * @throws IllegalArgumentException si el tipo de pieza o el color son nulos.
      */
     public int consultarNumeroPiezas(TipoPieza tipoPieza, Color color) {
-        if (tipoPieza == null || color == null) {
-            throw new IllegalArgumentException("El tipo de pieza y el color no pueden ser nulos.");
-        }
         int contador = 0;
         Celda[] celdas = tablero.consultarCeldas();
         for (int i = 0; i < celdas.length; i++) {
@@ -124,9 +110,6 @@ public class TableroConsultor {
      * @throws IllegalArgumentException si la coordenada es nula.
      */
     public int consultarNumeroPiezasEnHorizontal(Coordenada coordenada) {
-        if (coordenada == null) {
-            throw new IllegalArgumentException("La coordenada no puede ser nula.");
-        }
         int fila = coordenada.fila();
         int contador = 0;
         for (int columna = 0; columna < tablero.consultarNumeroColumnas(); columna++) {
@@ -146,9 +129,6 @@ public class TableroConsultor {
      * @throws IllegalArgumentException si la coordenada es nula.
      */
     public int consultarNumeroPiezasEnVertical(Coordenada coordenada) {
-        if (coordenada == null) {
-            throw new IllegalArgumentException("La coordenada no puede ser nula.");
-        }
         int columna = coordenada.columna();
         int contador = 0;
         for (int fila = 0; fila < tablero.consultarNumeroFilas(); fila++) {
@@ -168,9 +148,6 @@ public class TableroConsultor {
      * @throws IllegalArgumentException si el color es nulo.
      */
     public boolean estaReinaEnElCentro(Color color) {
-        if (color == null) {
-            throw new IllegalArgumentException("El color no puede ser nulo.");
-        }
         Coordenada centro = new Coordenada(3, 3);
         Celda celdaCentral = tablero.obtenerCelda(centro);
         Pieza pieza = celdaCentral.consultarPieza();
@@ -185,9 +162,6 @@ public class TableroConsultor {
      * @throws IllegalArgumentException si el color es nulo.
      */
     public boolean hayReina(Color color) {
-        if (color == null) {
-            throw new IllegalArgumentException("El color no puede ser nulo.");
-        }
         Celda[] celdas = tablero.consultarCeldas();
         for (int i = 0; i < celdas.length; i++) {
             Pieza pieza = celdas[i].consultarPieza();

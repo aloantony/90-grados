@@ -15,23 +15,23 @@ import noventagrados.util.Coordenada;
  */
 public record Jugada(Celda origen, Celda destino) {
 
-    /**
-     * Devuelve la representación en texto de la jugada (ej. "00-11").
-     *
-     * @return Representación textual de la jugada.
-     */
-    public String aTexto() {
-        Coordenada coordenadaOrigen = origen.consultarCoordenada();
-        Coordenada coordenadaDestino = destino.consultarCoordenada();
-        return String.format("%s-%s", coordenadaOrigen.aTexto(), coordenadaDestino.aTexto());
-    }
+	/**
+	 * Devuelve la representación en texto de la jugada (ej. "00-11").
+	 *
+	 * @return Representación textual de la jugada.
+	 */
+	public String aTexto() {
+		Coordenada coordenadaOrigen = origen.consultarCoordenada();
+		Coordenada coordenadaDestino = destino.consultarCoordenada();
+		return String.format("%s-%s", coordenadaOrigen.aTexto(), coordenadaDestino.aTexto());
+	}
 
-    @Override
+	@Override
 	public int hashCode() {
 		return Objects.hash(destino, origen);
 	}
 
-    @Override
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -43,7 +43,7 @@ public record Jugada(Celda origen, Celda destino) {
 		return Objects.equals(destino, other.destino) && Objects.equals(origen, other.origen);
 	}
 
-    @Override
+	@Override
 	public String toString() {
 		return "Jugada [origen=" + origen + ", destino=" + destino + "]";
 	}

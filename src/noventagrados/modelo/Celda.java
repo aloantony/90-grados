@@ -20,9 +20,6 @@ public class Celda {
      * @throws IllegalArgumentException si la coordenada es nula.
      */
     public Celda(Coordenada coordenada) {
-        if (coordenada == null) {
-            throw new IllegalArgumentException("La coordenada no puede ser nula.");
-        }
         this.coordenada = coordenada;
         this.pieza = null;
     }
