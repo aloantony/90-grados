@@ -2,6 +2,8 @@ package noventagrados.control;
 
 import noventagrados.modelo.Tablero;
 
+import java.util.Objects;
+
 import noventagrados.modelo.Celda;
 import noventagrados.modelo.Jugada;
 import noventagrados.modelo.Pieza;
@@ -59,8 +61,7 @@ public class Arbitro {
      * @param piezas      Array de piezas a colocar (no nulo)
      * @param coordenadas Array de coordenadas donde colocar las piezas (no nulo)
      * @param turnoActual Color del turno inicial (no nulo)
-     * @throws IllegalArgumentException Si algún parámetro es nulo o los arrays
-     *                                  tienen diferente longitud
+     *                    tienen diferente longitud
      */
     public void colocarPiezas(Pieza[] piezas, Coordenada[] coordenadas, Color turnoActual) {
 
@@ -122,7 +123,6 @@ public class Arbitro {
      *
      * @param color Color de la caja a consultar (no nulo).
      * @return La caja correspondiente.
-     * @throws IllegalArgumentException si el color es nulo.
      */
     public Caja consultarCaja(Color color) {
 
@@ -176,7 +176,6 @@ public class Arbitro {
      * Se asume que la jugada es legal.
      *
      * @param jugada Jugada a realizar (no nula).
-     * @throws IllegalArgumentException si la jugada es nula.
      */
     public void empujar(Jugada jugada) {
         // Instanciar un TableroConsultor para esta operación
@@ -191,16 +190,23 @@ public class Arbitro {
 
         // Realizar el empuje de las piezas
         empujarPiezas(origen, sentido, destino);
+        
 
         // Incrementar el número de jugadas
         numeroJugada++;
+        System.out.println(tablero.aTexto());
+        System.out.println(
+                "cajaPiezasBlancas" + cajaPiezasBlancas.toString() + "cajaPiezasNegras" +
+                        cajaPiezasNegras.toString());
 
-        // System.out.println(tablero.aTexto());
-        // System.out.println(
-        // "cajaPiezasBlancas" + cajaPiezasBlancas.toString() + "cajaPiezasNegras" +
-        // cajaPiezasNegras.toString());
     }
 
+    /*
+     * System.out.println(tablero.aTexto());
+     * System.out.println(
+     * "cajaPiezasBlancas" + cajaPiezasBlancas.toString() + "cajaPiezasNegras" +
+     * cajaPiezasNegras.toString());
+     */
     /**
      * Método auxiliar para empujar las piezas en una dirección.
      *
@@ -216,7 +222,6 @@ public class Arbitro {
 
         // Recolectar piezas y eliminarlas del tablero
         do {
-            // Celda celda = tablero.obtenerCelda(actual);
             Celda celda = tablero.consultarCelda(actual);
             if (!celda.estaVacia()) {
                 // System.out.println(celda.consultarPieza());
@@ -242,8 +247,8 @@ public class Arbitro {
                 posicion = consultarCoordenadaEnDireccion(posicion, sentido);
             }
 
-            estaFinalizadaPartida();
         }
+        estaFinalizadaPartida();
     }
 
     /**
@@ -271,30 +276,45 @@ public class Arbitro {
      *
      * @param jugada Jugada a validar (no nula).
      * @return true si la jugada es legal, false en caso contrario.
-     * @throws IllegalArgumentException si la jugada es nula.
      */
     public boolean esMovimientoLegal(Jugada jugada) {
+        // Validación inicial de jugada no nula
         if (jugada == null) {
             return false;
         }
+
+        // Verificar que la partida no ha terminado
         boolean esLegal = !estaFinalizadaPartida();
+
         if (esLegal) {
             TableroConsultor consultor = new TableroConsultor(tablero);
             Coordenada origen = jugada.origen().consultarCoordenada();
             Coordenada destino = jugada.destino().consultarCoordenada();
+
+            // Validar que las coordenadas están dentro del tablero y son diferentes
             esLegal = esCoordenadaValida(origen) && esCoordenadaValida(destino) && !origen.equals(destino);
+
             if (esLegal) {
-                Pieza piezaOrigen = tablero.obtenerCelda(origen).consultarPieza();
+                Pieza piezaOrigen = tablero.consultarCelda(origen).consultarPieza();
+                // Verificar que hay una pieza en el origen y es del turno actual
                 esLegal = piezaOrigen != null && piezaOrigen.consultarColor() == turnoActual;
+
                 if (esLegal) {
+                    // Contar piezas en línea horizontal y vertical desde el origen
                     int piezasHorizontal = consultor.consultarNumeroPiezasEnHorizontal(origen);
                     int piezasVertical = consultor.consultarNumeroPiezasEnVertical(origen);
-                    boolean esBlanca = piezaOrigen.consultarColor() == Color.BLANCO;
-                    esLegal = !(esBlanca && (destino.fila() < origen.fila() || destino.columna() < origen.columna())) &&
-                            !(!esBlanca && (destino.fila() > origen.fila() || destino.columna() > origen.columna()));
+
                     if (esLegal) {
+                        // Calcular distancias entre origen y destino
                         int distanciaHorizontal = Math.abs(destino.columna() - origen.columna());
                         int distanciaVertical = Math.abs(destino.fila() - origen.fila());
+
+                        // Verificar que el movimiento cumple las reglas:
+                        // - Si se mueve verticalmente, la distancia debe ser igual al número de piezas
+                        // en horizontal
+                        // - Si se mueve horizontalmente, la distancia debe ser igual al número de
+                        // piezas en vertical
+                        // - El movimiento debe tener un sentido válido (ortogonal)
                         esLegal = ((distanciaVertical == piezasHorizontal) ||
                                 (distanciaHorizontal == piezasVertical)) &&
                                 consultor.calcularSentido(origen, destino) != null;
@@ -352,6 +372,26 @@ public class Arbitro {
         }
 
         return finalizada;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(cajaPiezasBlancas, cajaPiezasNegras, numeroJugada, tablero, turnoActual, turnoGanador);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Arbitro other = (Arbitro) obj;
+        return Objects.equals(cajaPiezasBlancas, other.cajaPiezasBlancas)
+                && Objects.equals(cajaPiezasNegras, other.cajaPiezasNegras) && numeroJugada == other.numeroJugada
+                && Objects.equals(tablero, other.tablero) && turnoActual == other.turnoActual
+                && turnoGanador == other.turnoGanador;
     }
 
     @Override

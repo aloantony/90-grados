@@ -1,7 +1,12 @@
 "# 90-grados" 
 
-No consigo pasar todos los tests, no entiendo muy bien lo que falla en la lógica del código. 
+No consigo pasar todos los tests pero el juego funciona perfecto porque verifico la victoria cuando sale una o las dos reinas del tablero mediante la comprobación de si está la reina en el tablero en lugar de verificar la caja. Esto lo hago porque no entiendo muy bien lo que falla en la lógica del código:
 
-La verdad que he tenido que dejar para última hora el trabajo debido a la alta carga lectiva de estas dos últimas semanas.
+El caso es que cuando se echan del tablero 2 piezas, siendo una de ellas la reina, la reina no entra en la caja. Pero si echas más de 2 sí que entra. (Ni siquiera la recolecta y por lo tanto más tarde no la deposita).
+He intentado depurar manualmente durante bastante tiempo y no he conseguido averiguar qué ocurre.
 
-Agradecería una tutoría individual para explicarme bien los fallos y correcciones si fuera posible, muchas gracias.
+Agradecería mucho el feedback correspondiente, 
+
+un saludo,
+
+Antonio.

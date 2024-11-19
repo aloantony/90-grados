@@ -74,7 +74,7 @@ public class Tablero {
      * @param coordenada Coordenada de la celda.
      * @return Celda o null si la coordenada es inválida.
      */
-    public Celda obtenerCelda(Coordenada coordenada) {
+    Celda obtenerCelda(Coordenada coordenada) {
         if (coordenada != null) {
             int fila = coordenada.fila();
             int columna = coordenada.columna();
@@ -142,27 +142,29 @@ public class Tablero {
      * @return Cadena que representa el tablero.
      */
     public String aTexto() {
-        StringBuilder sb = new StringBuilder();
+        String resultado = "";
         for (int fila = 0; fila < TAMAÑO; fila++) {
-            sb.append(fila).append(" ");
+            resultado = resultado + fila + " ";
             for (int columna = 0; columna < TAMAÑO; columna++) {
                 Celda celda = celdas[fila][columna];
                 if (celda.estaVacia()) {
-                    sb.append("--");
+                    resultado = resultado + "--";
                 } else {
-                    sb.append(celda.consultarPieza().aTexto());
+                    resultado = resultado + celda.consultarPieza().aTexto();
                 }
                 if (columna < TAMAÑO - 1) {
-                    sb.append(" ");
+                    resultado = resultado + " ";
                 }
             }
-            sb.append("\n");
+            if (fila < TAMAÑO - 1) {
+                resultado = resultado + "\n";
+            }
         }
-        sb.append("  ");
+        resultado = resultado + "\n  ";
         for (int columna = 0; columna < TAMAÑO; columna++) {
-            sb.append(columna).append("  ");
+            resultado = resultado + columna + "  ";
         }
-        return sb.toString().trim();
+        return resultado;
     }
 
     /**

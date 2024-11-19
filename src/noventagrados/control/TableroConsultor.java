@@ -16,13 +16,13 @@ import noventagrados.util.TipoPieza;
  * @author <a href="mailto:aab1027@alu.ubu.es">Antonio Alonso Briones</a>
  */
 public class TableroConsultor {
+
     private final Tablero tablero;
 
     /**
      * Constructor de la clase TableroConsultor.
      *
      * @param tablero Tablero sobre el que se realizarán las consultas (no nulo).
-     * @throws IllegalArgumentException si el tablero es nulo.
      */
     public TableroConsultor(Tablero tablero) {
         this.tablero = tablero;
@@ -34,7 +34,6 @@ public class TableroConsultor {
      * @param origen  Coordenada de origen (no nula).
      * @param destino Coordenada de destino (no nula).
      * @return Sentido entre las coordenadas o null si no es válido.
-     * @throws IllegalArgumentException si alguna coordenada es nula.
      */
     public Sentido calcularSentido(Coordenada origen, Coordenada destino) {
         int diferenciaFila = destino.fila() - origen.fila();
@@ -55,7 +54,6 @@ public class TableroConsultor {
      * @param origen  Coordenada de origen (no nula).
      * @param destino Coordenada de destino (no nula).
      * @return Distancia o -1 si no están en la misma horizontal.
-     * @throws IllegalArgumentException si alguna coordenada es nula.
      */
     public int consultarDistanciaEnHorizontal(Coordenada origen, Coordenada destino) {
 
@@ -72,7 +70,6 @@ public class TableroConsultor {
      * @param origen  Coordenada de origen (no nula).
      * @param destino Coordenada de destino (no nula).
      * @return Distancia o -1 si no están en la misma vertical.
-     * @throws IllegalArgumentException si alguna coordenada es nula.
      */
     public int consultarDistanciaEnVertical(Coordenada origen, Coordenada destino) {
         if (origen.columna() == destino.columna()) {
@@ -88,7 +85,6 @@ public class TableroConsultor {
      * @param tipoPieza Tipo de pieza a contar (no nulo).
      * @param color     Color de las piezas a contar (no nulo).
      * @return Número de piezas encontradas.
-     * @throws IllegalArgumentException si el tipo de pieza o el color son nulos.
      */
     public int consultarNumeroPiezas(TipoPieza tipoPieza, Color color) {
         int contador = 0;
@@ -107,13 +103,12 @@ public class TableroConsultor {
      *
      * @param coordenada Coordenada de referencia (no nula).
      * @return Número de piezas en la misma fila.
-     * @throws IllegalArgumentException si la coordenada es nula.
      */
     public int consultarNumeroPiezasEnHorizontal(Coordenada coordenada) {
         int fila = coordenada.fila();
         int contador = 0;
         for (int columna = 0; columna < tablero.consultarNumeroColumnas(); columna++) {
-            Celda celda = tablero.obtenerCelda(new Coordenada(fila, columna));
+            Celda celda = tablero.consultarCelda(new Coordenada(fila, columna));
             if (!celda.estaVacia()) {
                 contador++;
             }
@@ -126,13 +121,12 @@ public class TableroConsultor {
      *
      * @param coordenada Coordenada de referencia (no nula).
      * @return Número de piezas en la misma columna.
-     * @throws IllegalArgumentException si la coordenada es nula.
      */
     public int consultarNumeroPiezasEnVertical(Coordenada coordenada) {
         int columna = coordenada.columna();
         int contador = 0;
         for (int fila = 0; fila < tablero.consultarNumeroFilas(); fila++) {
-            Celda celda = tablero.obtenerCelda(new Coordenada(fila, columna));
+            Celda celda = tablero.consultarCelda(new Coordenada(fila, columna));
             if (!celda.estaVacia()) {
                 contador++;
             }
@@ -145,11 +139,10 @@ public class TableroConsultor {
      *
      * @param color Color de la reina (no nulo).
      * @return true si la reina está en el centro, false en caso contrario.
-     * @throws IllegalArgumentException si el color es nulo.
      */
     public boolean estaReinaEnElCentro(Color color) {
         Coordenada centro = new Coordenada(3, 3);
-        Celda celdaCentral = tablero.obtenerCelda(centro);
+        Celda celdaCentral = tablero.consultarCelda(centro);
         Pieza pieza = celdaCentral.consultarPieza();
         return pieza != null && pieza.consultarTipoPieza() == TipoPieza.REINA && pieza.consultarColor() == color;
     }
@@ -159,7 +152,6 @@ public class TableroConsultor {
      *
      * @param color Color de la reina (no nulo).
      * @return true si la reina está en el tablero, false en caso contrario.
-     * @throws IllegalArgumentException si el color es nulo.
      */
     public boolean hayReina(Color color) {
         Celda[] celdas = tablero.consultarCeldas();
@@ -172,11 +164,22 @@ public class TableroConsultor {
         return false;
     }
 
+    /**
+     * Hash code.
+     *
+     * @return the int
+     */
     @Override
     public int hashCode() {
         return Objects.hash(tablero);
     }
 
+    /**
+     * Equals.
+     *
+     * @param obj the obj
+     * @return true, if successful
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -189,6 +192,11 @@ public class TableroConsultor {
         return Objects.equals(tablero, other.tablero);
     }
 
+    /**
+     * To string.
+     *
+     * @return the string
+     */
     @Override
     public String toString() {
         return "TableroConsultor [tablero=" + tablero + "]";

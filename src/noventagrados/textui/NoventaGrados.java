@@ -61,7 +61,7 @@ public class NoventaGrados {
 	public static void main(String[] args) {
 		// Inicializar la partida y mostrar mensaje de bienvenida
 		inicializarPartida();
-		mostrarMensajeBienvenida();
+		mensajeInicial();
 
 		// Bucle principal del juego
 		while (true) {
@@ -264,7 +264,7 @@ public class NoventaGrados {
 	/**
 	 * Muestra el mensaje de bienvenida con instrucciones para finalizar la partida.
 	 */
-	private static void mostrarMensajeBienvenida() {
+	private static void mensajeInicial() {
 		System.out.println("Bienvenido al juego de Noventa Grados 1.0");
 		System.out.println(
 				"Introduzca sus jugadas con el formato dd-dd donde d es un dígito en el rango [0, 6] (por ejemplo 00-04 o 65-63).");

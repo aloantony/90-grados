@@ -54,8 +54,11 @@ public class Celda {
      *
      * @return Pieza en la celda o null si está vacía.
      */
-    public Pieza consultarPieza() {
-        return this.pieza;
+    public Pieza consultarPieza()  {
+    	Pieza pieza = null;
+    	if(this.pieza != null) {
+    		pieza = this.pieza.clonar();}
+        return pieza;
     }
 
     /**
