@@ -237,17 +237,32 @@ public class Arbitro {
         for (int i = 0; i < numPiezas; i++) {
             // System.out.println(piezas[i]);
             Pieza pieza = piezas[i];
-            if (posicion == null) {
-                // Expulsar pieza a la caja correspondiente
-                Caja caja = pieza.consultarColor().equals(Color.BLANCO) ? cajaPiezasBlancas : cajaPiezasNegras;
-                caja.añadir(pieza);
-            } else {
+            if (posicion != null) {
+                Celda celda = tablero.consultarCelda(posicion);
+                if (!celda.estaVacia()) {
+                    moverPiezaACaja(celda.consultarPieza());
+                }
                 tablero.colocar(pieza, posicion);
                 posicion = consultarCoordenadaEnDireccion(posicion, sentido);
             }
 
+            else {
+                moverPiezaACaja(pieza);
+            }
+
         }
         estaFinalizadaPartida();
+    }
+
+    /**
+     * Expulsa la pieza en la coordenada indicada y la añade a la caja
+     * correspondiente.
+     *
+     * @param coordenada Coordenada de la pieza a expulsar.
+     */
+    private void moverPiezaACaja(Pieza pieza) {
+        Caja caja = pieza.consultarColor().equals(Color.BLANCO) ? cajaPiezasBlancas : cajaPiezasNegras;
+        caja.añadir(pieza);
     }
 
     /**
