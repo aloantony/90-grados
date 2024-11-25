@@ -114,8 +114,9 @@ public class NoventaGrados {
 	 * que jugamos. No comprueba la corrección del texto introducido.
 	 * 
 	 * @param args argumentos
-	 * @throws OpcionNoDisponibleException si el argumento con el modo de deshacer no
-	 *                                  es correcto
+	 * @throws OpcionNoDisponibleException si el argumento con el modo de deshacer
+	 *                                     no
+	 *                                     es correcto
 	 */
 	private static void extraerModoDeshacer(String[] args) throws OpcionNoDisponibleException {
 		// COMPLETAR POR EL ALUMNADO
@@ -135,14 +136,14 @@ public class NoventaGrados {
 	 */
 	private static void seleccionarMecanismoDeshacer(String configuracion) throws IllegalArgumentException {
 		switch (configuracion) {
-		case "jugadas":
-			deshacer = new MaquinaDelTiempoConJugadas(new Date());
-			break;
-		case "arbitros":
-			deshacer = new MaquinaDelTiempoConArbitros(new Date());
-			break;
-		default:
-			throw new IllegalArgumentException("Modo no definido:" + configuracion);
+			case "jugadas":
+				deshacer = new MaquinaDelTiempoConJugadas(new Date());
+				break;
+			case "arbitros":
+				deshacer = new MaquinaDelTiempoConArbitros(new Date());
+				break;
+			default:
+				throw new IllegalArgumentException("Modo no definido:" + configuracion);
 		}
 	}
 
@@ -179,7 +180,7 @@ public class NoventaGrados {
 	private static boolean comprobarSalir(String jugada) {
 		return jugada.equalsIgnoreCase(TEXTO_SALIR);
 	}
-	
+
 	/**
 	 * Comprueba si se quiere deshacer la última jugada.
 	 * 
@@ -344,7 +345,7 @@ public class NoventaGrados {
 	/**
 	 * Muestra el estado del tablero con sus piezas actuales en pantalla.
 	 */
-	private static void mostrarTablero() {		
+	private static void mostrarTablero() {
 		System.out.println();
 		System.out.println(arbitro.consultarTablero().aTexto());
 	}
