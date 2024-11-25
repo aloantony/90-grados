@@ -190,7 +190,6 @@ public class Arbitro {
 
         // Realizar el empuje de las piezas
         empujarPiezas(origen, sentido, destino);
-        
 
         // Incrementar el número de jugadas
         numeroJugada++;
@@ -216,7 +215,7 @@ public class Arbitro {
      */
     private void empujarPiezas(Coordenada origen, Sentido sentido, Coordenada destino) {
         // Recolectar piezas en el camino
-        Pieza[] piezas = new Pieza[tablero.consultarNumeroFilas() * tablero.consultarNumeroColumnas()];
+        Pieza[] piezas = new Pieza[tablero.consultarNumeroFilas()];
         int numPiezas = 0;
         Coordenada actual = origen;
 
