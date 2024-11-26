@@ -1,5 +1,8 @@
 package noventagrados.modelo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import noventagrados.util.Coordenada;
 
 /**
@@ -90,12 +93,13 @@ public class Tablero {
      *
      * @return Array de celdas.
      */
-    public Celda[] consultarCeldas() {
-        Celda[] todasLasCeldas = new Celda[TAMAÑO * TAMAÑO];
-        int indice = 0;
+    public List<Celda>/* Celda[] */ consultarCeldas() {
+        // Celda[] todasLasCeldas = new Celda[TAMAÑO * TAMAÑO];
+        // int indice = 0;
+        List<Celda> todasLasCeldas = new ArrayList<>(TAMAÑO * TAMAÑO);
         for (int fila = 0; fila < TAMAÑO; fila++) {
             for (int columna = 0; columna < TAMAÑO; columna++) {
-                todasLasCeldas[indice++] = celdas[fila][columna].clonar();
+                todasLasCeldas.add(this.celdas[fila][columna].clonar());
             }
         }
         return todasLasCeldas;

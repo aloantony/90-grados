@@ -47,6 +47,28 @@ public class Arbitro {
     }
 
     /**
+     * Crea un clon profundo del árbitro actual.
+     *
+     * @return Un nuevo objeto Arbitro que es una copia del actual.
+     */
+    public Arbitro clonar() {
+        Tablero tableroClonado = this.tablero.clonar();
+        Arbitro arbitroClonado = new Arbitro(tableroClonado);
+        arbitroClonado.turnoActual = this.turnoActual;
+        arbitroClonado.turnoGanador = this.turnoGanador;
+        arbitroClonado.numeroJugada = this.numeroJugada;
+
+        // Copiar piezas de las cajas originales a las nuevas
+        for (Pieza pieza : this.cajaPiezasBlancas.consultarPiezas()) {
+            arbitroClonado.cajaPiezasBlancas.añadir(pieza);
+        }
+        for (Pieza pieza : this.cajaPiezasNegras.consultarPiezas()) {
+            arbitroClonado.cajaPiezasNegras.añadir(pieza);
+        }
+        return arbitroClonado;
+    }
+
+    /**
      * Cambia el turno al otro contrincante si la partida no está finalizada
      * y hay un turno actual asignado.
      */
