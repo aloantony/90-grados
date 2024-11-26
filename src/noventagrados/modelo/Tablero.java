@@ -12,17 +12,18 @@ import noventagrados.util.Coordenada;
  */
 public class Tablero {
     private static final int TAMAÑO = 7;
-    private final Celda[][] celdas;
+    private final List<List<Celda>> celdas;
 
     /**
      * Constructor de la clase Tablero.
      * Inicializa el tablero con celdas vacías.
      */
     public Tablero() {
-        celdas = new Celda[TAMAÑO][TAMAÑO];
+        celdas = new ArrayList<>(TAMAÑO);
         for (int fila = 0; fila < TAMAÑO; fila++) {
+            List<Celda> filaCeldas = new ArrayList<>(TAMAÑO);
             for (int columna = 0; columna < TAMAÑO; columna++) {
-                celdas[fila][columna] = new Celda(new Coordenada(fila, columna));
+                filaCeldas.add(new Celda(new Coordenada(fila, columna)));
             }
         }
     }
@@ -82,7 +83,7 @@ public class Tablero {
             int fila = coordenada.fila();
             int columna = coordenada.columna();
             if (fila >= 0 && fila < TAMAÑO && columna >= 0 && columna < TAMAÑO) {
-                return celdas[fila][columna];
+                return celdas.get(fila).get(columna);
             }
         }
         return null;
@@ -99,7 +100,7 @@ public class Tablero {
         List<Celda> todasLasCeldas = new ArrayList<>(TAMAÑO * TAMAÑO);
         for (int fila = 0; fila < TAMAÑO; fila++) {
             for (int columna = 0; columna < TAMAÑO; columna++) {
-                todasLasCeldas.add(this.celdas[fila][columna].clonar());
+                todasLasCeldas.add(this.celdas.get(fila).get(columna).clonar());
             }
         }
         return todasLasCeldas;
@@ -132,9 +133,9 @@ public class Tablero {
         Tablero clon = new Tablero();
         for (int fila = 0; fila < TAMAÑO; fila++) {
             for (int columna = 0; columna < TAMAÑO; columna++) {
-                Celda celdaOriginal = this.celdas[fila][columna];
+                Celda celdaOriginal = this.celdas.get(fila).get(columna);
                 Celda celdaClonada = celdaOriginal.clonar();
-                clon.celdas[fila][columna] = celdaClonada;
+                clon.celdas.get(fila).set(columna, celdaClonada);
             }
         }
         return clon;
@@ -150,7 +151,7 @@ public class Tablero {
         for (int fila = 0; fila < TAMAÑO; fila++) {
             resultado = resultado + fila + " ";
             for (int columna = 0; columna < TAMAÑO; columna++) {
-                Celda celda = celdas[fila][columna];
+                Celda celda = celdas.get(fila).get(columna);
                 if (celda.estaVacia()) {
                     resultado = resultado + "--";
                 } else {
@@ -181,7 +182,7 @@ public class Tablero {
         int resultado = 17;
         for (int fila = 0; fila < TAMAÑO; fila++) {
             for (int columna = 0; columna < TAMAÑO; columna++) {
-                resultado = 31 * resultado + celdas[fila][columna].hashCode();
+                resultado = 31 * resultado + celdas.get(fila).get(columna).hashCode();
             }
         }
         return resultado;
@@ -202,8 +203,8 @@ public class Tablero {
         Tablero otro = (Tablero) obj;
         for (int fila = 0; fila < TAMAÑO; fila++) {
             for (int columna = 0; columna < TAMAÑO; columna++) {
-                Celda celdaThis = this.celdas[fila][columna];
-                Celda celdaOtro = otro.celdas[fila][columna];
+                Celda celdaThis = this.celdas.get(fila).get(columna);
+                Celda celdaOtro = otro.celdas.get(fila).get(columna);
                 if (!celdaThis.equals(celdaOtro)) {
                     return false;
                 }
