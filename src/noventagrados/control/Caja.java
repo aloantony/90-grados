@@ -1,6 +1,8 @@
 package noventagrados.control;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import noventagrados.modelo.Pieza;
@@ -15,7 +17,7 @@ import noventagrados.util.TipoPieza;
  */
 public class Caja {
     private final Color color;
-    private Pieza[] piezas;
+    private List<Pieza> piezas;
     private int numPiezas;
 
     private static final int CAPACIDAD_MAXIMA = 7;
@@ -27,7 +29,7 @@ public class Caja {
      */
     public Caja(Color color) {
         this.color = color;
-        this.piezas = new Pieza[CAPACIDAD_MAXIMA];
+        this.piezas = new ArrayList<>(CAPACIDAD_MAXIMA);
         this.numPiezas = 0;
     }
 
@@ -39,20 +41,21 @@ public class Caja {
     public void añadir(Pieza pieza) {
         if (numPiezas != CAPACIDAD_MAXIMA) {
             if (this.color == pieza.consultarColor()) {
-                piezas[numPiezas++] = pieza;
+                piezas.add(pieza);
+                numPiezas++;
             }
         }
     }
 
     /**
-     * Devuelve un arreglo con clones de todas las piezas en la caja.
+     * Devuelve una lista con clones de todas las piezas en la caja.
      *
-     * @return Arreglo de piezas clonadas.
+     * @return Lista de piezas clonadas.
      */
-    public Pieza[] consultarPiezas() {
-        Pieza[] piezasClonadas = new Pieza[numPiezas];
+    public List<Pieza> consultarPiezas() {
+        List<Pieza> piezasClonadas = new ArrayList<>();
         for (int i = 0; i < numPiezas; i++) {
-            piezasClonadas[i] = piezas[i].clonar();
+            piezasClonadas.add(piezas.get(i).clonar());
         }
         return piezasClonadas;
     }
@@ -76,7 +79,7 @@ public class Caja {
     public int contarPiezas(TipoPieza tipoPieza) {
         int contador = 0;
         for (int i = 0; i < numPiezas; i++) {
-            if (piezas[i].consultarTipoPieza() == tipoPieza) {
+            if (piezas.get(i).consultarTipoPieza() == tipoPieza) {
                 contador++;
             }
         }
@@ -100,7 +103,7 @@ public class Caja {
     public Caja clonar() {
         Caja clon = new Caja(this.color);
         for (int i = 0; i < this.numPiezas; i++) {
-            clon.añadir(this.piezas[i].clonar());
+            clon.añadir(this.piezas.get(i).clonar());
         }
         return clon;
     }
@@ -109,7 +112,7 @@ public class Caja {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + Arrays.hashCode(piezas);
+        result = prime * result + Objects.hash(piezas);
         result = prime * result + Objects.hash(color, numPiezas);
         return result;
     }
@@ -123,11 +126,11 @@ public class Caja {
         if (getClass() != obj.getClass())
             return false;
         Caja other = (Caja) obj;
-        return color == other.color && numPiezas == other.numPiezas && Arrays.equals(piezas, other.piezas);
+        return color == other.color && numPiezas == other.numPiezas && Objects.equals(piezas, other.piezas);
     }
 
     @Override
     public String toString() {
-        return "Caja [color=" + color + ", piezas=" + Arrays.toString(piezas) + ", numPiezas=" + numPiezas + "]";
+        return "Caja [color=" + color + ", piezas=" + piezas + ", numPiezas=" + numPiezas + "]";
     }
 }

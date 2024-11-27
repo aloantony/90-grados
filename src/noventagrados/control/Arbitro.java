@@ -2,6 +2,7 @@ package noventagrados.control;
 
 import noventagrados.modelo.Tablero;
 
+import java.util.List;
 import java.util.Objects;
 
 import noventagrados.modelo.Celda;
@@ -77,20 +78,18 @@ public class Arbitro {
     }
 
     /**
-     * Coloca piezas en el tablero según los arrays proporcionados e inicializa el
+     * Coloca piezas en el tablero según las listas proporcionadas e inicializa el
      * turno.
      * 
-     * @param piezas      Array de piezas a colocar (no nulo)
-     * @param coordenadas Array de coordenadas donde colocar las piezas (no nulo)
+     * @param piezas      Lista de piezas a colocar (no nula)
+     * @param coordenadas Lista de coordenadas donde colocar las piezas (no nula)
      * @param turnoActual Color del turno inicial (no nulo)
-     *                    tienen diferente longitud
      */
-    public void colocarPiezas(Pieza[] piezas, Coordenada[] coordenadas, Color turnoActual) {
-
+    public void colocarPiezas(List<Pieza> piezas, List<Coordenada> coordenadas, Color turnoActual) {
         // Colocar las piezas en las coordenadas especificadas
-        for (int i = 0; i < piezas.length; i++) {
-            Pieza pieza = piezas[i];
-            Coordenada coordenada = coordenadas[i];
+        for (int i = 0; i < piezas.size(); i++) {
+            Pieza pieza = piezas.get(i);
+            Coordenada coordenada = coordenadas.get(i);
             tablero.colocar(pieza, coordenada);
         }
 

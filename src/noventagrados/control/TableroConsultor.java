@@ -1,6 +1,7 @@
 package noventagrados.control;
 
 import java.util.Objects;
+import java.util.List;
 
 import noventagrados.modelo.Celda;
 import noventagrados.modelo.Pieza;
@@ -12,19 +13,24 @@ import noventagrados.util.TipoPieza;
 
 /**
  * Clase que permite realizar consultas avanzadas sobre el tablero.
+ * Extiende de Tablero para proporcionar funcionalidad adicional.
  * 
  * @author <a href="mailto:aab1027@alu.ubu.es">Antonio Alonso Briones</a>
+ * @param <T> tipo de tablero sobre el que se realizarán las consultas
  */
-public class TableroConsultor {
+public class TableroConsultor<T extends Tablero> extends Tablero {
 
-    private final Tablero tablero;
+    private final T tablero;
 
     /**
      * Constructor de la clase TableroConsultor.
      *
      * @param tablero Tablero sobre el que se realizarán las consultas (no nulo).
      */
-    public TableroConsultor(Tablero tablero) {
+    public TableroConsultor(T tablero) {
+        if (tablero == null) {
+            throw new IllegalArgumentException("El tablero no puede ser nulo");
+        }
         this.tablero = tablero;
     }
 
@@ -88,9 +94,9 @@ public class TableroConsultor {
      */
     public int consultarNumeroPiezas(TipoPieza tipoPieza, Color color) {
         int contador = 0;
-        Celda[] celdas = tablero.consultarCeldas();
-        for (int i = 0; i < celdas.length; i++) {
-            Pieza pieza = celdas[i].consultarPieza();
+        List<Celda> celdas = tablero.consultarCeldas();
+        for (Celda celda : celdas) {
+            Pieza pieza = celda.consultarPieza();
             if (pieza != null && pieza.consultarTipoPieza() == tipoPieza && pieza.consultarColor() == color) {
                 contador++;
             }
@@ -154,9 +160,9 @@ public class TableroConsultor {
      * @return true si la reina está en el tablero, false en caso contrario.
      */
     public boolean hayReina(Color color) {
-        Celda[] celdas = tablero.consultarCeldas();
-        for (int i = 0; i < celdas.length; i++) {
-            Pieza pieza = celdas[i].consultarPieza();
+        List<Celda> celdas = tablero.consultarCeldas();
+        for (Celda celda : celdas) {
+            Pieza pieza = celda.consultarPieza();
             if (pieza != null && pieza.consultarTipoPieza() == TipoPieza.REINA && pieza.consultarColor() == color) {
                 return true;
             }
