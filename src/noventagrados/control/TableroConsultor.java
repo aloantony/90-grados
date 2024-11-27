@@ -168,23 +168,6 @@ public class TableroConsultor<T extends Tablero> {
     }
 
     @Override
-	public int hashCode() {
-		return Objects.hash(tablero);
-	}
-
-    @Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		TableroConsultor other = (TableroConsultor) obj;
-		return Objects.equals(tablero, other.tablero);
-	}
-
-    @Override
     public String toString() {
         return "TableroConsultor [tablero=" + tablero + "]";
     }
