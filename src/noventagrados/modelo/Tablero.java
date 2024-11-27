@@ -25,6 +25,7 @@ public class Tablero {
             for (int columna = 0; columna < TAMAÑO; columna++) {
                 filaCeldas.add(new Celda(new Coordenada(fila, columna)));
             }
+            celdas.add(filaCeldas);
         }
     }
 
