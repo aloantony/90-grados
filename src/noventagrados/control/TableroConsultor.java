@@ -18,7 +18,7 @@ import noventagrados.util.TipoPieza;
  * @author <a href="mailto:aab1027@alu.ubu.es">Antonio Alonso Briones</a>
  * @param <T> tipo de tablero sobre el que se realizarán las consultas
  */
-public class TableroConsultor<T extends Tablero> extends Tablero {
+public class TableroConsultor<T extends Tablero> {
 
     private final T tablero;
 
@@ -28,9 +28,6 @@ public class TableroConsultor<T extends Tablero> extends Tablero {
      * @param tablero Tablero sobre el que se realizarán las consultas (no nulo).
      */
     public TableroConsultor(T tablero) {
-        if (tablero == null) {
-            throw new IllegalArgumentException("El tablero no puede ser nulo");
-        }
         this.tablero = tablero;
     }
 
@@ -170,39 +167,23 @@ public class TableroConsultor<T extends Tablero> extends Tablero {
         return false;
     }
 
-    /**
-     * Hash code.
-     *
-     * @return the int
-     */
     @Override
-    public int hashCode() {
-        return Objects.hash(tablero);
-    }
+	public int hashCode() {
+		return Objects.hash(tablero);
+	}
 
-    /**
-     * Equals.
-     *
-     * @param obj the obj
-     * @return true, if successful
-     */
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        TableroConsultor other = (TableroConsultor) obj;
-        return Objects.equals(tablero, other.tablero);
-    }
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TableroConsultor other = (TableroConsultor) obj;
+		return Objects.equals(tablero, other.tablero);
+	}
 
-    /**
-     * To string.
-     *
-     * @return the string
-     */
     @Override
     public String toString() {
         return "TableroConsultor [tablero=" + tablero + "]";

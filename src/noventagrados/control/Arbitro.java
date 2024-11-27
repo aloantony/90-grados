@@ -199,8 +199,7 @@ public class Arbitro {
      * @param jugada Jugada a realizar (no nula).
      */
     public void empujar(Jugada jugada) {
-        // Instanciar un TableroConsultor para esta operación
-        TableroConsultor consultor = new TableroConsultor(tablero);
+        TableroConsultor<Tablero> consultor = new TableroConsultor<>(tablero);
 
         // Obtener sentido del movimiento
         Coordenada origen = jugada.origen().consultarCoordenada();
@@ -322,7 +321,7 @@ public class Arbitro {
         boolean esLegal = !estaFinalizadaPartida();
 
         if (esLegal) {
-            TableroConsultor consultor = new TableroConsultor(tablero);
+            TableroConsultor<Tablero> consultor = new TableroConsultor<>(tablero);
             Coordenada origen = jugada.origen().consultarCoordenada();
             Coordenada destino = jugada.destino().consultarCoordenada();
 
@@ -371,7 +370,7 @@ public class Arbitro {
      * @return true si la partida ha finalizado, false en caso contrario.
      */
     public boolean estaFinalizadaPartida() {
-        TableroConsultor consultor = new TableroConsultor(tablero);
+        TableroConsultor<Tablero> consultor = new TableroConsultor<>(tablero);
         boolean finalizada = false;
 
         // Verificar si la reina blanca ha alcanzado el centro
