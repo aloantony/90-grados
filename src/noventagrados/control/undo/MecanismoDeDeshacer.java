@@ -1,7 +1,9 @@
 package noventagrados.control.undo;
 
 import noventagrados.control.Arbitro;
+import noventagrados.modelo.Jugada;
 import java.util.Date;
+
 
 public interface MecanismoDeDeshacer {
 
@@ -11,7 +13,7 @@ public interface MecanismoDeDeshacer {
 
     public void deshacerJugada();
 
-    public void hacerJugada();
+    public void hacerJugada(Jugada jugada);
 
     public Date obtenerFechaInicio();
 }
