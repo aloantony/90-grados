@@ -3,6 +3,7 @@ package noventagrados.control.undo;
 import noventagrados.control.Arbitro;
 import noventagrados.modelo.Jugada;
 import noventagrados.modelo.Tablero;
+
 import java.util.Date;
 
 public class MaquinaDelTiempoConJugadas extends MecanismoDeDeshacerAbstracto<Jugada> {
@@ -14,23 +15,19 @@ public class MaquinaDelTiempoConJugadas extends MecanismoDeDeshacerAbstracto<Jug
     @Override
     public void hacerJugada(Jugada jugada) {
         historico.add(jugada);
-        numeroJugadasEnHistorico = historico.size();
     }
 
     @Override
     public void deshacerJugada() {
         if (!historico.isEmpty()) {
-            historico.remove(historico.size() - 1);
-            numeroJugadasEnHistorico = historico.size();
-            fechaInicio = new Date();
-            arbitro = consultarArbitroActual();
+            historico.remove(consultarNumeroJugadasEnHistorico() - 1);
+            consultarArbitroActual();
         }
     }
 
     @Override
     public Arbitro consultarArbitroActual() {
-        Tablero tablero = new Tablero();
-        Arbitro arbitro = new Arbitro(tablero);
+        Arbitro arbitro = new Arbitro(new Tablero());
         arbitro.colocarPiezasConfiguracionInicial();
 
         for (Jugada jugada : historico) {

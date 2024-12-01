@@ -2,6 +2,7 @@ package noventagrados.control.undo;
 
 import noventagrados.control.Arbitro;
 import noventagrados.modelo.Jugada;
+import noventagrados.modelo.Tablero;
 
 import java.util.Date;
 import java.util.List;
@@ -9,30 +10,22 @@ import java.util.ArrayList;
 
 public abstract class MecanismoDeDeshacerAbstracto<Tipo> implements MecanismoDeDeshacer {
 
-    Arbitro arbitro;
-    int numeroJugadasEnHistorico;
     Date fechaInicio;
     List<Tipo> historico;
-    Jugada jugada;
 
     /*
      * Constructor de la Máquina del tiempo
      */
     public MecanismoDeDeshacerAbstracto(Date fechaInicio) {
         this.historico = new ArrayList<>();
-        this.numeroJugadasEnHistorico = 0; // A 0 al crear la instancia
         this.fechaInicio = fechaInicio;
-        this.arbitro = consultarArbitroActual();
 
     }
 
-    public Arbitro consultarArbitroActual() {
-        return arbitro.clonar();
-    }
+    public abstract Arbitro consultarArbitroActual();
 
     public int consultarNumeroJugadasEnHistorico() {
-        numeroJugadasEnHistorico = historico.size();
-        return numeroJugadasEnHistorico;
+        return historico.size();
     }
 
     public abstract void hacerJugada(Jugada jugada);

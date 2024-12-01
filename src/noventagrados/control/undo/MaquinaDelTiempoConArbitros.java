@@ -14,28 +14,26 @@ public class MaquinaDelTiempoConArbitros extends MecanismoDeDeshacerAbstracto<Ar
 
     @Override
     public void hacerJugada(Jugada jugada) {
+        Arbitro arbitro = consultarArbitroActual();
         historico.add(arbitro);
-        numeroJugadasEnHistorico = historico.size();
+        consultarNumeroJugadasEnHistorico();
     }
 
     @Override
     public void deshacerJugada() {
         if (!historico.isEmpty()) {
-            fechaInicio = new Date();
-            arbitro = consultarArbitroActual();
-            historico.remove(numeroJugadasEnHistorico - 1);
-            numeroJugadasEnHistorico = historico.size();
-        } else {
-            arbitro = new Arbitro(new Tablero());
-            arbitro.colocarPiezasConfiguracionInicial();
+            consultarArbitroActual();
+            historico.remove(consultarNumeroJugadasEnHistorico() - 1);
         }
     }
 
     @Override
     public Arbitro consultarArbitroActual() {
-        if (!historico.isEmpty()) {
-            arbitro = historico.get(numeroJugadasEnHistorico - 1);
-        }
-        return arbitro;
+        if (consultarNumeroJugadasEnHistorico() == 0) {
+            Arbitro arbitro = new Arbitro(new Tablero());
+            arbitro.colocarPiezasConfiguracionInicial();
+            return arbitro;
+        } else
+            return historico.get(consultarNumeroJugadasEnHistorico() - 1);
     }
 }
