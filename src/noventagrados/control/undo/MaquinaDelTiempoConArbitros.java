@@ -7,7 +7,6 @@ import noventagrados.modelo.Tablero;
 import java.util.Date;
 
 public class MaquinaDelTiempoConArbitros extends MecanismoDeDeshacerAbstracto<Arbitro> {
-
     public MaquinaDelTiempoConArbitros(Date fechaInicio) {
         super(fechaInicio);
     }
@@ -15,25 +14,29 @@ public class MaquinaDelTiempoConArbitros extends MecanismoDeDeshacerAbstracto<Ar
     @Override
     public void hacerJugada(Jugada jugada) {
         Arbitro arbitro = consultarArbitroActual();
+        arbitro.empujar(jugada);
+        arbitro.cambiarTurno();
         historico.add(arbitro);
-        consultarNumeroJugadasEnHistorico();
     }
 
     @Override
     public void deshacerJugada() {
         if (!historico.isEmpty()) {
-            consultarArbitroActual();
             historico.remove(consultarNumeroJugadasEnHistorico() - 1);
+            consultarArbitroActual();
+        } else {
+            Arbitro arbitro = new Arbitro(new Tablero());
+            arbitro.colocarPiezasConfiguracionInicial();
         }
     }
 
     @Override
     public Arbitro consultarArbitroActual() {
-        if (consultarNumeroJugadasEnHistorico() == 0) {
+        if (historico.isEmpty()) {
             Arbitro arbitro = new Arbitro(new Tablero());
             arbitro.colocarPiezasConfiguracionInicial();
             return arbitro;
-        } else
-            return historico.get(consultarNumeroJugadasEnHistorico() - 1);
+        }
+        return historico.get(consultarNumeroJugadasEnHistorico() - 1).clonar();
     }
 }

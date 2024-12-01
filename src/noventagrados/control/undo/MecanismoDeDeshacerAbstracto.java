@@ -2,7 +2,6 @@ package noventagrados.control.undo;
 
 import noventagrados.control.Arbitro;
 import noventagrados.modelo.Jugada;
-import noventagrados.modelo.Tablero;
 
 import java.util.Date;
 import java.util.List;

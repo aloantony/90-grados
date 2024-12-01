@@ -1,6 +1,5 @@
 package noventagrados.control;
 
-import java.util.Objects;
 import java.util.List;
 
 import noventagrados.modelo.Celda;
