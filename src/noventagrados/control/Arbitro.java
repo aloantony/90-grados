@@ -213,10 +213,10 @@ public class Arbitro {
 
         // Incrementar el número de jugadas
         numeroJugada++;
-        System.out.println(tablero.aTexto());
-        System.out.println(
-                "cajaPiezasBlancas" + cajaPiezasBlancas.toString() + "cajaPiezasNegras" +
-                        cajaPiezasNegras.toString());
+        // System.out.println(tablero.aTexto());
+        // System.out.println(
+        // "cajaPiezasBlancas" + cajaPiezasBlancas.toString() + "cajaPiezasNegras" +
+        // cajaPiezasNegras.toString());
 
     }
 
