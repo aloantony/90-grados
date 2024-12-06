@@ -6,6 +6,8 @@ package noventagrados.util;
  *         Enumeración que representa los sentidos posibles de movimiento en el
  *         juego.
  *         Cada sentido tiene asociado un desplazamiento en filas y columnas.
+ * @since 1.0
+ * @version 1.0
  */
 public enum Sentido {
     VERTICAL_N(-1, 0),

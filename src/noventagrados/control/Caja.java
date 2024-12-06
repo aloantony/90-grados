@@ -13,6 +13,8 @@ import noventagrados.util.TipoPieza;
  * juego Noventa Grados.
  * 
  * @author <a href="mailto:aab1027@alu.ubu.es">Antonio Alonso Briones</a>
+ * @since 1.0
+ * @version 1.0
  */
 public class Caja {
     private final Color color;

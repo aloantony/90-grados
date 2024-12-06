@@ -9,6 +9,8 @@ import noventagrados.util.TipoPieza;
  * @author <a href="mailto:aab1027@alu.ubu.es">Antonio Alonso Briones</a>
  *         Clase que representa una pieza en el juego Noventa Grados.
  *         Cada pieza tiene un tipo y un color.
+ * @since 1.0
+ * @version 1.0
  */
 public class Pieza {
     private final TipoPieza tipoPieza;

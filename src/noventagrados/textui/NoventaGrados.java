@@ -25,7 +25,8 @@ import noventagrados.control.undo.MaquinaDelTiempoConJugadas;
  * 
  * En algunos casos los métodos estáticos son meros envoltorios o "wrappers" de
  * invocaciones a métodos del árbitro.
- *
+ * 
+ * @author <a href="mailto: aab1027@alu.ubu.es">Antonio Alonso Briones</a>
  * @author <a href="rmartico@ubu.es">Raúl Marticorena</a>
  * @since 1.0
  * @version 1.0.1

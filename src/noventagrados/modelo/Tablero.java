@@ -9,6 +9,8 @@ import noventagrados.util.Coordenada;
  * @author <a href="mailto:aab1027@alu.ubu.es">Antonio Alonso Briones</a>
  *         Clase que representa el tablero del juego Noventa Grados.
  *         Contiene una matriz de celdas de 7x7.
+ * @since 1.0
+ * @version 1.0
  */
 public class Tablero {
     private static final int TAMAÑO = 7;

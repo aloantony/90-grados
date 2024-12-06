@@ -8,10 +8,8 @@ import noventagrados.util.Coordenada;
  * @author <a href="mailto:aab1027@alu.ubu.es">Antonio Alonso Briones</a>
  *         Clase que representa una jugada en el juego Noventa Grados.
  *         Contiene las celdas de origen y destino.
- */
-/**
- * Clase que representa una jugada en el juego Noventa Grados.
- * Contiene las celdas de origen y destino.
+ * @since 1.0
+ * @version 1.0
  */
 public record Jugada(Celda origen, Celda destino) {
 

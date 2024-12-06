@@ -5,6 +5,9 @@ package noventagrados.util;
  * 
  * Enumeración que representa los colores de las piezas y turnos.
  * Asocia cada color con un carácter ('B' para blanco, 'N' para negro).
+ * 
+ * @since 1.0
+ * @version 1.0
  */
 public enum Color {
     BLANCO('B'),

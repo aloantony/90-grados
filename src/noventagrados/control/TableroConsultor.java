@@ -16,6 +16,8 @@ import noventagrados.util.TipoPieza;
  * 
  * @author <a href="mailto:aab1027@alu.ubu.es">Antonio Alonso Briones</a>
  * @param <T> tipo de tablero sobre el que se realizarán las consultas
+ * @since 1.0
+ * @version 1.0
  */
 public class TableroConsultor<T extends Tablero> {
 

@@ -8,6 +8,8 @@ import noventagrados.util.Color;
  *         Clase que representa una celda en el tablero del juego Noventa
  *         Grados.
  *         Contiene una coordenada y, opcionalmente, una pieza.
+ * @since 1.0
+ * @version 1.0
  */
 public class Celda {
     private final Coordenada coordenada;
@@ -17,7 +19,6 @@ public class Celda {
      * Constructor de la clase Celda.
      *
      * @param coordenada Coordenada asociada a la celda (no nula).
-     * @throws IllegalArgumentException si la coordenada es nula.
      */
     public Celda(Coordenada coordenada) {
         this.coordenada = coordenada;
@@ -54,10 +55,11 @@ public class Celda {
      *
      * @return Pieza en la celda o null si está vacía.
      */
-    public Pieza consultarPieza()  {
-    	Pieza pieza = null;
-    	if(this.pieza != null) {
-    		pieza = this.pieza.clonar();}
+    public Pieza consultarPieza() {
+        Pieza pieza = null;
+        if (this.pieza != null) {
+            pieza = this.pieza.clonar();
+        }
         return pieza;
     }
 
