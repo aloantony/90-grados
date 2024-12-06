@@ -14,7 +14,7 @@ import noventagrados.control.undo.MaquinaDelTiempoConArbitros;
 import noventagrados.control.undo.MaquinaDelTiempoConJugadas;
 
 /**
- * Noventa grados en tipo texto.
+ * Noventa grados en modo texto.
  * 
  * Se abusa del uso del modificador static tanto en atributos como en métodos
  * para comprobar su similitud a variables globales y funciones globales de
@@ -57,7 +57,7 @@ public class NoventaGrados {
 	private static MecanismoDeDeshacer deshacer;
 
 	/**
-	 * Tipo de mecanismo de deshacer a instanciar.
+	 * modo de mecanismo de deshacer a instanciar.
 	 */
 	private static String configuracion;
 
@@ -66,60 +66,68 @@ public class NoventaGrados {
 	}
 
 	/**
-	 * Método raíz con el algoritmo principal en tipo texto.
+	 * Método raíz con el algoritmo principal en modo texto.
 	 * 
 	 * @param args argumentos de entrada en línea de comandos
 	 */
 	public static void main(String[] args) {
+		boolean noHayError = true;
 		try {
-			extraertipoDeshacer(args);
+			extraerModoDeshacer(args);
 			inicializarPartida();
 			mostrarMensajeBienvenida();
 			mostrarTablero();
-
-			// Mientras la partida no esté finalizada...
-			while (!comprobarFinalizacionPartida()) {
-				String jugadaTexto = recogerTextoDeJugadaPorTeclado();
-
-				if (comprobarSalir(jugadaTexto)) {
-					return;
-				}
-
-				if (comprobarDeshacer(jugadaTexto)) {
-					deshacerJugada();
-					continue;
-				}
-
-				if (!validarFormato(jugadaTexto)) {
-					mostrarErrorEnFormatoDeEntrada();
-					continue;
-				}
-
-				try {
-					Jugada jugada = extraerJugada(jugadaTexto);
-
-					if (esLegal(jugada)) {
-						realizarEmpujón(jugada);
-
-						cambiarTurnoPartida();
-
-						mostrarTablero();
-					} else {
-						mostrarErrorPorMovimientoIlegal(jugadaTexto);
-					}
-				} catch (RuntimeException exception) {
-					mostrarErrorInterno(exception);
-				}
-			}
-
-			mostrarGanador();
-
 		} catch (OpcionNoDisponibleException exception) {
-			mostrarErrorSeleccionandotipo();
+			mostrarErrorSeleccionandomodo();
+			noHayError = false;
+		} catch (IllegalArgumentException exception) {
+			mostrarErrorInterno(exception);
+			noHayError = false;
 		} catch (RuntimeException exception) {
 			mostrarErrorInterno(exception);
-		} finally {
-			// Finalizar la partida y cerrar recursos
+			noHayError = false;
+		}
+
+		if (noHayError) {
+			try {
+				boolean seContinua = true;
+				while (seContinua && !comprobarFinalizacionPartida()) {
+					String jugadaEnTexto = recogerTextoDeJugadaPorTeclado();
+
+					if (comprobarSalir(jugadaEnTexto)) {
+						seContinua = false;
+					} else if (comprobarDeshacer(jugadaEnTexto)) {
+						try {
+							deshacerJugada();
+						} catch (RuntimeException exception) {
+							mostrarErrorInterno(exception);
+						}
+					} else if (!validarFormato(jugadaEnTexto)) {
+						mostrarErrorEnFormatoDeEntrada();
+					} else {
+						try {
+							Jugada jugada = extraerJugada(jugadaEnTexto);
+
+							if (esLegal(jugada)) {
+								realizarEmpujón(jugada);
+								cambiarTurnoPartida();
+								mostrarTablero();
+							} else {
+								mostrarErrorPorMovimientoIlegal(jugadaEnTexto);
+							}
+						} catch (RuntimeException exception) {
+							mostrarErrorInterno(exception);
+						}
+					}
+				}
+				mostrarGanador();
+			} catch (RuntimeException exception) {
+				mostrarErrorInterno(exception);
+			} finally {
+				finalizarPartida();
+			}
+		} else {
+			// Si no se inicializó correctamente, se finaliza directamente.
 			finalizarPartida();
 		}
 	}
@@ -150,33 +158,33 @@ public class NoventaGrados {
 	}
 
 	/**
-	 * Muestra mensaje de error grave si el tipo de deshacer no es ninguno de los
+	 * Muestra mensaje de error grave si el modo de deshacer no es ninguno de los
 	 * dos disponibles.
 	 */
-	private static void mostrarErrorSeleccionandotipo() {
-		System.err.println("El tipo seleccionado no se corresponde con ninguna de las dos opciones válidas.");
+	private static void mostrarErrorSeleccionandomodo() {
+		System.err.println("El modo seleccionado no se corresponde con ninguna de las dos opciones válidas.");
 		System.err.println("Debe introducir \"jugadas\" o \"arbitros\".");
 	}
 
 	/**
-	 * Extrae de los argumentos de ejecución el tipo de mecanismo de deshacer con el
+	 * Extrae de los argumentos de ejecución el modo de mecanismo de deshacer con el
 	 * que jugamos. No comprueba la corrección del texto introducido.
 	 * 
 	 * @param args argumentos
-	 * @throws OpcionNoDisponibleException si el argumento con el tipo de deshacer
+	 * @throws OpcionNoDisponibleException si el argumento con el modo de deshacer
 	 *                                     no
 	 *                                     es correcto
 	 */
-	private static void extraertipoDeshacer(String[] args) throws OpcionNoDisponibleException {
-		if (args.length > 0) {
-			String tipo = args[0];
-			if (tipo.equalsIgnoreCase("jugadas") || tipo.equalsIgnoreCase("arbitros")) {
-				configuracion = tipo.toLowerCase();
+	private static void extraerModoDeshacer(String[] args) throws OpcionNoDisponibleException {
+		if (args != null) {
+			String modo = args[0];
+			if (modo == "jugadas" || modo == "arbitros") {
+				configuracion = modo;
 			} else {
-				throw new OpcionNoDisponibleException(tipo);
+				throw new OpcionNoDisponibleException(modo);
 			}
 		} else {
-			configuracion = "jugadas"; // Valor por defecto
+			configuracion = "jugadas";
 		}
 	}
 
@@ -199,7 +207,7 @@ public class NoventaGrados {
 				deshacer = new MaquinaDelTiempoConArbitros(new Date());
 				break;
 			default:
-				throw new IllegalArgumentException("tipo no definido:" + configuracion);
+				throw new IllegalArgumentException("modo no definido:" + configuracion);
 		}
 	}
 
