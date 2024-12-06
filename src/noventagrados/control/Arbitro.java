@@ -314,47 +314,47 @@ public class Arbitro {
         }
 
         // Verificar que la partida no ha terminado
-        boolean esLegal = !estaFinalizadaPartida();
+        boolean cumpleRegla = !estaFinalizadaPartida();
 
-        if (esLegal) {
+        if (cumpleRegla) {
             TableroConsultor<Tablero> consultor = new TableroConsultor<>(tablero);
             Coordenada origen = jugada.origen().consultarCoordenada();
             Coordenada destino = jugada.destino().consultarCoordenada();
+            // Las coordenadas, origen y destino, están en el tablero y son distintas
+            cumpleRegla = estaCoordenadaEnTablero(origen) && estaCoordenadaEnTablero(destino)
+                    && !origen.equals(destino);
 
-            // Validar que las coordenadas están dentro del tablero y son diferentes
-            esLegal = esCoordenadaValida(origen) && esCoordenadaValida(destino) && !origen.equals(destino);
-
-            if (esLegal) {
+            if (cumpleRegla) {
                 Pieza piezaOrigen = tablero.consultarCelda(origen).consultarPieza();
-                esLegal = piezaOrigen != null && piezaOrigen.consultarColor() == turnoActual;
+                // Hay pieza en el origen y es del color del turno actual
+                cumpleRegla = piezaOrigen != null && piezaOrigen.consultarColor() == turnoActual;
 
-                if (esLegal) {
+                if (cumpleRegla) {
                     int piezasHorizontal = consultor.consultarNumeroPiezasEnHorizontal(origen);
                     int piezasVertical = consultor.consultarNumeroPiezasEnVertical(origen);
-
-                    if (esLegal) {
-                        int distanciaHorizontal = Math.abs(destino.columna() - origen.columna());
-                        int distanciaVertical = Math.abs(destino.fila() - origen.fila());
-
-                        esLegal = ((distanciaVertical == piezasHorizontal) ||
-                                (distanciaHorizontal == piezasVertical)) &&
-                                consultor.calcularSentido(origen, destino) != null;
-                    }
+                    int distanciaHorizontal = Math.abs(destino.columna() - origen.columna());
+                    int distanciaVertical = Math.abs(destino.fila() - origen.fila());
+                    // La distancia horizontal o vertical es igual al número de piezas en la
+                    // perpendicular
+                    cumpleRegla = ((distanciaVertical == piezasHorizontal) ||
+                            (distanciaHorizontal == piezasVertical)) &&
+                            consultor.calcularSentido(origen, destino) != null;
                 }
             }
         }
-        return esLegal;
+
+        return cumpleRegla;
     }
 
     /**
-     * Comprueba si una coordenada es válida dentro del tablero.
+     * Comprueba si una coordenada está dentro del tablero.
      *
-     * @param coord Coordenada a verificar.
+     * @param coordenada Coordenada a verificar.
      * @return true si es válida, false en caso contrario.
      */
-    private boolean esCoordenadaValida(Coordenada coord) {
-        return coord.fila() >= 0 && coord.fila() < tablero.consultarNumeroFilas() &&
-                coord.columna() >= 0 && coord.columna() < tablero.consultarNumeroColumnas();
+    private boolean estaCoordenadaEnTablero(Coordenada coordenada) {
+        return coordenada.fila() >= 0 && coordenada.fila() < tablero.consultarNumeroFilas() &&
+                coordenada.columna() >= 0 && coordenada.columna() < tablero.consultarNumeroColumnas();
     }
 
     /**
