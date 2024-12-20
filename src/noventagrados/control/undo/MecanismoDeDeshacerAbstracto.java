@@ -1,8 +1,5 @@
 package noventagrados.control.undo;
 
-import noventagrados.control.Arbitro;
-import noventagrados.modelo.Jugada;
-
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
@@ -30,13 +27,6 @@ public abstract class MecanismoDeDeshacerAbstracto<Tipo> implements MecanismoDeD
     }
 
     /**
-     * Consulta el estado actual del árbitro.
-     * 
-     * @return El árbitro en su estado actual.
-     */
-    public abstract Arbitro consultarArbitroActual();
-
-    /**
      * Consulta el número de jugadas en el historial.
      * 
      * @return El número de jugadas en el historial.
@@ -44,18 +34,6 @@ public abstract class MecanismoDeDeshacerAbstracto<Tipo> implements MecanismoDeD
     public int consultarNumeroJugadasEnHistorico() {
         return historico.size();
     }
-
-    /**
-     * Realiza una jugada, añadiéndola al historial.
-     * 
-     * @param jugada La jugada a realizar.
-     */
-    public abstract void hacerJugada(Jugada jugada);
-
-    /**
-     * Deshace la última jugada realizada.
-     */
-    public abstract void deshacerJugada();
 
     /**
      * Obtiene la fecha de inicio del mecanismo de deshacer.

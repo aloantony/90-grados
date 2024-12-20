@@ -25,7 +25,8 @@ public class MaquinaDelTiempoConArbitros extends MecanismoDeDeshacerAbstracto<Ar
     }
 
     /**
-     * Realiza una jugada, empujando las piezas y cambiando el turno.
+     * Realiza jugada, empuja las piezas y cambia el turno, además la añade al
+     * historial.
      * 
      * @param jugada La jugada a realizar.
      */
@@ -38,7 +39,7 @@ public class MaquinaDelTiempoConArbitros extends MecanismoDeDeshacerAbstracto<Ar
     }
 
     /**
-     * Deshace la última jugada realizada, volviendo al estado previo.
+     * Deshace la última jugada registrada en el histórico.
      */
     @Override
     public void deshacerJugada() {
@@ -52,7 +53,7 @@ public class MaquinaDelTiempoConArbitros extends MecanismoDeDeshacerAbstracto<Ar
     }
 
     /**
-     * Consulta el estado actual del árbitro.
+     * Recupera una copia profunda del arbitro actual.
      * 
      * @return El árbitro en su estado actual.
      */

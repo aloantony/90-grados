@@ -71,63 +71,42 @@ public class NoventaGrados {
 	 * @param args argumentos de entrada en línea de comandos
 	 */
 	public static void main(String[] args) {
-		boolean noHayError = true;
 		try {
 			extraerModoDeshacer(args);
 			inicializarPartida();
 			mostrarMensajeBienvenida();
 			mostrarTablero();
-		} catch (OpcionNoDisponibleException exception) {
-			mostrarErrorSeleccionandomodo();
-			noHayError = false;
-		} catch (IllegalArgumentException exception) {
-			mostrarErrorInterno(exception);
-			noHayError = false;
-		} catch (RuntimeException exception) {
-			mostrarErrorInterno(exception);
-			noHayError = false;
-		}
+			boolean seContinua = true;
+			while (seContinua && !comprobarFinalizacionPartida()) {
+				String jugadaEnTexto = recogerTextoDeJugadaPorTeclado();
 
-		if (noHayError) {
-			try {
-				boolean seContinua = true;
-				while (seContinua && !comprobarFinalizacionPartida()) {
-					String jugadaEnTexto = recogerTextoDeJugadaPorTeclado();
+				if (comprobarSalir(jugadaEnTexto)) {
+					seContinua = false;
+				} else if (comprobarDeshacer(jugadaEnTexto)) {
+					deshacerJugada();
+				} else if (!validarFormato(jugadaEnTexto)) {
+					mostrarErrorEnFormatoDeEntrada();
+				} else {
+					Jugada jugada = extraerJugada(jugadaEnTexto);
 
-					if (comprobarSalir(jugadaEnTexto)) {
-						seContinua = false;
-					} else if (comprobarDeshacer(jugadaEnTexto)) {
-						try {
-							deshacerJugada();
-						} catch (RuntimeException exception) {
-							mostrarErrorInterno(exception);
-						}
-					} else if (!validarFormato(jugadaEnTexto)) {
-						mostrarErrorEnFormatoDeEntrada();
+					if (esLegal(jugada)) {
+						realizarEmpujón(jugada);
+						cambiarTurnoPartida();
+						mostrarTablero();
 					} else {
-						try {
-							Jugada jugada = extraerJugada(jugadaEnTexto);
-
-							if (esLegal(jugada)) {
-								realizarEmpujón(jugada);
-								cambiarTurnoPartida();
-								mostrarTablero();
-							} else {
-								mostrarErrorPorMovimientoIlegal(jugadaEnTexto);
-							}
-						} catch (RuntimeException exception) {
-							mostrarErrorInterno(exception);
-						}
+						mostrarErrorPorMovimientoIlegal(jugadaEnTexto);
 					}
 				}
-				mostrarGanador();
-			} catch (RuntimeException exception) {
-				mostrarErrorInterno(exception);
-			} finally {
-				finalizarPartida();
 			}
-		} else {
-			// Si no se inicializó correctamente, se finaliza directamente.
+
+			mostrarGanador();
+		} catch (OpcionNoDisponibleException exception) {
+			mostrarErrorSeleccionandomodo();
+		} catch (RuntimeException exception) {
+			mostrarErrorInterno(exception);
+		}
+
+		finally {
 			finalizarPartida();
 		}
 	}
@@ -176,9 +155,11 @@ public class NoventaGrados {
 	 *                                     es correcto
 	 */
 	private static void extraerModoDeshacer(String[] args) throws OpcionNoDisponibleException {
-		if (args != null) {
+		// verificar que argumentos diferente de nulo y que la longitud de argumentos
+		// sea mayor de 0
+		if (args != null && args.length > 0) {
 			String modo = args[0];
-			if (modo == "jugadas" || modo == "arbitros") {
+			if (modo.equals("jugadas") || modo.equals("arbitros")) {
 				configuracion = modo;
 			} else {
 				throw new OpcionNoDisponibleException(modo);

@@ -1,7 +1,7 @@
 package noventagrados.textui.excepcion;
 
 /**
- * Excepción que se lanza cuando se intenta acceder a una opción no disponible.
+ * Excepción para opciones no disponibles.
  * 
  * @since 1.0
  * @version 1.0
@@ -15,7 +15,7 @@ public class OpcionNoDisponibleException extends Exception {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Constructor por defecto de la excepción.
+     * Constructor de la excepción.
      */
     public OpcionNoDisponibleException() {
         super();

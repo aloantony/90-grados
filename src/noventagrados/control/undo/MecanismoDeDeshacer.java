@@ -5,7 +5,7 @@ import noventagrados.modelo.Jugada;
 import java.util.Date;
 
 /**
- * Interfaz que define el mecanismo de deshacer para el juego.
+ * Interfaz para definir el mecanismo de deshacer para el juego.
  * 
  * @since 1.0
  * @version 1.0.1
@@ -14,33 +14,33 @@ import java.util.Date;
 public interface MecanismoDeDeshacer {
 
     /**
-     * Consulta el estado actual del árbitro.
+     * Recupera una copia profunda del árbitro actual.
      * 
      * @return El árbitro en su estado actual.
      */
     public Arbitro consultarArbitroActual();
 
     /**
-     * Consulta el número de jugadas en el historial.
+     * Consulta cuantas jugadas se han realizado cuando se llama.
      * 
-     * @return El número de jugadas en el historial.
+     * @return El número de jugadas en el histórico.
      */
     public int consultarNumeroJugadasEnHistorico();
 
     /**
-     * Deshace la última jugada realizada.
+     * Deshace la última jugada grabada en el histórico.
      */
     public void deshacerJugada();
 
     /**
-     * Realiza una jugada, añadiéndola al historial.
+     * Realiza una jugada y la añade al histórico.
      * 
      * @param jugada La jugada a realizar.
      */
     public void hacerJugada(Jugada jugada);
 
     /**
-     * Obtiene la fecha de inicio del mecanismo de deshacer.
+     * Obtiene la fecha, destinada a registrar cuando se deshace una jugada.
      * 
      * @return La fecha de inicio.
      */

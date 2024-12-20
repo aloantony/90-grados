@@ -212,7 +212,7 @@ public class Arbitro {
     private void Reubicador(Coordenada origen, Sentido sentido, Coordenada destino) {
         Coordenada actual = origen;
         // Recolectar las piezas que hay que empujar y eliminarlas del tablero
-        List<Pieza> listaPiezasAReubicar = recolector(actual, destino, sentido);
+        List<Pieza> listaPiezasAReubicar = Recolector(actual, destino, sentido);
 
         // Reubicar piezas las piezas recolectadas
         Coordenada posicion = destino;
@@ -232,7 +232,7 @@ public class Arbitro {
 
     }
 
-    private List<Pieza> recolector(Coordenada actual, Coordenada destino, Sentido sentido) {
+    private List<Pieza> Recolector(Coordenada actual, Coordenada destino, Sentido sentido) {
         List<Pieza> listaPiezasAReubicar = new ArrayList<>();
         do {
             Celda celda = tablero.consultarCelda(actual);
