@@ -303,56 +303,52 @@ public class Arbitro {
      * @return true si la jugada es legal, false en caso contrario.
      */
     public boolean esMovimientoLegal(Jugada jugada) {
-        // Validación inicial de jugada no nula
         if (jugada == null) {
             return false;
         }
 
         // Verificar que la partida no ha terminado
-        boolean esLegal = !estaFinalizadaPartida();
+        boolean cumpleRegla = !estaFinalizadaPartida();
 
-        if (esLegal) {
+        if (cumpleRegla) {
             TableroConsultor consultor = new TableroConsultor(tablero);
             Coordenada origen = jugada.origen().consultarCoordenada();
             Coordenada destino = jugada.destino().consultarCoordenada();
+            // Las coordenadas, origen y destino, están en el tablero y son distintas
+            cumpleRegla = estaCoordenadaEnTablero(origen) && estaCoordenadaEnTablero(destino)
+                    && !origen.equals(destino);
 
-            // Validar que las coordenadas están dentro del tablero y son diferentes
-            esLegal = esCoordenadaValida(origen) && esCoordenadaValida(destino) && !origen.equals(destino);
-
-            if (esLegal) {
+            if (cumpleRegla) {
                 Pieza piezaOrigen = tablero.consultarCelda(origen).consultarPieza();
-                // Verificar que hay una pieza en el origen y es del turno actual
-                esLegal = piezaOrigen != null && piezaOrigen.consultarColor() == turnoActual;
+                // Hay pieza en el origen y es del color del turno actual
+                cumpleRegla = piezaOrigen != null && piezaOrigen.consultarColor() == turnoActual;
 
-                if (esLegal) {
-                    // Contar piezas en línea horizontal y vertical desde el origen
+                if (cumpleRegla) {
                     int piezasHorizontal = consultor.consultarNumeroPiezasEnHorizontal(origen);
                     int piezasVertical = consultor.consultarNumeroPiezasEnVertical(origen);
-
-                    if (esLegal) {
-                        // Calcular distancias entre origen y destino
-                        int distanciaHorizontal = Math.abs(destino.columna() - origen.columna());
-                        int distanciaVertical = Math.abs(destino.fila() - origen.fila());
-
-                        // Verificar que el movimiento cumple las reglas:
-                        // - Si se mueve verticalmente, la distancia debe ser igual al número de piezas
-                        // en horizontal
-                        // - Si se mueve horizontalmente, la distancia debe ser igual al número de
-                        // piezas en vertical
-                        // - El movimiento debe tener un sentido válido (ortogonal)
-                        esLegal = ((distanciaVertical == piezasHorizontal) ||
-                                (distanciaHorizontal == piezasVertical)) &&
-                                consultor.calcularSentido(origen, destino) != null;
-                    }
+                    int distanciaHorizontal = Math.abs(destino.columna() - origen.columna());
+                    int distanciaVertical = Math.abs(destino.fila() - origen.fila());
+                    // La distancia horizontal o vertical es igual al número de piezas en la
+                    // perpendicular
+                    cumpleRegla = ((distanciaVertical == piezasHorizontal) ||
+                            (distanciaHorizontal == piezasVertical)) &&
+                            consultor.calcularSentido(origen, destino) != null;
                 }
             }
         }
-        return esLegal;
+
+        return cumpleRegla;
     }
 
-    private boolean esCoordenadaValida(Coordenada coord) {
-        return coord.fila() >= 0 && coord.fila() < tablero.consultarNumeroFilas() &&
-                coord.columna() >= 0 && coord.columna() < tablero.consultarNumeroColumnas();
+    /**
+     * Comprueba si una coordenada está dentro del tablero.
+     *
+     * @param coordenada Coordenada a verificar.
+     * @return true si es válida, false en caso contrario.
+     */
+    private boolean estaCoordenadaEnTablero(Coordenada coordenada) {
+        return coordenada.fila() >= 0 && coordenada.fila() < tablero.consultarNumeroFilas() &&
+                coordenada.columna() >= 0 && coordenada.columna() < tablero.consultarNumeroColumnas();
     }
 
     /**

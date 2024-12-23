@@ -59,55 +59,34 @@ public class NoventaGrados {
 	 * @param args argumentos de entrada en línea de comandos
 	 */
 	public static void main(String[] args) {
-		// Inicializar la partida y mostrar mensaje de bienvenida
 		inicializarPartida();
 		mensajeInicial();
+		mostrarTablero();
+		boolean seContinua = true;
+		while (seContinua && !comprobarFinalizacionPartida()) {
+			String jugadaEnTexto = recogerTextoDeJugadaPorTeclado();
 
-		// Bucle principal del juego
-		while (true) {
-			// Mostrar el estado actual del tablero
-			mostrarTablero();
-
-			// Recoger la jugada del usuario
-			String textoJugada = recogerTextoDeJugadaPorTeclado();
-
-			// Comprobar si el usuario desea salir
-			if (comprobarSalir(textoJugada)) {
-				finalizarPartida();
-				break;
-			}
-
-			// Validar el formato de la jugada
-			if (!validarFormato(textoJugada)) {
+			if (comprobarSalir(jugadaEnTexto)) {
+				seContinua = false;
+			} else if (!validarFormato(jugadaEnTexto)) {
 				mostrarErrorEnFormatoDeEntrada();
-				continue; // Volver a pedir jugada
+			} else {
+				Jugada jugada = extraerJugada(jugadaEnTexto);
+
+				if (esLegal(jugada)) {
+					realizarEmpujón(jugada);
+					cambiarTurnoPartida();
+					mostrarTablero();
+				} else {
+					mostrarErrorPorMovimientoIlegal(jugadaEnTexto);
+				}
 			}
-
-			// Extraer la jugada
-			Jugada jugada = extraerJugada(textoJugada);
-
-			// Comprobar si la jugada es legal
-			if (!esLegal(jugada)) {
-				mostrarErrorPorMovimientoIlegal(textoJugada);
-				continue; // Volver a pedir jugada
-			}
-
-			// Realizar el empujón
-			realizarEmpujón(jugada);
-
-			// Comprobar si la partida ha finalizado
-			if (comprobarFinalizacionPartida()) {
-				// Mostrar el estado final del tablero
-				mostrarTablero();
-				// Mostrar el ganador
-				mostrarGanador();
-				finalizarPartida();
-				break;
-			}
-
-			// Cambiar el turno
-			cambiarTurnoPartida();
 		}
+
+		mostrarGanador();
+
+		finalizarPartida();
+
 	}
 
 	/**
@@ -153,17 +132,17 @@ public class NoventaGrados {
 	 * Otra mejor solución alternativa es el uso de expresiones regulares (se verán
 	 * con más detalle en la asignatura de 3º Procesadores del Lenguaje).
 	 * 
-	 * @param textoJugada a validar
+	 * @param jugadaEnTexto a validar
 	 * @return true si el formato de la jugada es correcta según las coordenadas
 	 *         disponibles del tablero
 	 */
-	private static boolean validarFormato(String textoJugada) {
+	private static boolean validarFormato(String jugadaEnTexto) {
 		// si la longitud es correcta y a la mitad hay un guion...
-		System.out.println(textoJugada.charAt(TAMAÑO_JUGADA / 2));
-		if (textoJugada.length() == TAMAÑO_JUGADA && textoJugada.charAt(TAMAÑO_JUGADA / 2) == '-') {
+		System.out.println(jugadaEnTexto.charAt(TAMAÑO_JUGADA / 2));
+		if (jugadaEnTexto.length() == TAMAÑO_JUGADA && jugadaEnTexto.charAt(TAMAÑO_JUGADA / 2) == '-') {
 			// acabar de validar dígitos en el resto de valores...
-			String origen = textoJugada.substring(0, INICIO_COORDENADA_DESTINO);
-			String destino = textoJugada.substring(INICIO_COORDENADA_DESTINO, TAMAÑO_JUGADA);
+			String origen = jugadaEnTexto.substring(0, INICIO_COORDENADA_DESTINO);
+			String destino = jugadaEnTexto.substring(INICIO_COORDENADA_DESTINO, TAMAÑO_JUGADA);
 			// comprobar si ambos textos son correctos
 			return esTextoCorrectoParaCoordenada(origen) && esTextoCorrectoParaCoordenada(destino);
 		}
@@ -286,10 +265,10 @@ public class NoventaGrados {
 	/**
 	 * Informa de la ilegalidad de la jugada intentada.
 	 * 
-	 * @param textoJugada texto de la jugada introducido por teclado
+	 * @param jugadaEnTexto texto de la jugada introducido por teclado
 	 */
-	private static void mostrarErrorPorMovimientoIlegal(String textoJugada) {
-		System.out.printf("%nLa jugada %s es ilegal.%nRevise las reglas del juego.%n", textoJugada);
+	private static void mostrarErrorPorMovimientoIlegal(String jugadaEnTexto) {
+		System.out.printf("%nLa jugada %s es ilegal.%nRevise las reglas del juego.%n", jugadaEnTexto);
 	}
 
 	/**
