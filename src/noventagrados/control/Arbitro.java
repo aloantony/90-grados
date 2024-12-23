@@ -178,7 +178,6 @@ public class Arbitro {
      * @param jugada Jugada a realizar (no nula).
      */
     public void empujar(Jugada jugada) {
-        // Instanciar un TableroConsultor para esta operación
         TableroConsultor consultor = new TableroConsultor(tablero);
 
         // Obtener sentido del movimiento
@@ -186,26 +185,13 @@ public class Arbitro {
         Coordenada destino = jugada.destino().consultarCoordenada();
         Sentido sentido = consultor.calcularSentido(origen, destino);
 
-        // System.out.println("Origen" + origen + "Destino" + destino);
-
-        // Realizar el empuje de las piezas
-        empujarPiezas(origen, sentido, destino);
+        // Reubicar las piezas para similar el empuje
+        Reubicador(origen, sentido, destino);
 
         // Incrementar el número de jugadas
         numeroJugada++;
-        System.out.println(tablero.aTexto());
-        System.out.println(
-                "cajaPiezasBlancas" + cajaPiezasBlancas.toString() + "cajaPiezasNegras" +
-                        cajaPiezasNegras.toString());
-
     }
 
-    /*
-     * System.out.println(tablero.aTexto());
-     * System.out.println(
-     * "cajaPiezasBlancas" + cajaPiezasBlancas.toString() + "cajaPiezasNegras" +
-     * cajaPiezasNegras.toString());
-     */
     /**
      * Método auxiliar para empujar las piezas en una dirección.
      *
@@ -213,72 +199,97 @@ public class Arbitro {
      * @param sentido Sentido del movimiento.
      * @param destino Coordenada de destino.
      */
-    private void empujarPiezas(Coordenada origen, Sentido sentido, Coordenada destino) {
-        // Recolectar piezas en el camino
-        Pieza[] piezas = new Pieza[tablero.consultarNumeroFilas() * tablero.consultarNumeroColumnas()];
-        int numPiezas = 0;
+    private void Reubicador(Coordenada origen, Sentido sentido, Coordenada destino) {
         Coordenada actual = origen;
+        // Recolectar las piezas que hay que empujar y eliminarlas del tablero
+        Pieza[] listaPiezasAReubicar = Recolector(actual, destino, sentido);
 
-        // Recolectar piezas y eliminarlas del tablero
-        do {
-            Celda celda = tablero.consultarCelda(actual);
-            if (!celda.estaVacia()) {
-                // System.out.println(celda.consultarPieza());
-                // System.out.println(" ");
-                piezas[numPiezas++] = celda.consultarPieza();
-                tablero.eliminarPieza(actual);
-            }
-            actual = actual.equals(destino) ? null : consultarCoordenadaEnDireccion(actual, sentido);
-
-        } while (actual != null);
-
-        // Reubicar piezas
+        // Reubicar piezas las piezas recolectadas
         Coordenada posicion = destino;
-        for (int i = 0; i < numPiezas; i++) {
-            // System.out.println(piezas[i]);
-            Pieza pieza = piezas[i];
+        for (int i = 0; i < listaPiezasAReubicar.length; i++) {
+            Pieza pieza = listaPiezasAReubicar[i];
             if (posicion != null) {
                 Celda celda = tablero.consultarCelda(posicion);
                 if (!celda.estaVacia()) {
-                    moverPiezaACaja(celda.consultarPieza());
+                    meterPiezaEnSuCaja(celda.consultarPieza());
                 }
                 tablero.colocar(pieza, posicion);
-                posicion = consultarCoordenadaEnDireccion(posicion, sentido);
+                posicion = consultarCoordenadaSiguienteAActualEnSentidoDeterminado(posicion, sentido);
+            } else {
+                meterPiezaEnSuCaja(pieza);
             }
-
-            else {
-                moverPiezaACaja(pieza);
-            }
-
         }
         estaFinalizadaPartida();
     }
 
+    private Pieza[] Recolector(Coordenada actual, Coordenada destino, Sentido sentido) {
+        Pieza[] listaPiezasAReubicar = new Pieza[tablero.consultarNumeroFilas() * tablero.consultarNumeroColumnas()];
+        int numPiezas = 0;
+
+        do {
+            Celda celda = tablero.consultarCelda(actual);
+            if (!celda.estaVacia()) {
+                listaPiezasAReubicar[numPiezas++] = celda.consultarPieza();
+                tablero.eliminarPieza(actual);
+            }
+            actual = actual.equals(destino) ? null
+                    : consultarCoordenadaSiguienteAActualEnSentidoDeterminado(actual, sentido);
+        } while (actual != null);
+
+        // Recolectar piezas oportunas más allá del destino.
+        Celda celdaTrasDestino = tablero
+                .consultarCelda(consultarCoordenadaSiguienteAActualEnSentidoDeterminado(destino, sentido));
+        if (destino != null && !tablero.consultarCelda(destino).estaVacia() && celdaTrasDestino != null
+                && !celdaTrasDestino.estaVacia()) {
+            // asignamos a celda local la copia de la celda siguiente al destino
+            Celda celda = tablero
+                    .consultarCelda(consultarCoordenadaSiguienteAActualEnSentidoDeterminado(destino, sentido));
+            // asignamos a actual la coordenada siguiente al destino
+            actual = consultarCoordenadaSiguienteAActualEnSentidoDeterminado(destino, sentido);
+            // mientras la celda no esté vacía o la coordenada siguiente no sea nula
+            // seguimos metiendo piezas al array
+            do {
+                if (!celda.estaVacia()) {
+                    listaPiezasAReubicar[numPiezas++] = celda.consultarPieza();
+                    tablero.eliminarPieza(consultarCoordenadaSiguienteAActualEnSentidoDeterminado(actual, sentido));
+                    celda = tablero
+                            .consultarCelda(consultarCoordenadaSiguienteAActualEnSentidoDeterminado(actual, sentido));
+                    actual = consultarCoordenadaSiguienteAActualEnSentidoDeterminado(actual, sentido);
+                }
+            } while (actual != null && !celda.estaVacia());
+        }
+
+        Pieza[] resultado = new Pieza[numPiezas];
+        System.arraycopy(listaPiezasAReubicar, 0, resultado, 0, numPiezas);
+        return resultado;
+    }
+
     /**
      * Expulsa la pieza en la coordenada indicada y la añade a la caja
-     * correspondiente.
+     * correspondiente con el método añadir de la clase caja.
      *
-     * @param coordenada Coordenada de la pieza a expulsar.
+     * @param pieza Pieza a expulsar.
      */
-    private void moverPiezaACaja(Pieza pieza) {
+    private void meterPiezaEnSuCaja(Pieza pieza) {
         Caja caja = pieza.consultarColor().equals(Color.BLANCO) ? cajaPiezasBlancas : cajaPiezasNegras;
         caja.añadir(pieza);
     }
 
     /**
-     * Método auxiliar para obtener la coordenada siguiente en una dirección dada.
+     * Método auxiliar privado para obtener la coordenada siguiente a la
+     * proporcionada en una dirección y sentido determinados.
      *
      * @param coordenada Coordenada actual.
      * @param sentido    Sentido del movimiento.
      * @return La siguiente coordenada en la dirección dada, o null si está fuera
      *         del tablero.
      */
-    private Coordenada consultarCoordenadaEnDireccion(Coordenada coordenada, Sentido sentido) {
+    private Coordenada consultarCoordenadaSiguienteAActualEnSentidoDeterminado(Coordenada coordenada, Sentido sentido) {
         int fila = coordenada.fila() + sentido.consultarDesplazamientoEnFilas();
         int columna = coordenada.columna() + sentido.consultarDesplazamientoEnColumnas();
 
-        if (fila >= 0 && fila < tablero.consultarNumeroFilas()
-                && columna >= 0 && columna < tablero.consultarNumeroColumnas()) {
+        if (fila >= 0 && fila < tablero.consultarNumeroFilas() && columna >= 0
+                && columna < tablero.consultarNumeroColumnas()) {
             return new Coordenada(fila, columna);
         } else {
             return null;
