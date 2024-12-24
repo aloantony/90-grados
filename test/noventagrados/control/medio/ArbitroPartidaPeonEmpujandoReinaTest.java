@@ -21,6 +21,7 @@ import noventagrados.control.TableroConsultor;
 import noventagrados.modelo.Pieza;
 import noventagrados.modelo.Tablero;
 import noventagrados.util.Color;
+import noventagrados.util.Coordenada;
 import noventagrados.util.TipoPieza;
 
 /**
@@ -73,6 +74,9 @@ public class ArbitroPartidaPeonEmpujandoReinaTest {
 	@Test
 	@DisplayName("Comprueba que hay victoria de negras expulsando peón a reina blanca.")
 	void probarPartidaConVictoriaDePeonNegroExpulsandoAReinaBlanca() {
+		Pieza reinaBlancaExpulsada = arbitro.consultarTablero().consultarCelda(new Coordenada(0,0)).consultarPieza();
+		Pieza peonBlancoExpulsado = arbitro.consultarTablero().consultarCelda(new Coordenada(0,3)).consultarPieza();
+
 
 		// given
 		arbitro.empujar(fabricarJugada(tablero, 0, 0, 0, 4)); // blancas
@@ -127,8 +131,9 @@ public class ArbitroPartidaPeonEmpujandoReinaTest {
 						arbitro.consultarCaja(Color.BLANCO).contarPiezas(), is(2)),
 				() -> assertThat("La caja blanca no contiene las dos piezas esperadas.",
 						Arrays.asList(arbitro.consultarCaja(Color.BLANCO).consultarPiezas()),
-						containsInAnyOrder(new Pieza(TipoPieza.REINA, Color.BLANCO),
-								new Pieza(TipoPieza.PEON, Color.BLANCO)						
+						containsInAnyOrder(
+								reinaBlancaExpulsada,
+								peonBlancoExpulsado						
 						)),
 				() -> assertThat("La caja negra debería estar vacía.",
 						arbitro.consultarCaja(Color.NEGRO).contarPiezas(), is(0)),
@@ -148,6 +153,10 @@ public class ArbitroPartidaPeonEmpujandoReinaTest {
 	@Test
 	@DisplayName("Comprueba que hay victoria de blancas expulsando peón a reina negra.")
 	void probarPartidaConVictoriaDePeonBlancoExpulsandoAReinaNegra() {
+		
+		Pieza reinaNegraExpulsada = arbitro.consultarTablero().consultarCelda(new Coordenada(6,6)).consultarPieza();
+		Pieza peonNegroExpulsado = arbitro.consultarTablero().consultarCelda(new Coordenada(6,3)).consultarPieza();
+
 
 		// given
 		arbitro.empujar(fabricarJugada(tablero, 2, 0, 2, 4)); // blancas
@@ -208,8 +217,8 @@ public class ArbitroPartidaPeonEmpujandoReinaTest {
 				() -> assertThat("La caja negra no contiene las dos piezas esperadas.",
 						Arrays.asList(arbitro.consultarCaja(Color.NEGRO).consultarPiezas()),
 						containsInAnyOrder(
-								new Pieza(TipoPieza.REINA, Color.NEGRO),
-								new Pieza(TipoPieza.PEON, Color.NEGRO)						
+								reinaNegraExpulsada,
+								peonNegroExpulsado						
 						)),
 
 				() -> assertThat("La partida se desarrolla en un número erróneo de jugadas.",

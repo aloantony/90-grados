@@ -14,8 +14,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
 import noventagrados.control.Arbitro;
+import noventagrados.modelo.Celda;
 import noventagrados.modelo.Jugada;
 import noventagrados.modelo.Tablero;
+import noventagrados.util.Coordenada;
 
 /**
  * Comprobación de movimientos legales del árbitro.
@@ -142,6 +144,11 @@ public class ArbitroMovimientosLegalesTest {
 		Jugada jugada6 = fabricarJugada(tablero,6,4,6,3);
 		Jugada jugada7 = fabricarJugada(tablero,6,5,6,4);
 		
+		// empujamos con blanca para iniciar partida
+		Celda origen = arbitro.consultarTablero().consultarCelda(new Coordenada(3,0));
+		Celda destino = arbitro.consultarTablero().consultarCelda(new Coordenada(5,0));
+		arbitro.empujar(new Jugada(origen, destino));
+		
 		arbitro.cambiarTurno(); // cambiamos turno para que pueda mover negras
 		
 		assertAll("mover pieza negra en horizontal",
@@ -174,6 +181,11 @@ public class ArbitroMovimientosLegalesTest {
 		Jugada jugada5 = fabricarJugada(tablero,6,3,2,3);
 		Jugada jugada6 = fabricarJugada(tablero,6,4,2,4);
 		Jugada jugada7 = fabricarJugada(tablero,6,5,2,5);
+		
+		// empujamos con blanca para iniciar partida
+		Celda origen = arbitro.consultarTablero().consultarCelda(new Coordenada(0,3));
+		Celda destino = arbitro.consultarTablero().consultarCelda(new Coordenada(0,5));
+		arbitro.empujar(new Jugada(origen, destino));
 		
 		arbitro.cambiarTurno(); // cambiamos turno para que pueda mover negras
 		

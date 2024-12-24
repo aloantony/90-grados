@@ -76,8 +76,11 @@ public class CajaTest {
 	@ParameterizedTest
 	void comprobarLlenarCaja(Color color) {
 		Caja cajaLocal = new Caja(color);
+		Pieza[] valoresEsperados = new Pieza[7];
 		for (int i = 0; i < 7; i++) {
-			cajaLocal.añadir(new Pieza(TipoPieza.PEON, color));
+			Pieza peon = new Pieza(TipoPieza.PEON, color);
+			cajaLocal.añadir(peon);
+			valoresEsperados[i] = peon.clonar();
 		}
 		assertAll("comprobar estado inicial de la caja con siete peones",
 				() -> assertThat(COLOR_MAL_INICIALIZADO_EN_LA_CAJA, cajaLocal.consultarColor(), is(color)),
@@ -87,13 +90,13 @@ public class CajaTest {
 				() -> assertThat(NÚMERO_DE_REINAS_INCORRECTO, cajaLocal.contarPiezas(TipoPieza.REINA), is(0)),
 				() -> assertThat(NO_ESTÁN_TODAS_LAS_PIEZAS_EN_LA_CAJA, Arrays.asList(cajaLocal.consultarPiezas()),
 						containsInAnyOrder(
-								new Pieza(TipoPieza.PEON, color),
-								new Pieza(TipoPieza.PEON, color),
-								new Pieza(TipoPieza.PEON, color),
-								new Pieza(TipoPieza.PEON, color),
-								new Pieza(TipoPieza.PEON, color),
-								new Pieza(TipoPieza.PEON, color),
-								new Pieza(TipoPieza.PEON, color)))
+								valoresEsperados[0],
+								valoresEsperados[1],
+								valoresEsperados[2],
+								valoresEsperados[3],
+								valoresEsperados[4],
+								valoresEsperados[5],
+								valoresEsperados[6]))
 				);
 	}
 	
@@ -131,10 +134,15 @@ public class CajaTest {
 	@ParameterizedTest
 	void comprobarLlenarCajaConTresPeonesYUnaReina(Color color) {
 		Caja cajaLocal = new Caja(color);
+		Pieza[] valoresEsperados = new Pieza[4];
 		for (int i = 0; i < 3; i++) {
-			cajaLocal.añadir(new Pieza(TipoPieza.PEON, color));
+			Pieza pieza = new Pieza(TipoPieza.PEON, color);
+			cajaLocal.añadir(pieza);
+			valoresEsperados[i] = pieza.clonar();
 		}
-		cajaLocal.añadir(new Pieza(TipoPieza.REINA, color));
+		Pieza reina = new Pieza(TipoPieza.REINA, color);
+		cajaLocal.añadir(reina);
+		valoresEsperados[3] = reina.clonar();
 		assertAll("comprobar estado inicial de la caja con cuatro piezas",
 				() -> assertThat(COLOR_MAL_INICIALIZADO_EN_LA_CAJA, cajaLocal.consultarColor(), is(color)),
 				() -> assertThat(INCORRECTO_NÚMERO_DE_PIEZAS_INICIALES_EN_LA_CAJA,
@@ -143,10 +151,10 @@ public class CajaTest {
 				() -> assertThat(NÚMERO_DE_REINAS_INCORRECTO, cajaLocal.contarPiezas(TipoPieza.REINA), is(1)),
 				() -> assertThat(NO_ESTÁN_TODAS_LAS_PIEZAS_EN_LA_CAJA, Arrays.asList(cajaLocal.consultarPiezas()),
 						containsInAnyOrder(
-								new Pieza(TipoPieza.PEON, color),
-								new Pieza(TipoPieza.PEON, color),
-								new Pieza(TipoPieza.PEON, color),
-								new Pieza(TipoPieza.REINA, color)))
+								valoresEsperados[0],
+								valoresEsperados[1],
+								valoresEsperados[2],
+								valoresEsperados[3]))
 				);
 	}
 	
@@ -160,11 +168,17 @@ public class CajaTest {
 	@ParameterizedTest
 	void comprobarLlenarCajaIntentandoAñadirUnaPiezaAdicional(Color color) {
 		Caja cajaLocal = new Caja(color);
+		Pieza[] valoresEsperados = new Pieza[8];
 		for (int i = 0; i < 7; i++) {
-			cajaLocal.añadir(new Pieza(TipoPieza.PEON, color));
+			Pieza pieza = new Pieza(TipoPieza.PEON, color);
+			cajaLocal.añadir(pieza);
+			valoresEsperados[i] = pieza.clonar();
 		}
 		// añadimos una reina que no cabe y debería ser ignorada esta petición
-		cajaLocal.añadir(new Pieza(TipoPieza.REINA, color));
+		Pieza reina = new Pieza(TipoPieza.REINA, color);
+		cajaLocal.añadir(reina);
+		valoresEsperados[7] = reina.clonar();	
+		
 		assertAll("comprobar estado inicial de la caja solo con siete peones",
 				() -> assertThat(COLOR_MAL_INICIALIZADO_EN_LA_CAJA, cajaLocal.consultarColor(), is(color)),
 				() -> assertThat(INCORRECTO_NÚMERO_DE_PIEZAS_INICIALES_EN_LA_CAJA,
@@ -174,13 +188,13 @@ public class CajaTest {
 
 				() -> assertThat(NO_ESTÁN_TODAS_LAS_PIEZAS_EN_LA_CAJA, Arrays.asList(cajaLocal.consultarPiezas()),
 						containsInAnyOrder(
-								new Pieza(TipoPieza.PEON, color),
-								new Pieza(TipoPieza.PEON, color),
-								new Pieza(TipoPieza.PEON, color),
-								new Pieza(TipoPieza.PEON, color),
-								new Pieza(TipoPieza.PEON, color),
-								new Pieza(TipoPieza.PEON, color),
-								new Pieza(TipoPieza.PEON, color)))
+								valoresEsperados[0],
+								valoresEsperados[1],
+								valoresEsperados[2],
+								valoresEsperados[3],
+								valoresEsperados[4],
+								valoresEsperados[5],
+								valoresEsperados[6]))
 				);
 	}
 	

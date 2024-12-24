@@ -11,7 +11,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -31,12 +34,42 @@ import noventagrados.util.TipoPieza;
  * GNU/Linux se trabaja directamente con el tipo enumerado. 
  * 
  * @author <a href="mailto:rmartico@ubu.es">Raúl Marticorena Sánchez</a>
- * @version 1.0 20230706
+ * @version 3.0 20241214
  * 
  */
+@TestMethodOrder(OrderAnnotation.class)
 @DisplayName("Tests sobre Pieza (depende de Coordenada, TipoPieza y Color).")
 @Timeout(value = 1, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD) // Time out global para todos los tests salvo los de ciclo de vida
-public class PiezaTest {
+public class PiezaTest {	
+	
+	/**
+	 * Test de id con valores consecutivos.
+	 * 
+	 * Se instancian cuatro piezas comprobando que sus valores
+	 * son consecutivos.
+	 * 
+	 * El método se ejecuta siempre el primero en este test
+	 * para no verse afectado por el uso de propiedades
+	 * estáticas y carga de la clase.
+	 */
+	@DisplayName("Inicialización de identificadores")
+	@Test
+	@Order(1)    
+	public void comprobarGeneracionId() {
+		
+		Pieza pieza1 = new Pieza(TipoPieza.PEON, Color.BLANCO);
+		int contador = pieza1.consultarIdentificacion();
+		Pieza pieza2 = new Pieza(TipoPieza.PEON, Color.NEGRO);
+		Pieza pieza3 = new Pieza(TipoPieza.PEON, Color.BLANCO);
+		Pieza pieza4 = new Pieza(TipoPieza.REINA, Color.BLANCO);
+		
+		assertAll("comprobación de identificadores generados consecutivamente",
+				() -> assertThat(pieza1.consultarIdentificacion(), is(contador)),
+				() -> assertThat(pieza2.consultarIdentificacion(), is(contador+1)),
+				() -> assertThat(pieza3.consultarIdentificacion(), is(contador+2)),
+				() -> assertThat(pieza4.consultarIdentificacion(), is(contador+3))						
+		);
+	}
 
 	/**
 	 * Test del constructor con peon negro.

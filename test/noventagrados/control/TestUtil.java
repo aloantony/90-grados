@@ -48,12 +48,12 @@ public class TestUtil {
 	 */
 	static Stream<Arguments> piezaYCoordenadaDePeonesNegrosProvider() {
 		return Stream.of(
-				arguments(new Pieza(TipoPieza.PEON, Color.NEGRO), new Coordenada(3,6)),
-				arguments(new Pieza(TipoPieza.PEON, Color.NEGRO), new Coordenada(4,6)), 
-				arguments(new Pieza(TipoPieza.PEON, Color.NEGRO), new Coordenada(5,6)), 
-				arguments(new Pieza(TipoPieza.PEON, Color.NEGRO), new Coordenada(6,3)), 
-				arguments(new Pieza(TipoPieza.PEON, Color.NEGRO), new Coordenada(6,4)), 
-				arguments(new Pieza(TipoPieza.PEON, Color.NEGRO), new Coordenada(6,5))); 
+				arguments(new Pieza(1, TipoPieza.PEON, Color.NEGRO), new Coordenada(3,6)),
+				arguments(new Pieza(2, TipoPieza.PEON, Color.NEGRO), new Coordenada(4,6)), 
+				arguments(new Pieza(3, TipoPieza.PEON, Color.NEGRO), new Coordenada(5,6)), 
+				arguments(new Pieza(4, TipoPieza.PEON, Color.NEGRO), new Coordenada(6,3)), 
+				arguments(new Pieza(5, TipoPieza.PEON, Color.NEGRO), new Coordenada(6,4)), 
+				arguments(new Pieza(6, TipoPieza.PEON, Color.NEGRO), new Coordenada(6,5))); 
 	}
 	
 	/**
@@ -63,12 +63,12 @@ public class TestUtil {
 	 */
 	static Stream<Arguments> piezaYCoordenadaDePeonesBlancosProvider() {
 		return Stream.of(
-				arguments(new Pieza(TipoPieza.PEON, Color.BLANCO), new Coordenada(0,1)),
-				arguments(new Pieza(TipoPieza.PEON, Color.BLANCO), new Coordenada(0,2)), 
-				arguments(new Pieza(TipoPieza.PEON, Color.BLANCO), new Coordenada(0,3)), 
-				arguments(new Pieza(TipoPieza.PEON, Color.BLANCO), new Coordenada(1,0)), 
-				arguments(new Pieza(TipoPieza.PEON, Color.BLANCO), new Coordenada(2,0)), 
-				arguments(new Pieza(TipoPieza.PEON, Color.BLANCO), new Coordenada(3,0))); 
+				arguments(new Pieza(1, TipoPieza.PEON, Color.BLANCO), new Coordenada(0,1)),
+				arguments(new Pieza(2, TipoPieza.PEON, Color.BLANCO), new Coordenada(0,2)), 
+				arguments(new Pieza(3, TipoPieza.PEON, Color.BLANCO), new Coordenada(0,3)), 
+				arguments(new Pieza(4, TipoPieza.PEON, Color.BLANCO), new Coordenada(1,0)), 
+				arguments(new Pieza(5, TipoPieza.PEON, Color.BLANCO), new Coordenada(2,0)), 
+				arguments(new Pieza(6, TipoPieza.PEON, Color.BLANCO), new Coordenada(3,0))); 
 	}
 
 
