@@ -27,6 +27,8 @@ public class Arbitro {
     private Color turnoActual;
     private Color turnoGanador;
     private int numeroJugada;
+    private Coordenada coordenadaDestinoTurnoAnterior;
+    private Sentido sentidoJugadaTurnoAnterior;
 
     /**
      * Constructor de la clase Árbitro.
@@ -188,6 +190,8 @@ public class Arbitro {
         // Reubicar las piezas para similar el empuje
         Reubicador(origen, sentido, destino);
 
+        coordenadaDestinoTurnoAnterior = destino;
+        sentidoJugadaTurnoAnterior = sentido;
         // Incrementar el número de jugadas
         numeroJugada++;
     }
@@ -322,15 +326,16 @@ public class Arbitro {
                 cumpleRegla = piezaOrigen != null && piezaOrigen.consultarColor() == turnoActual;
 
                 if (cumpleRegla) {
-                    int piezasHorizontal = consultor.consultarNumeroPiezasEnHorizontal(origen);
-                    int piezasVertical = consultor.consultarNumeroPiezasEnVertical(origen);
                     int distanciaHorizontal = Math.abs(destino.columna() - origen.columna());
                     int distanciaVertical = Math.abs(destino.fila() - origen.fila());
                     // La distancia horizontal o vertical es igual al número de piezas en la
                     // perpendicular
-                    cumpleRegla = ((distanciaVertical == piezasHorizontal) ||
-                            (distanciaHorizontal == piezasVertical)) &&
+                    cumpleRegla = ((distanciaVertical == consultor.consultarNumeroPiezasEnHorizontal(origen)) ||
+                            (distanciaHorizontal == consultor.consultarNumeroPiezasEnVertical(origen))) &&
                             consultor.calcularSentido(origen, destino) != null;
+                            if (cumpleRegla){
+                                cumpleRegla = !(destino == coordenadaDestinoTurnoAnterior && (sentidoJugadaTurnoAnterior = zVertical_N && consultor.calcularSentido(origen, destino) == Vertical_S);
+                            }
                 }
             }
         }
