@@ -11,8 +11,10 @@ import noventagrados.util.TipoPieza;
  *         Cada pieza tiene un tipo y un color.
  */
 public class Pieza {
+    private int id;
     private final TipoPieza tipoPieza;
     private final Color color;
+    private static int identificadorDeNuevasPiezas = 0;
 
     /**
      * Constructor de la clase Pieza.
@@ -25,13 +27,19 @@ public class Pieza {
         this.color = color;
     }
 
+    public Pieza(int id, TipoPieza tipoPieza, Color color) {
+        this.id = ++identificadorDeNuevasPiezas;
+        this.tipoPieza = tipoPieza;
+        this.color = color;
+    }
+
     /**
      * Retorna una copia profunda de la pieza.
      *
      * @return Clon de la pieza actual.
      */
     public Pieza clonar() {
-        return new Pieza(this.tipoPieza, this.color);
+        return new Pieza(this.id, this.tipoPieza, this.color);
     }
 
     /**
