@@ -206,7 +206,7 @@ public class Arbitro {
 
         // Reubicar piezas las piezas recolectadas
         Coordenada posicion = destino;
-        for (int i = 0; i < listaPiezasAReubicar.length; i++) {
+        for (int i = 0; i < listaPiezasAReubicar.length && listaPiezasAReubicar[i] != null; i++) {
             Pieza pieza = listaPiezasAReubicar[i];
             if (posicion != null) {
                 Celda celda = tablero.consultarCelda(posicion);
@@ -223,7 +223,7 @@ public class Arbitro {
     }
 
     private Pieza[] Recolector(Coordenada actual, Coordenada destino, Sentido sentido) {
-        Pieza[] listaPiezasAReubicar = new Pieza[tablero.consultarNumeroFilas() * tablero.consultarNumeroColumnas()];
+        Pieza[] listaPiezasAReubicar = new Pieza[tablero.consultarNumeroFilas()];
         int numPiezas = 0;
 
         do {
@@ -259,9 +259,7 @@ public class Arbitro {
             } while (actual != null && !celda.estaVacia());
         }
 
-        Pieza[] resultado = new Pieza[numPiezas];
-        System.arraycopy(listaPiezasAReubicar, 0, resultado, 0, numPiezas);
-        return resultado;
+        return listaPiezasAReubicar;
     }
 
     /**
