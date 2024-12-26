@@ -29,6 +29,8 @@ public class Arbitro {
     private int numeroJugada;
     private Coordenada coordenadaDestinoTurnoAnterior;
     private Sentido sentidoJugadaTurnoAnterior;
+    private Tablero tableroAnteriorTurnoBlancas;
+    private Tablero tableroAnteriorTurnoNegras;
 
     /**
      * Constructor de la clase Árbitro.
@@ -46,6 +48,8 @@ public class Arbitro {
         this.turnoActual = null;
         this.turnoGanador = null;
         this.numeroJugada = 0;
+        this.tableroAnteriorTurnoBlancas = new Tablero();
+        this.tableroAnteriorTurnoNegras = new Tablero();
     }
 
     /**
@@ -190,6 +194,12 @@ public class Arbitro {
         // Reubicar las piezas para similar el empuje
         Reubicador(origen, sentido, destino);
 
+        if (turnoActual == Color.BLANCO) {
+            tableroAnteriorTurnoBlancas = tablero.clonar();
+        }
+        if (turnoActual == Color.NEGRO) {
+            tableroAnteriorTurnoNegras = tablero.clonar();
+        }
         coordenadaDestinoTurnoAnterior = destino;
         sentidoJugadaTurnoAnterior = sentido;
         // Incrementar el número de jugadas
@@ -333,9 +343,20 @@ public class Arbitro {
                     cumpleRegla = ((distanciaVertical == consultor.consultarNumeroPiezasEnHorizontal(origen)) ||
                             (distanciaHorizontal == consultor.consultarNumeroPiezasEnVertical(origen))) &&
                             consultor.calcularSentido(origen, destino) != null;
-                            if (cumpleRegla){
-                                cumpleRegla = !(destino == coordenadaDestinoTurnoAnterior && (sentidoJugadaTurnoAnterior = zVertical_N && consultor.calcularSentido(origen, destino) == Vertical_S);
-                            }
+                    if (cumpleRegla) {
+                        Tablero tableroTemporal = tablero.clonar();
+                        Arbitro arbitroTemporal = new Arbitro(tableroTemporal);
+                        if (turnoActual == Color.BLANCO) {
+                            arbitroTemporal.turnoActual = Color.BLANCO;
+                            arbitroTemporal.empujar(jugada);
+                            cumpleRegla = !tableroAnteriorTurnoBlancas.equals(tableroTemporal);
+                        }
+                        if (turnoActual == Color.NEGRO) {
+                            arbitroTemporal.turnoActual = Color.NEGRO;
+                            arbitroTemporal.empujar(jugada);
+                            cumpleRegla = !tableroAnteriorTurnoNegras.equals(tableroTemporal);
+                        }
+                    }
                 }
             }
         }
@@ -400,7 +421,9 @@ public class Arbitro {
 
     @Override
     public int hashCode() {
-        return Objects.hash(cajaPiezasBlancas, cajaPiezasNegras, numeroJugada, tablero, turnoActual, turnoGanador);
+        return Objects.hash(cajaPiezasBlancas, cajaPiezasNegras, coordenadaDestinoTurnoAnterior, numeroJugada,
+                sentidoJugadaTurnoAnterior, tablero, tableroAnteriorTurnoBlancas, tableroAnteriorTurnoNegras,
+                turnoActual, turnoGanador);
     }
 
     @Override
@@ -413,9 +436,13 @@ public class Arbitro {
             return false;
         Arbitro other = (Arbitro) obj;
         return Objects.equals(cajaPiezasBlancas, other.cajaPiezasBlancas)
-                && Objects.equals(cajaPiezasNegras, other.cajaPiezasNegras) && numeroJugada == other.numeroJugada
-                && Objects.equals(tablero, other.tablero) && turnoActual == other.turnoActual
-                && turnoGanador == other.turnoGanador;
+                && Objects.equals(cajaPiezasNegras, other.cajaPiezasNegras)
+                && Objects.equals(coordenadaDestinoTurnoAnterior, other.coordenadaDestinoTurnoAnterior)
+                && numeroJugada == other.numeroJugada && sentidoJugadaTurnoAnterior == other.sentidoJugadaTurnoAnterior
+                && Objects.equals(tablero, other.tablero)
+                && Objects.equals(tableroAnteriorTurnoBlancas, other.tableroAnteriorTurnoBlancas)
+                && Objects.equals(tableroAnteriorTurnoNegras, other.tableroAnteriorTurnoNegras)
+                && turnoActual == other.turnoActual && turnoGanador == other.turnoGanador;
     }
 
     @Override
@@ -423,5 +450,56 @@ public class Arbitro {
         return "Arbitro [tablero=" + tablero + ", cajaPiezasBlancas=" + cajaPiezasBlancas + ", cajaPiezasNegras="
                 + cajaPiezasNegras + ", turnoActual=" + turnoActual + ", turnoGanador=" + turnoGanador
                 + ", numeroJugada=" + numeroJugada + "]";
+    }
+
+    public static void main(String[] args) {
+        Tablero tablero = new Tablero();
+        Arbitro arbitro = new Arbitro(tablero);
+        arbitro.colocarPiezasConfiguracionInicial();
+
+        System.out.println(tablero.aTexto());
+
+        Jugada primerMovimiento = new Jugada(
+                tablero.consultarCelda(new Coordenada(3, 0)),
+                tablero.consultarCelda(new Coordenada(3, 4)));
+        if (arbitro.esMovimientoLegal(primerMovimiento)) {
+            System.out.println("Jugada: 30-34");
+            arbitro.empujar(primerMovimiento);
+            arbitro.cambiarTurno();
+            System.out.println(tablero.aTexto());
+        }
+
+        Jugada segundoMovimiento = new Jugada(
+                tablero.consultarCelda(new Coordenada(3, 6)),
+                tablero.consultarCelda(new Coordenada(3, 2)));
+        if (arbitro.esMovimientoLegal(segundoMovimiento)) {
+            System.out.println("Jugada: 36-32");
+            arbitro.empujar(segundoMovimiento);
+            arbitro.cambiarTurno();
+            System.out.println(tablero.aTexto());
+        }
+
+        Jugada tercerMovimiento = new Jugada(
+                tablero.consultarCelda(new Coordenada(3, 1)),
+                tablero.consultarCelda(new Coordenada(3, 3)));
+        if (arbitro.esMovimientoLegal(tercerMovimiento)) {
+            System.out.println("Jugada: 31-33");
+            arbitro.empujar(tercerMovimiento);
+            arbitro.cambiarTurno();
+            System.out.println(tablero.aTexto());
+
+        }
+
+        Jugada cuartoMovimiento = new Jugada(
+                tablero.consultarCelda(new Coordenada(3, 4)),
+                tablero.consultarCelda(new Coordenada(3, 2)));
+        if (arbitro.esMovimientoLegal(cuartoMovimiento)) {
+            System.out.println("Jugada: 34-32");
+            arbitro.empujar(cuartoMovimiento);
+            System.out.println(tablero.aTexto());
+
+        } else {
+            System.out.println("Jugada ilegal: 34-32");
+        }
     }
 }

@@ -1,6 +1,9 @@
 package noventagrados.modelo;
 
 import noventagrados.util.Coordenada;
+
+import java.util.Objects;
+
 import noventagrados.util.Color;
 
 /**
@@ -92,37 +95,22 @@ public class Celda {
         return clon;
     }
 
-    /**
-     * Genera un código hash para la celda.
-     *
-     * @return Código hash.
-     */
     @Override
-    public int hashCode() {
-        int resultado = 17;
-        resultado = 31 * resultado + coordenada.hashCode();
-        resultado = 31 * resultado + (pieza != null ? pieza.hashCode() : 0);
-        return resultado;
-    }
+	public int hashCode() {
+		return Objects.hash(coordenada, pieza);
+	}
 
-    /**
-     * Compara si dos celdas son iguales.
-     *
-     * @param obj Objeto a comparar.
-     * @return true si son iguales, false en caso contrario.
-     */
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null || !(obj instanceof Celda))
-            return false;
-        Celda otra = (Celda) obj;
-        boolean mismasCoordenadas = this.coordenada.equals(otra.coordenada);
-        boolean mismasPiezas = (this.pieza == null && otra.pieza == null) ||
-                (this.pieza != null && this.pieza.equals(otra.pieza));
-        return mismasCoordenadas && mismasPiezas;
-    }
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Celda other = (Celda) obj;
+		return Objects.equals(coordenada, other.coordenada) && Objects.equals(pieza, other.pieza);
+	}
 
     /**
      * Devuelve la representación en texto de la celda.

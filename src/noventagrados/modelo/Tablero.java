@@ -1,5 +1,7 @@
 package noventagrados.modelo;
 
+import java.util.Arrays;
+
 import noventagrados.util.Coordenada;
 
 /**
@@ -167,46 +169,25 @@ public class Tablero {
         return resultado;
     }
 
-    /**
-     * Genera un código hash para el tablero.
-     *
-     * @return Código hash.
-     */
     @Override
-    public int hashCode() {
-        int resultado = 17;
-        for (int fila = 0; fila < TAMAÑO; fila++) {
-            for (int columna = 0; columna < TAMAÑO; columna++) {
-                resultado = 31 * resultado + celdas[fila][columna].hashCode();
-            }
-        }
-        return resultado;
-    }
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.deepHashCode(celdas);
+		return result;
+	}
 
-    /**
-     * Compara si dos tableros son iguales.
-     *
-     * @param obj Objeto a comparar.
-     * @return true si son iguales, false en caso contrario.
-     */
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null || !(obj instanceof Tablero))
-            return false;
-        Tablero otro = (Tablero) obj;
-        for (int fila = 0; fila < TAMAÑO; fila++) {
-            for (int columna = 0; columna < TAMAÑO; columna++) {
-                Celda celdaThis = this.celdas[fila][columna];
-                Celda celdaOtro = otro.celdas[fila][columna];
-                if (!celdaThis.equals(celdaOtro)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Tablero other = (Tablero) obj;
+		return Arrays.deepEquals(celdas, other.celdas);
+	}
 
     /**
      * Devuelve la representación en texto del tablero.

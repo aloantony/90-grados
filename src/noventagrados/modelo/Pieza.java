@@ -23,6 +23,7 @@ public class Pieza {
      * @param color     Color de la pieza (no nulo).
      */
     public Pieza(TipoPieza tipoPieza, Color color) {
+        this.id = ++identificadorDeNuevasPiezas;
         this.tipoPieza = tipoPieza;
         this.color = color;
     }
@@ -58,6 +59,15 @@ public class Pieza {
      */
     public TipoPieza consultarTipoPieza() {
         return this.tipoPieza;
+    }
+
+    /**
+     * Devuelve el identificador de la pieza.
+     *
+     * @return Identificador de la pieza.
+     */
+    public int consultarIdentificacion() {
+        return this.id;
     }
 
     /**
