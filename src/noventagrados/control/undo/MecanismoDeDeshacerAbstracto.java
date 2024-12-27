@@ -44,3 +44,4 @@ public abstract class MecanismoDeDeshacerAbstracto<Tipo> implements MecanismoDeD
         return fechaInicio;
     }
 }
+// comentario prueba para hacer push de la nueva rama
