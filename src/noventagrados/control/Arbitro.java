@@ -452,6 +452,11 @@ public class Arbitro {
                 + ", numeroJugada=" + numeroJugada + "]";
     }
 
+    /*
+     * Método main para probar la condición nueva de 2ª convocatoria
+     * 
+     * @param args argumentos de entrada en línea de comandos
+     */
     public static void main(String[] args) {
         Tablero tablero = new Tablero();
         Arbitro arbitro = new Arbitro(tablero);
