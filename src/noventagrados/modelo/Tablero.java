@@ -97,9 +97,7 @@ public class Tablero {
      *
      * @return Array de celdas.
      */
-    public List<Celda>/* Celda[] */ consultarCeldas() {
-        // Celda[] todasLasCeldas = new Celda[TAMAÑO * TAMAÑO];
-        // int indice = 0;
+    public List<Celda> consultarCeldas() {
         List<Celda> todasLasCeldas = new ArrayList<>(TAMAÑO * TAMAÑO);
         for (int fila = 0; fila < TAMAÑO; fila++) {
             for (int columna = 0; columna < TAMAÑO; columna++) {

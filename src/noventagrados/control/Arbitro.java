@@ -2,10 +2,14 @@ package noventagrados.control;
 
 import noventagrados.modelo.Tablero;
 
+import static org.hamcrest.CoreMatchers.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import noventagrados.control.excepcion.TableroIncorrectoException;
+import noventagrados.control.excepcion.TamañoIncorrectoException;
 import noventagrados.modelo.Celda;
 import noventagrados.modelo.Jugada;
 import noventagrados.modelo.Pieza;
@@ -86,7 +90,11 @@ public class Arbitro {
      * @param coordenadas Lista de coordenadas donde colocar las piezas (no nula)
      * @param turnoActual Color del turno inicial (no nulo)
      */
-    public void colocarPiezas(List<Pieza> piezas, List<Coordenada> coordenadas, Color turnoActual) {
+    public void colocarPiezas(List<Pieza> piezas, List<Coordenada> coordenadas, Color turnoActual)
+            throws TamañoIncorrectoException {
+        if (piezas.size() != coordenadas.size()) {
+            throw new TamañoIncorrectoException("Las listas, piezas y coordenadas, no tienen el mismo tamñaño");
+        }
         for (int i = 0; i < piezas.size(); i++) {
             Pieza pieza = piezas.get(i);
             Coordenada coordenada = coordenadas.get(i);
@@ -135,7 +143,10 @@ public class Arbitro {
      * @param color Color de la caja a consultar (no nulo).
      * @return La caja correspondiente.
      */
-    public Caja consultarCaja(Color color) {
+    public Caja consultarCaja(Color color) throws IllegalArgumentException {
+        if (color == null) {
+            throw new IllegalArgumentException();
+        }
         if (color == Color.BLANCO) {
             return cajaPiezasBlancas.clonar();
         } else {
@@ -187,7 +198,7 @@ public class Arbitro {
      *
      * @param jugada Jugada a realizar (no nula).
      */
-    public void empujar(Jugada jugada) {
+    public void empujar(Jugada jugada) throws TableroIncorrectoException {
         TableroConsultor<Tablero> consultor = new TableroConsultor<>(tablero);
 
         // Obtener sentido del movimiento
@@ -196,7 +207,7 @@ public class Arbitro {
         Sentido sentido = consultor.calcularSentido(origen, destino);
 
         // Reubicar las piezas para similar el empuje
-        Reubicador(origen, sentido, destino);
+        reubicador(origen, sentido, destino);
 
         // Incrementar el número de jugadas
         numeroJugada++;
@@ -209,7 +220,7 @@ public class Arbitro {
      * @param sentido Sentido del movimiento.
      * @param destino Coordenada de destino.
      */
-    private void Reubicador(Coordenada origen, Sentido sentido, Coordenada destino) {
+    private void reubicador(Coordenada origen, Sentido sentido, Coordenada destino) throws TableroIncorrectoException {
         Coordenada actual = origen;
         // Recolectar las piezas que hay que empujar y eliminarlas del tablero
         List<Pieza> listaPiezasAReubicar = Recolector(actual, destino, sentido);
@@ -308,7 +319,7 @@ public class Arbitro {
      * @param jugada Jugada a validar (no nula).
      * @return true si la jugada es legal, false en caso contrario.
      */
-    public boolean esMovimientoLegal(Jugada jugada) {
+    public boolean esMovimientoLegal(Jugada jugada) throws TableroIncorrectoException {
         if (jugada == null) {
             return false;
         }
@@ -362,7 +373,7 @@ public class Arbitro {
      *
      * @return true si la partida ha finalizado, false en caso contrario.
      */
-    public boolean estaFinalizadaPartida() {
+    public boolean estaFinalizadaPartida() throws TableroIncorrectoException {
         TableroConsultor<Tablero> consultor = new TableroConsultor<>(tablero);
         boolean finalizada = false;
 

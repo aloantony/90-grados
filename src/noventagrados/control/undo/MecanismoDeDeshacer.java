@@ -45,4 +45,6 @@ public interface MecanismoDeDeshacer {
      * @return La fecha de inicio.
      */
     public Date obtenerFechaInicio();
+
+    public void reiniciar();
 }

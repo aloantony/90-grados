@@ -2,6 +2,7 @@ package noventagrados.control;
 
 import java.util.List;
 
+import noventagrados.control.excepcion.TableroIncorrectoException;
 import noventagrados.modelo.Celda;
 import noventagrados.modelo.Pieza;
 import noventagrados.modelo.Tablero;
@@ -28,7 +29,10 @@ public class TableroConsultor<T extends Tablero> {
      *
      * @param tablero Tablero sobre el que se realizarán las consultas (no nulo).
      */
-    public TableroConsultor(T tablero) {
+    public TableroConsultor(T tablero) throws TableroIncorrectoException {
+        if (tablero == null) {
+            throw new TableroIncorrectoException("Tablero nulo.");
+        }
         this.tablero = tablero;
     }
 

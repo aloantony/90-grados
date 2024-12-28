@@ -4,10 +4,13 @@ import java.util.Date;
 import java.util.Scanner;
 
 import noventagrados.control.Arbitro;
+import noventagrados.control.Caja;
 import noventagrados.modelo.Celda;
 import noventagrados.modelo.Jugada;
+import noventagrados.modelo.Pieza;
 import noventagrados.modelo.Tablero;
 import noventagrados.textui.excepcion.OpcionNoDisponibleException;
+import noventagrados.util.Color;
 import noventagrados.util.Coordenada;
 import noventagrados.control.undo.MecanismoDeDeshacer;
 import noventagrados.control.undo.MaquinaDelTiempoConArbitros;
@@ -92,6 +95,7 @@ public class NoventaGrados {
 					if (esLegal(jugada)) {
 						realizarEmpujón(jugada);
 						cambiarTurnoPartida();
+						mostrarCajas();
 						mostrarTablero();
 					} else {
 						mostrarErrorPorMovimientoIlegal(jugadaEnTexto);
@@ -404,6 +408,22 @@ public class NoventaGrados {
 					arbitro.consultarTurnoGanador());
 		} else {
 			System.out.println("\nEmpate con ambas reinas empujadas fuera del tablero.");
+		}
+	}
+
+	/**
+	 * Muestra el contenido de las cajas.
+	 */
+	private static void mostrarCajas() {
+		for (Color color : Color.values()) {
+			Caja caja = arbitro.consultarCaja(color);
+			if (caja.contarPiezas() > 0) {
+				System.out.printf("%nPiezas en caja de color %s: ", color);
+				for (Pieza pieza : caja.consultarPiezas()) {
+					System.out.printf("%s ", pieza.aTexto());
+				}
+				System.out.println();
+			}
 		}
 	}
 }

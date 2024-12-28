@@ -13,8 +13,8 @@ import java.util.ArrayList;
  */
 public abstract class MecanismoDeDeshacerAbstracto<Tipo> implements MecanismoDeDeshacer {
 
-    protected Date fechaInicio;
-    protected List<Tipo> historico;
+    public Date fechaInicio;
+    public List<Tipo> historico;
 
     /**
      * Constructor de la Máquina del tiempo.
@@ -42,5 +42,9 @@ public abstract class MecanismoDeDeshacerAbstracto<Tipo> implements MecanismoDeD
      */
     public Date obtenerFechaInicio() {
         return fechaInicio;
+    }
+
+    public void reiniciar() {
+        historico.clear();
     }
 }
