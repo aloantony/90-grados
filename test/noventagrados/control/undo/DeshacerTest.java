@@ -16,6 +16,7 @@ import org.opentest4j.MultipleFailuresError;
 
 import noventagrados.control.Arbitro;
 import noventagrados.control.TableroConsultor;
+import noventagrados.control.excepcion.TableroIncorrectoException;
 import noventagrados.modelo.Celda;
 import noventagrados.modelo.Jugada;
 import noventagrados.modelo.Pieza;
@@ -31,15 +32,14 @@ import noventagrados.util.TipoPieza;
  * @since 1.0
  * @version 2.0
  */
-@Timeout(value = 3, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD) // Time out global para todos los tests salvo
-																			// los de ciclo de vida
+@Timeout(value = 3, unit = TimeUnit.SECONDS, threadMode = SEPARATE_THREAD) // Time out global para todos los tests salvo los de ciclo de vida
 public abstract class DeshacerTest {
 
 	/**
 	 * Mecanismo a testar.
 	 */
 	MecanismoDeDeshacer deshacer;
-
+		
 	/**
 	 * Obtiene un mecanismo de deshacer con fecha personalizada.
 	 * 
@@ -47,7 +47,7 @@ public abstract class DeshacerTest {
 	 * @return mecanismo de deshacer
 	 */
 	abstract MecanismoDeDeshacer obtenerDeshacerConFechaPersonalizada(Date date);
-
+	
 	/**
 	 * Comprueba correcta inicialización con fecha.
 	 */
@@ -55,8 +55,8 @@ public abstract class DeshacerTest {
 	@Test
 	@DisplayName("Comprobar que inicializa correctamente con la fecha.")
 	void inicializacionConFecha() {
-		MecanismoDeDeshacer deshacerLocal = obtenerDeshacerConFechaPersonalizada(new Date(0, 1, 2, 3, 4, 5));
-		assertThat(deshacerLocal.obtenerFechaInicio(), is(new Date(0, 1, 2, 3, 4, 5)));
+		MecanismoDeDeshacer deshacerLocal = obtenerDeshacerConFechaPersonalizada(new Date(0,1,2,3,4,5));
+		assertThat(deshacerLocal.obtenerFechaInicio(), is(new Date(0,1,2,3,4,5)));
 	}
 
 	/**
@@ -67,21 +67,19 @@ public abstract class DeshacerTest {
 	void probarDeshacerSinHaberGrabadoNingunaJugada() {
 		Arbitro partidaInicial = generarPartidaInicial();
 		deshacer.deshacerJugada();
-		Arbitro partida = deshacer.consultarArbitroActual();
+		Arbitro partida = deshacer.consultarArbitroActual();		
 		assertThat("Si no hay jugadas grabadas debería devolver la partida inicial.", partida, is(partidaInicial));
 	}
-
+	
 	/**
-	 * Comprueba que gestiona bien el contador de jugadas a deshacer si no había
-	 * jugada previa.
+	 * Comprueba que gestiona bien el contador de jugadas a deshacer si no había jugada previa.
 	 */
 	@Test
 	@DisplayName("Comprobar que gestiona correctamente el contador si no había ninguna jugada previa al deshacer.")
 	void probarGestionDeContadorSinHaberGrabadoNingunaJugada() {
-		assertThat("No debe haber jugadas a deshacer al iniciar.", deshacer.consultarNumeroJugadasEnHistorico(), is(0));
+		assertThat("No debe haber jugadas a deshacer al iniciar.", deshacer.consultarNumeroJugadasEnHistorico(),is(0));
 		deshacer.deshacerJugada();
-		assertThat("No deber haber jugadas a deshacer, pese a que se haya invocado una vez sin jugada a deshacer.",
-				deshacer.consultarNumeroJugadasEnHistorico(), is(0));
+		assertThat("No deber haber jugadas a deshacer, pese a que se haya invocado una vez sin jugada a deshacer.", deshacer.consultarNumeroJugadasEnHistorico(),is(0));
 	}
 
 	/**
@@ -91,17 +89,15 @@ public abstract class DeshacerTest {
 	@Test
 	@DisplayName("Comprobar si deshace correctamente si solo había una jugada previa.")
 	void probarDeshacerGrabandoUnaJugada() {
-		Jugada jugada = new Jugada(new Celda(new Coordenada(0, 3)), new Celda(new Coordenada(0, 5)));
+		Jugada jugada = new Jugada(new Celda(new Coordenada(0,3)), new Celda(new Coordenada(0,5)));
 		deshacer.hacerJugada(jugada);
 		deshacer.deshacerJugada();
-		Arbitro arbitro = deshacer.consultarArbitroActual();
+		Arbitro arbitro = deshacer.consultarArbitroActual();	
 		Tablero tablero = arbitro.consultarTablero();
 		assertAll("comprobar que deshacer con solo una jugada grabada devuelve una partida en estado inicial",
-				() -> assertThat("El número de jugadas en el histórico es incorrecto.",
-						deshacer.consultarNumeroJugadasEnHistorico(), is(0)),
-				() -> assertThat("La reina debería estar nuevamente en la esquina.",
-						tablero.consultarCelda(new Coordenada(0, 0)).consultarPieza(),
-						is(new Pieza(TipoPieza.REINA, Color.BLANCO))),
+				() -> assertThat("El número de jugadas en el histórico es incorrecto.", deshacer.consultarNumeroJugadasEnHistorico(),is(0)),
+						() -> assertThat("La reina debería estar nuevamente en la esquina.",
+						tablero.consultarCelda(new Coordenada(0,0)).consultarPieza(), is(new Pieza(TipoPieza.REINA, Color.BLANCO))),
 				() -> assertThat("El turno es incorrecto.", arbitro.consultarTurno(), is(Color.BLANCO)),
 				() -> assertThat("El contador de jugadas es incorrecto.", arbitro.consultarNumeroJugada(), is(0)),
 				() -> assertThat("No debería haber ganador.", arbitro.consultarTurnoGanador(), is(nullValue())),
@@ -109,116 +105,102 @@ public abstract class DeshacerTest {
 
 		);
 	}
-
+	
 	/**
-	 * Comprueba si deshace bien si solo hay una jugada previa expulsando a dos
-	 * peones.
+	 * Comprueba si deshace bien si solo hay una jugada previa expulsando a dos peones.
+	 * 
+	 * @throws TableroIncorrectoException si el tablero es nulo
 	 * 
 	 */
 	@Test
 	@DisplayName("Comprobar si deshace correctamente si solo había una jugada previa expulsando dos peones.")
-	void probarDeshacerGrabandoUnaJugadaExpulsandoDosPeones() {
-		Jugada jugada = new Jugada(new Celda(new Coordenada(0, 0)), new Celda(new Coordenada(0, 4)));
+	void probarDeshacerGrabandoUnaJugadaExpulsandoDosPeones() throws TableroIncorrectoException {
+		Jugada jugada = new Jugada(new Celda(new Coordenada(0,0)), new Celda(new Coordenada(0,4)));
 		deshacer.hacerJugada(jugada);
-		final Arbitro arbitro = deshacer.consultarArbitroActual();
+		final Arbitro arbitro = deshacer.consultarArbitroActual();	
 		final Tablero tablero = arbitro.consultarTablero();
 		final TableroConsultor<Tablero> tc = new TableroConsultor<Tablero>(tablero);
 		assertAll("comprobar que se ha movido la reina y se ha expulsado un peón",
-				() -> assertThat("El número de jugadas en el histórico es incorrecto.",
-						deshacer.consultarNumeroJugadasEnHistorico(), is(1)),
+				() -> assertThat("El número de jugadas en el histórico es incorrecto.", deshacer.consultarNumeroJugadasEnHistorico(),is(1)),
 				() -> assertThat("La reina debería estar en posición (0, 4).",
-						tablero.consultarCelda(new Coordenada(0, 4)).consultarPieza(),
-						is(new Pieza(TipoPieza.REINA, Color.BLANCO))),
+						tablero.consultarCelda(new Coordenada(0,4)).consultarPieza(), is(new Pieza(TipoPieza.REINA, Color.BLANCO))),
 				() -> assertThat("El turno es incorrecto.", arbitro.consultarTurno(), is(Color.NEGRO)),
 				() -> assertThat("El contador de jugadas es incorrecto.", arbitro.consultarNumeroJugada(), is(1)),
 				() -> assertThat("No debería haber ganador.", arbitro.consultarTurnoGanador(), is(nullValue())),
-				() -> assertThat("Número de piezas en caja blanca incorrecto.",
-						arbitro.consultarCaja(Color.BLANCO).contarPiezas(), is(1)),
-				() -> assertThat("Número de peones blancos en tablero incorrecto.",
-						tc.consultarNumeroPiezas(TipoPieza.PEON, Color.BLANCO), is(5)),
-				() -> assertThat("Número de peones negros en tablero incorrecto.",
-						tc.consultarNumeroPiezas(TipoPieza.PEON, Color.NEGRO), is(6)),
+				() -> assertThat("Número de piezas en caja blanca incorrecto.", arbitro.consultarCaja(Color.BLANCO).contarPiezas(),is(1)),
+				() -> assertThat("Número de peones blancos en tablero incorrecto.", tc.consultarNumeroPiezas(TipoPieza.PEON, Color.BLANCO), is(5)),
+				() -> assertThat("Número de peones negros en tablero incorrecto.", tc.consultarNumeroPiezas(TipoPieza.PEON, Color.NEGRO), is(6)),
 				() -> assertThat("La partida no debería estar acabada.", arbitro.estaFinalizadaPartida(), is(false))
 
 		);
-
+		
 		deshacer.deshacerJugada(); // Deshacemos la jugada y volvemos al estado inicial...
-
+		
 		comprobarEstadoInicial();
 	}
-
+	
+	
 	/**
 	 * Comprueba si deshace bien si hay dos jugadas previa expulsando a peones
 	 * de ambos colores y se deshace solo una jugada.
 	 * 
+	 * @throws TableroIncorrectoException si el tablero es nulo
+	 * 
 	 */
 	@Test
 	@DisplayName("Comprobar si deshace correctamente una jugada tras dos jugadas expulsando peones.")
-	void probarDeshacerGrabandoDosJugadasExpulsandoDosPeonesDeshaciendoSoloUnaJugada() {
-		Jugada jugada = new Jugada(new Celda(new Coordenada(0, 0)), new Celda(new Coordenada(0, 4)));
+	void probarDeshacerGrabandoDosJugadasExpulsandoDosPeonesDeshaciendoSoloUnaJugada() throws TableroIncorrectoException {
+		Jugada jugada = new Jugada(new Celda(new Coordenada(0,0)), new Celda(new Coordenada(0,4)));
 		deshacer.hacerJugada(jugada);
-		jugada = new Jugada(new Celda(new Coordenada(6, 6)), new Celda(new Coordenada(6, 1)));
+		jugada = new Jugada(new Celda(new Coordenada(6,6)), new Celda(new Coordenada(6,1)));
 		deshacer.hacerJugada(jugada);
 		// las dos reinas movidas en horizontal...
-		final Arbitro arbitro = deshacer.consultarArbitroActual();
+		final Arbitro arbitro = deshacer.consultarArbitroActual();	
 		final Tablero tablero = arbitro.consultarTablero();
 		final TableroConsultor<Tablero> tc = new TableroConsultor<Tablero>(tablero);
 		assertAll("comprobar que se han movido las dos reinas y se han expulsado un peón blanco y dos negras",
-				() -> assertThat("El número de jugadas en el histórico es incorrecto.",
-						deshacer.consultarNumeroJugadasEnHistorico(), is(2)),
+				() -> assertThat("El número de jugadas en el histórico es incorrecto.", deshacer.consultarNumeroJugadasEnHistorico(),is(2)),
 				() -> assertThat("La reina blanca debería estar en posición (0, 4).",
-						tablero.consultarCelda(new Coordenada(0, 4)).consultarPieza(),
-						is(new Pieza(TipoPieza.REINA, Color.BLANCO))),
+						tablero.consultarCelda(new Coordenada(0,4)).consultarPieza(), is(new Pieza(TipoPieza.REINA, Color.BLANCO))),
 				() -> assertThat("La reina negra debería estar en posición (6, 1).",
-						tablero.consultarCelda(new Coordenada(6, 1)).consultarPieza(),
-						is(new Pieza(TipoPieza.REINA, Color.NEGRO))),
+						tablero.consultarCelda(new Coordenada(6,1)).consultarPieza(), is(new Pieza(TipoPieza.REINA, Color.NEGRO))),
 				() -> assertThat("El turno es incorrecto.", arbitro.consultarTurno(), is(Color.BLANCO)),
 				() -> assertThat("El contador de jugadas es incorrecto.", arbitro.consultarNumeroJugada(), is(2)),
 				() -> assertThat("No debería haber ganador.", arbitro.consultarTurnoGanador(), is(nullValue())),
-				() -> assertThat("Número de piezas en caja blanca incorrecto.",
-						arbitro.consultarCaja(Color.BLANCO).contarPiezas(), is(1)),
-				() -> assertThat("Número de piezas en caja negra incorrecto.",
-						arbitro.consultarCaja(Color.NEGRO).contarPiezas(), is(2)),
+				() -> assertThat("Número de piezas en caja blanca incorrecto.", arbitro.consultarCaja(Color.BLANCO).contarPiezas(),is(1)),
+				() -> assertThat("Número de piezas en caja negra incorrecto.", arbitro.consultarCaja(Color.NEGRO).contarPiezas(),is(2)),
 
-				() -> assertThat("Número de peones blancos en tablero incorrecto.",
-						tc.consultarNumeroPiezas(TipoPieza.PEON, Color.BLANCO), is(5)),
-				() -> assertThat("Número de peones negros en tablero incorrecto.",
-						tc.consultarNumeroPiezas(TipoPieza.PEON, Color.NEGRO), is(4)),
+				() -> assertThat("Número de peones blancos en tablero incorrecto.", tc.consultarNumeroPiezas(TipoPieza.PEON, Color.BLANCO), is(5)),
+				() -> assertThat("Número de peones negros en tablero incorrecto.", tc.consultarNumeroPiezas(TipoPieza.PEON, Color.NEGRO), is(4)),
 				() -> assertThat("La partida no debería estar acabada.", arbitro.estaFinalizadaPartida(), is(false))
 
 		);
-
+		
 		deshacer.deshacerJugada(); // Deshacemos la jugada y volvemos al estado previo con solo una jugada
-
-		final Arbitro arbitro2 = deshacer.consultarArbitroActual();
+		
+		
+		final Arbitro arbitro2 = deshacer.consultarArbitroActual();	
 		final Tablero tablero2 = arbitro2.consultarTablero();
 		final TableroConsultor<Tablero> tc2 = new TableroConsultor<Tablero>(tablero2);
 
 		assertAll("comprobar que deshacer con una jugada grabada devuelve una partida con una sola jugada hecha",
-				() -> assertThat("El número de jugadas en el histórico es incorrecto.",
-						deshacer.consultarNumeroJugadasEnHistorico(), is(1)),
+				() -> assertThat("El número de jugadas en el histórico es incorrecto.", deshacer.consultarNumeroJugadasEnHistorico(),is(1)),
 				() -> assertThat("La reina blanca debería estar nuevamente en la esquina.",
-						tablero2.consultarCelda(new Coordenada(0, 4)).consultarPieza(),
-						is(new Pieza(TipoPieza.REINA, Color.BLANCO))),
+						tablero2.consultarCelda(new Coordenada(0,4)).consultarPieza(), is(new Pieza(TipoPieza.REINA, Color.BLANCO))),
 				() -> assertThat("La reina negra debería estar nuevamente en la esquina.",
-						tablero2.consultarCelda(new Coordenada(6, 6)).consultarPieza(),
-						is(new Pieza(TipoPieza.REINA, Color.NEGRO))),
+						tablero2.consultarCelda(new Coordenada(6,6)).consultarPieza(), is(new Pieza(TipoPieza.REINA, Color.NEGRO))),
 				() -> assertThat("El turno es incorrecto.", arbitro2.consultarTurno(), is(Color.NEGRO)),
 				() -> assertThat("El contador de jugadas es incorrecto.", arbitro2.consultarNumeroJugada(), is(1)),
 				() -> assertThat("No debería haber ganador.", arbitro2.consultarTurnoGanador(), is(nullValue())),
-				() -> assertThat("Número de piezas en caja blanca incorrecto.",
-						arbitro2.consultarCaja(Color.BLANCO).contarPiezas(), is(1)),
-				() -> assertThat("Número de piezas en caja negra incorrecto.",
-						arbitro2.consultarCaja(Color.NEGRO).contarPiezas(), is(0)),
-				() -> assertThat("Número de peones blancos en tablero incorrecto.",
-						tc2.consultarNumeroPiezas(TipoPieza.PEON, Color.BLANCO), is(5)),
-				() -> assertThat("Número de peones negros en tablero incorrecto.",
-						tc2.consultarNumeroPiezas(TipoPieza.PEON, Color.NEGRO), is(6)),
+				() -> assertThat("Número de piezas en caja blanca incorrecto.", arbitro2.consultarCaja(Color.BLANCO).contarPiezas(),is(1)),
+				() -> assertThat("Número de piezas en caja negra incorrecto.", arbitro2.consultarCaja(Color.NEGRO).contarPiezas(),is(0)),
+				() -> assertThat("Número de peones blancos en tablero incorrecto.", tc2.consultarNumeroPiezas(TipoPieza.PEON, Color.BLANCO), is(5)),
+				() -> assertThat("Número de peones negros en tablero incorrecto.", tc2.consultarNumeroPiezas(TipoPieza.PEON, Color.NEGRO), is(6)),
 				() -> assertThat("La partida no debería estar acabada.", arbitro2.estaFinalizadaPartida(), is(false))
 
 		);
 	}
-
+	
 	/**
 	 * Comprueba si deshace tres jugadas volviendo al estado inicial.
 	 * 
@@ -226,13 +208,13 @@ public abstract class DeshacerTest {
 	@Test
 	@DisplayName("Comprobar si deshace correctamente tres jugadas volviendo al estado inicial.")
 	void probarDeshacerGrabandoTresJugadasVolviendoAlEstadoInicial() {
-		Jugada jugada = new Jugada(new Celda(new Coordenada(0, 0)), new Celda(new Coordenada(0, 4)));
+		Jugada jugada = new Jugada(new Celda(new Coordenada(0,0)), new Celda(new Coordenada(0,4)));
 		deshacer.hacerJugada(jugada);
-		jugada = new Jugada(new Celda(new Coordenada(6, 6)), new Celda(new Coordenada(6, 1)));
+		jugada = new Jugada(new Celda(new Coordenada(6,6)), new Celda(new Coordenada(6,1)));
 		deshacer.hacerJugada(jugada);
-		jugada = new Jugada(new Celda(new Coordenada(0, 6)), new Celda(new Coordenada(3, 6)));
-		deshacer.hacerJugada(jugada);
-
+		jugada = new Jugada(new Celda(new Coordenada(0,6)), new Celda(new Coordenada(3,6)));
+		deshacer.hacerJugada(jugada);		
+		
 		deshacer.deshacerJugada(); // Deshacemos la jugada y volvemos al estado previo con solo dos jugadas
 		deshacer.deshacerJugada(); // Deshacemos la jugada y volvemos al estado previo con solo una jugada
 		deshacer.deshacerJugada(); // Deshacemos la jugada y volvemos al estado inicial
@@ -246,14 +228,12 @@ public abstract class DeshacerTest {
 	 * @throws MultipleFailuresError errores varios en el test
 	 */
 	private void comprobarEstadoInicial() throws MultipleFailuresError {
-		final Arbitro arbitro2 = deshacer.consultarArbitroActual();
+		final Arbitro arbitro2 = deshacer.consultarArbitroActual();	
 		final Tablero tablero2 = arbitro2.consultarTablero();
 		assertAll("comprobar que deshacer tres jugadas grabadas devolviendo una partida en estado inicial",
-				() -> assertThat("El número de jugadas en el histórico es incorrecto.",
-						deshacer.consultarNumeroJugadasEnHistorico(), is(0)),
+				() -> assertThat("El número de jugadas en el histórico es incorrecto.", deshacer.consultarNumeroJugadasEnHistorico(),is(0)),
 				() -> assertThat("La reina debería estar nuevamente en la esquina.",
-						tablero2.consultarCelda(new Coordenada(0, 0)).consultarPieza(),
-						is(new Pieza(TipoPieza.REINA, Color.BLANCO))),
+						tablero2.consultarCelda(new Coordenada(0,0)).consultarPieza(), is(new Pieza(TipoPieza.REINA, Color.BLANCO))),
 				() -> assertThat("El turno es incorrecto.", arbitro2.consultarTurno(), is(Color.BLANCO)),
 				() -> assertThat("El contador de jugadas es incorrecto.", arbitro2.consultarNumeroJugada(), is(0)),
 				() -> assertThat("No debería haber ganador.", arbitro2.consultarTurnoGanador(), is(nullValue())),
@@ -262,6 +242,7 @@ public abstract class DeshacerTest {
 		);
 	}
 
+	
 	/**
 	 * Genera un árbitro inicial.
 	 * 
@@ -274,5 +255,28 @@ public abstract class DeshacerTest {
 		arbitro.colocarPiezasConfiguracionInicial();
 		return arbitro;
 	}
+	
+	/**
+	 * Comprueba si reinica bien tras tres jugadas volviendo al estado inicial.
+	 * 
+	 */
+	@Test
+	@DisplayName("Comprobar si reinicia bien tras tres jugadas volviendo al estado inicial.")
+	void probarReiniciar() {
+		Jugada jugada = new Jugada(new Celda(new Coordenada(0,0)), new Celda(new Coordenada(0,4)));
+		deshacer.hacerJugada(jugada);
+		jugada = new Jugada(new Celda(new Coordenada(6,6)), new Celda(new Coordenada(6,1)));
+		deshacer.hacerJugada(jugada);
+		jugada = new Jugada(new Celda(new Coordenada(0,6)), new Celda(new Coordenada(3,6)));
+		deshacer.hacerJugada(jugada);
+		
+		assertThat("Número de jugadas a deshacer incorrecto.", deshacer.consultarNumeroJugadasEnHistorico(), is(3));
+		
+		deshacer.reiniciar();
+		
+		assertThat("Número de jugadas a deshacer incorrecto tras reiniciar.", deshacer.consultarNumeroJugadasEnHistorico(), is(0));
+	}
 
+	
 }
+

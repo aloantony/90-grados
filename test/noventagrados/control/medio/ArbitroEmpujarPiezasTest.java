@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Timeout;
 
 import noventagrados.control.Arbitro;
 import noventagrados.control.TableroConsultor;
+import noventagrados.control.excepcion.TableroIncorrectoException;
 import noventagrados.modelo.Jugada;
 import noventagrados.modelo.Pieza;
 import noventagrados.modelo.Tablero;
@@ -88,11 +89,13 @@ public class ArbitroEmpujarPiezasTest {
 	/**
 	 * Comprobacion de empujar reina blanca en horizontal echando un peón blanco del tablero.
 	 * 
+	 * @throws TableroIncorrectoException si el tablero es nulo
+	 * 
 	 * @see noventagrados.control.TestUtil#fabricarJugada
 	 */
 	@DisplayName("Comprueba el empuje de la reina blanca en horizontal.")
 	@Test
-	void comprobarEmpujeDeReinaBlancaEnHorizontal() {
+	void comprobarEmpujeDeReinaBlancaEnHorizontal() throws TableroIncorrectoException {
 		Jugada jugada1 = fabricarJugada(tablero, 0, 0, 0, 4);
 		arbitro.empujar(jugada1);
 		TableroConsultor<Tablero> tc = new TableroConsultor<>(arbitro.consultarTablero());
@@ -143,11 +146,13 @@ public class ArbitroEmpujarPiezasTest {
 	/**
 	 * Comprobacion de empujar reina negra en horizontal echando un peón negro del tablero.
 	 * 
+	 * @throws TableroIncorrectoException si el tablero es nulo
+	 * 
 	 * @see noventagrados.control.TestUtil#fabricarJugada
 	 */
 	@DisplayName("Comprueba el empuje de la reina negra en horizontal.")
 	@Test
-	void comprobarEmpujeDeReinaNegraEnHorizontal() {
+	void comprobarEmpujeDeReinaNegraEnHorizontal() throws TableroIncorrectoException {
 		Jugada jugada1 = fabricarJugada(tablero, 6, 6, 6, 2);
 		arbitro.empujar(jugada1); // no es necesario cambiar turno, no comprobamos legalidad
 		TableroConsultor<Tablero> tc = new TableroConsultor<>(arbitro.consultarTablero());
@@ -200,11 +205,13 @@ public class ArbitroEmpujarPiezasTest {
 	/**
 	 * Comprobacion de empujar peon blanco en horizontal echando a la reina blanca.
 	 * 
+	 * @throws TableroIncorrectoException si el tablero es nulo
+	 * 
 	 * @see noventagrados.control.TestUtil#fabricarJugada
 	 */
 	@DisplayName("Comprueba el empuje del peón blanco de su propia reina blanca en horizontal.")
 	@Test
-	void comprobarEmpujeDePeonAReinaBlancaEnHorizontal() {
+	void comprobarEmpujeDePeonAReinaBlancaEnHorizontal() throws TableroIncorrectoException {
 		Jugada jugada1 = fabricarJugada(tablero, 0, 3, 0, 1);
 		arbitro.empujar(jugada1);
 		TableroConsultor<Tablero> tc = new TableroConsultor<>(arbitro.consultarTablero());
@@ -256,11 +263,13 @@ public class ArbitroEmpujarPiezasTest {
 	/**
 	 * Comprobacion de empujar peon negro en horizontal echando a la reina negra.
 	 * 
+	 * @throws TableroIncorrectoException si el tablero es nulo
+	 * 
 	 * @see noventagrados.control.TestUtil#fabricarJugada
 	 */
 	@DisplayName("Comprueba el empuje del peón negro de su propia reina negra en horizontal.")
 	@Test
-	void comprobarEmpujeDePeonAReinaNegraEnHorizontal() {
+	void comprobarEmpujeDePeonAReinaNegraEnHorizontal() throws TableroIncorrectoException {
 		Jugada jugada1 = fabricarJugada(tablero, 6, 3, 6, 5);
 		arbitro.empujar(jugada1);
 		TableroConsultor<Tablero> tc = new TableroConsultor<Tablero>(arbitro.consultarTablero());
@@ -312,11 +321,13 @@ public class ArbitroEmpujarPiezasTest {
 	/**
 	 * Comprobacion de empujar reina blanca en vertical echando un peón blanco del tablero.
 	 * 
+	 * @throws TableroIncorrectoException si el tablero es nulo
+	 * 
 	 * @see noventagrados.control.TestUtil#fabricarJugada
 	 */
 	@DisplayName("Comprueba el empuje de la reina blanca en vertical.")
 	@Test
-	void comprobarEmpujeDeReinaBlancaEnVertical() {
+	void comprobarEmpujeDeReinaBlancaEnVertical() throws TableroIncorrectoException {
 		Jugada jugada1 = fabricarJugada(tablero, 0, 0, 4, 0);
 		arbitro.empujar(jugada1);
 		TableroConsultor<Tablero> tc = new TableroConsultor<Tablero>(arbitro.consultarTablero());
@@ -371,11 +382,13 @@ public class ArbitroEmpujarPiezasTest {
 	/**
 	 * Comprobacion de empujar reina negra en vertical echando un peón negro del tablero.
 	 * 
+	 * @throws TableroIncorrectoException si el tablero es nulo
+	 * 
 	 * @see noventagrados.control.TestUtil#fabricarJugada
 	 */
 	@DisplayName("Comprueba el empuje de la reina negra en vertical.")
 	@Test
-	void comprobarEmpujeDeReinaNegraEnVertical() {
+	void comprobarEmpujeDeReinaNegraEnVertical() throws TableroIncorrectoException {
 		Jugada jugada1 = fabricarJugada(tablero, 6, 6, 2, 6);
 		arbitro.empujar(jugada1); // no es necesario cambiar turno, no comprobamos legalidad
 		TableroConsultor<Tablero> tc = new TableroConsultor<>(arbitro.consultarTablero());
@@ -430,11 +443,13 @@ public class ArbitroEmpujarPiezasTest {
 	/**
 	 * Comprobacion de empujar peon blanco en vertical echando a la reina blanca.
 	 * 
+	 * @throws TableroIncorrectoException si el tablero es nulo
+	 * 
 	 * @see noventagrados.control.TestUtil#fabricarJugada
 	 */
 	@DisplayName("Comprueba el empuje del peón blanco de su propia reina blanca en horizontal.")
 	@Test
-	void comprobarEmpujeDePeonAReinaBlancaEnVertical() {
+	void comprobarEmpujeDePeonAReinaBlancaEnVertical() throws TableroIncorrectoException {
 		Jugada jugada1 = fabricarJugada(tablero, 3, 0, 1, 0);
 		arbitro.empujar(jugada1);
 		TableroConsultor<Tablero> tc = new TableroConsultor<>(arbitro.consultarTablero());
@@ -488,11 +503,13 @@ public class ArbitroEmpujarPiezasTest {
 	/**
 	 * Comprobacion de empujar peon negro en vertical echando a la reina negra.
 	 * 
+	 * @throws TableroIncorrectoException si el tablero es nulo
+	 * 
 	 * @see noventagrados.control.TestUtil#fabricarJugada
 	 */
 	@DisplayName("Comprueba el empuje del peón negro de su propia reina negra en vertical.")
 	@Test
-	void comprobarEmpujeDePeonAReinaNegraEnVertical() {
+	void comprobarEmpujeDePeonAReinaNegraEnVertical() throws TableroIncorrectoException {
 		Jugada jugada1 = fabricarJugada(tablero, 3, 6, 5, 6);
 		arbitro.empujar(jugada1);
 		TableroConsultor<Tablero> tc = new TableroConsultor<>(arbitro.consultarTablero());

@@ -15,6 +15,7 @@ import org.junit.platform.suite.api.SuiteDisplayName;
  */
 @SelectPackages({
 	"noventagrados.control",
+	"noventagrados.control.excepcion",
 	"noventagrados.modelo",
 	"noventagrados.util",
 	"noventagrados.textui.excepcion"})

@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Timeout;
 
 import noventagrados.control.Arbitro;
 import noventagrados.control.TableroConsultor;
+import noventagrados.control.excepcion.TableroIncorrectoException;
 import noventagrados.modelo.Pieza;
 import noventagrados.modelo.Tablero;
 import noventagrados.util.Color;
@@ -68,10 +69,12 @@ public class ArbitroPartidaReinaEmpujandoReinaTest {
 
 	/**
 	 * Comprueba una partida con victoria de negras expulsando a reina blanca.
+	 * 
+	 * @throws TableroIncorrectoException si el tablero es nulo
 	 */
 	@Test
 	@DisplayName("Comprueba que hay victoria de negras expulsando a reina blanca.")
-	void probarPartidaConVictoriaDeNegrasExpulsandoAReinaBlanca() {
+	void probarPartidaConVictoriaDeNegrasExpulsandoAReinaBlanca() throws TableroIncorrectoException {
 
 		// given
 		arbitro.empujar(fabricarJugada(tablero, 0, 0, 0, 4)); // blancas
@@ -152,10 +155,12 @@ public class ArbitroPartidaReinaEmpujandoReinaTest {
 	
 	/**
 	 * Comprueba una partida con victoria de blancas expulsando a reina negra.
+	 * 
+	 * @throws TableroIncorrectoException si el tablero es nulo
 	 */
 	@Test
 	@DisplayName("Comprueba que hay victoria de blancas expulsando a reina negra.")
-	void probarPartidaConVictoriaDeBlancasExpulsandoAReinaNegra() {
+	void probarPartidaConVictoriaDeBlancasExpulsandoAReinaNegra() throws TableroIncorrectoException {
 
 		// given
 		arbitro.empujar(fabricarJugada(tablero, 3, 0, 3, 4)); // blancas

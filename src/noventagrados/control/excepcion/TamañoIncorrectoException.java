@@ -1,3 +1,10 @@
+/**
+ * Excepción lanzada cuando una operación relacionada con el tamaño del array encuentra un tamaño de array no válido.
+ * 
+ * @author <a href="mailto:aab1027@alu.ubu.es">Antonio Alonso Briones</a>
+ * @version 1.0
+ * @since 1.0
+ */
 package noventagrados.control.excepcion;
 
 public class TamañoIncorrectoException extends Exception {
@@ -8,7 +15,7 @@ public class TamañoIncorrectoException extends Exception {
     }
 
     public TamañoIncorrectoException(String message) {
-        super("El tablero es incorrecto.");
+        super(message);
     }
 
     public TamañoIncorrectoException(Throwable cause) {
@@ -16,7 +23,7 @@ public class TamañoIncorrectoException extends Exception {
     }
 
     public TamañoIncorrectoException(String message, Throwable cause) {
-        super("El tablero es incorrecto.", cause);
+        super(message, cause);
     }
 
 }

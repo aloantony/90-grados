@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
 
 import java.util.concurrent.TimeUnit;
@@ -20,6 +21,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import noventagrados.control.excepcion.TableroIncorrectoException;
 import noventagrados.modelo.Celda;
 import noventagrados.modelo.Pieza;
 import noventagrados.modelo.Tablero;
@@ -47,11 +49,27 @@ public class TableroConsultorTest {
 	/** Tablero consultor de testing. */
 	private TableroConsultor<Tablero> tableroConsultor;
 
-	/** Inicializa valores para cada test. */
+	/** Inicializa valores para cada test. 
+	 * 
+	 * @throws TableroIncorrectoException si el tablero es nulo
+	 */
 	@BeforeEach
 	@Timeout(value = 1000, unit = TimeUnit.MILLISECONDS)
-	void inicializar() {
+	void inicializar() throws TableroIncorrectoException {
 		tableroConsultor = new TableroConsultor<>(new Tablero());
+	}
+	
+	/** 
+	 * Comprueba lanzamiento de excepción comprobable al instanciar
+	 * con valor incorercto.
+	 */
+	@Test
+	@DisplayName("Comprueba el lanzamiento de excepción al consultar caja con valor nulo.")
+	void comprobarLanzamientoExcepcion() {
+		assertThrows(TableroIncorrectoException.class,
+				() ->  {
+					new TableroConsultor<Tablero>(null);
+				});
 	}
 
 	/**
@@ -350,11 +368,12 @@ public class TableroConsultorTest {
 		 * @param filaOrigen     fila origen
 		 * @param columnaOrigen  columna origen
 		 * @param numeroPiezas   número de piezas en el sentido horizontal
+		 * @throws TableroIncorrectoException si el tablero es nulo
 		 */
 		@DisplayName(" Comprueba el número de piezas en horizontal a partir de una coordenada.")
 		@ParameterizedTest
 		@CsvSource({ "0, 0, 1", "1, 1, 2", "2, 2, 3", "3, 3, 4", "4, 4, 5", "5, 5, 6", "6, 6, 7" })
-		void comprobarNumeroPiezasEnHorizontal(int filaOrigen, int columnaOrigen, int numeroPiezas) {
+		void comprobarNumeroPiezasEnHorizontal(int filaOrigen, int columnaOrigen, int numeroPiezas) throws TableroIncorrectoException {
 			// given
 			Tablero tableroConPiezas = new Tablero();
 			colocarPiezasConsecutivas(tableroConPiezas);
@@ -376,11 +395,12 @@ public class TableroConsultorTest {
 		 * @param filaOrigen     fila origen
 		 * @param columnaOrigen  columna origen
 		 * @param numeroPiezas   número de piezas en el sentido vertical
+		 * @throws TableroIncorrectoException si el tablero es nulo
 		 */
 		@DisplayName(" Comprueba el número de piezas en vertical a partir de una coordenada.")
 		@ParameterizedTest
 		@CsvSource({ "0, 0, 7", "1, 1, 6", "2, 2, 5", "3, 3, 4", "4, 4, 3", "5, 5, 2", "6, 6, 1" })
-		void comprobarNumeroPiezasEnVertical(int filaOrigen, int columnaOrigen, int numeroPiezas) {
+		void comprobarNumeroPiezasEnVertical(int filaOrigen, int columnaOrigen, int numeroPiezas) throws TableroIncorrectoException {
 			// given
 			// given
 			Tablero tableroConPiezas = new Tablero();
@@ -450,11 +470,12 @@ public class TableroConsultorTest {
 		 * @param filaOrigen     fila origen
 		 * @param columnaOrigen  columna origen
 		 * @param numeroPiezas   número de piezas en el sentido horizontal
+		 * @throws TableroIncorrectoException si el tablero es nulo
 		 */
 		@DisplayName(" Comprueba el número de piezas en horizontal a partir de una coordenada con huecos.")
 		@ParameterizedTest
 		@CsvSource({ "0, 0, 1", "1, 1, 2", "2, 4, 3", "3, 6, 4", "4, 5, 3", "5, 6, 3", "6, 5, 2" })
-		void comprobarNumeroPiezasEnHorizontalConHuecos(int filaOrigen, int columnaOrigen, int numeroPiezas) {
+		void comprobarNumeroPiezasEnHorizontalConHuecos(int filaOrigen, int columnaOrigen, int numeroPiezas) throws TableroIncorrectoException {
 			// given
 			Tablero tableroConPiezas = new Tablero();
 			colocarPiezasAlternas(tableroConPiezas);
@@ -477,11 +498,12 @@ public class TableroConsultorTest {
 		 * @param filaOrigen     fila origen
 		 * @param columnaOrigen  columna origen
 		 * @param numeroPiezas   número de piezas en el sentido vertical
+		 * @throws TableroIncorrectoException si el tablero es nulo
 		 */
 		@DisplayName(" Comprueba el número de piezas en vertical a partir de una coordenada con huecos.")
 		@ParameterizedTest
 		@CsvSource({ "0, 0, 4", "1, 1, 1", "2, 4, 3", "3, 6, 2", "4, 5, 2", "5, 6, 2", "6, 6, 2" })
-		void comprobarNumeroPiezasEnVerticalConHuecos(int filaOrigen, int columnaOrigen, int numeroPiezas) {
+		void comprobarNumeroPiezasEnVerticalConHuecos(int filaOrigen, int columnaOrigen, int numeroPiezas) throws TableroIncorrectoException {
 			// given
 			Tablero tableroConPiezas = new Tablero();
 			colocarPiezasAlternas(tableroConPiezas);
@@ -499,10 +521,12 @@ public class TableroConsultorTest {
 		/**
 		 * Comprueba el número de piezas de cada tipo sobre el tablero.
 		 * 
+		 * @throws TableroIncorrectoException si el tablero es nulo 
+		 * 
 		 */
 		@DisplayName(" Comprueba el número de piezas de cada tipo sobre el tablero.")
 		@Test
-		void comprobarNumeroPiezasDeCadaTipoSobreElTablero() {
+		void comprobarNumeroPiezasDeCadaTipoSobreElTablero() throws TableroIncorrectoException {
 			// given
 			Tablero tableroConPiezas = new Tablero();
 			colocarPiezasAlternas(tableroConPiezas);
@@ -530,10 +554,12 @@ public class TableroConsultorTest {
 
 		/**
 		 * Rellena el tablero de distintos tipos de piezas hasta ver que está completo.
+		 * 
+		 * @throws TableroIncorrectoException si el tablero es nulo
 		 */
 		@DisplayName("Comprueba el rellenado del tablero de piezas hasta completarlo")
 		@Test
-		void comprobarRellenadoDelTableroConPiezas() {			
+		void comprobarRellenadoDelTableroConPiezas() throws TableroIncorrectoException {			
 			// En cada iteración lo completamos con tipos de piezas distintas
 			for (TipoPieza tipoPieza : TipoPieza.values()) {
 				// y de distintos colores
@@ -624,10 +650,12 @@ public class TableroConsultorTest {
 		/**
 		 * Comprueba que la reina blanca está en el centro.
 		 * 
+		 * @throws TableroIncorrectoException si el tablero es nulo
+		 * 
 		 */
 		@DisplayName(" Comprueba que la reina blanca está en el centro y la negra no.")
 		@Test
-		void comprobarReinaBlancaEnElCentro() {
+		void comprobarReinaBlancaEnElCentro() throws TableroIncorrectoException {
 			// given
 			Tablero tableroConReinaBlancaEnElCentro = new Tablero();
 			colocarReinaBlancaEnCentro(tableroConReinaBlancaEnElCentro);
@@ -650,10 +678,12 @@ public class TableroConsultorTest {
 		/**
 		 * Comprueba que la reina negra está en el centro.
 		 * 
+		 * @throws TableroIncorrectoException si el tablero es nulo 
+		 * 
 		 */
 		@DisplayName(" Comprueba que la reina negra está en el centro y la blanca no.")
 		@Test
-		void comprobarReinaNegraEnElCentro() {
+		void comprobarReinaNegraEnElCentro() throws TableroIncorrectoException {
 			// given
 			Tablero tableroConReinaNegraEnElCentro = new Tablero();
 			colocarReinaNegraEnCentro(tableroConReinaNegraEnElCentro);

@@ -75,7 +75,6 @@ public class Caja {
      *
      * @param tipoPieza Tipo de pieza a contar (no nulo).
      * @return Número de piezas del tipo especificado.
-     * @throws IllegalArgumentException si el tipo de pieza es nulo.
      */
     public int contarPiezas(TipoPieza tipoPieza) {
         int contador = 0;

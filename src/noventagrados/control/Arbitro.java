@@ -2,8 +2,6 @@ package noventagrados.control;
 
 import noventagrados.modelo.Tablero;
 
-import static org.hamcrest.CoreMatchers.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -198,19 +196,23 @@ public class Arbitro {
      *
      * @param jugada Jugada a realizar (no nula).
      */
-    public void empujar(Jugada jugada) throws TableroIncorrectoException {
-        TableroConsultor<Tablero> consultor = new TableroConsultor<>(tablero);
+    public void empujar(Jugada jugada) {
+        try {
+            TableroConsultor<Tablero> consultor = new TableroConsultor<>(tablero);
 
-        // Obtener sentido del movimiento
-        Coordenada origen = jugada.origen().consultarCoordenada();
-        Coordenada destino = jugada.destino().consultarCoordenada();
-        Sentido sentido = consultor.calcularSentido(origen, destino);
+            // Obtener sentido del movimiento
+            Coordenada origen = jugada.origen().consultarCoordenada();
+            Coordenada destino = jugada.destino().consultarCoordenada();
+            Sentido sentido = consultor.calcularSentido(origen, destino);
 
-        // Reubicar las piezas para similar el empuje
-        reubicador(origen, sentido, destino);
+            // Reubicar las piezas para similar el empuje
+            reubicador(origen, sentido, destino);
 
-        // Incrementar el número de jugadas
-        numeroJugada++;
+            // Incrementar el número de jugadas
+            numeroJugada++;
+        } catch (TableroIncorrectoException exception) {
+            throw new RuntimeException();
+        }
     }
 
     /**
@@ -220,7 +222,7 @@ public class Arbitro {
      * @param sentido Sentido del movimiento.
      * @param destino Coordenada de destino.
      */
-    private void reubicador(Coordenada origen, Sentido sentido, Coordenada destino) throws TableroIncorrectoException {
+    private void reubicador(Coordenada origen, Sentido sentido, Coordenada destino) {
         Coordenada actual = origen;
         // Recolectar las piezas que hay que empujar y eliminarlas del tablero
         List<Pieza> listaPiezasAReubicar = Recolector(actual, destino, sentido);
@@ -240,7 +242,6 @@ public class Arbitro {
             }
         }
         estaFinalizadaPartida();
-
     }
 
     private List<Pieza> Recolector(Coordenada actual, Coordenada destino, Sentido sentido) {
@@ -319,42 +320,45 @@ public class Arbitro {
      * @param jugada Jugada a validar (no nula).
      * @return true si la jugada es legal, false en caso contrario.
      */
-    public boolean esMovimientoLegal(Jugada jugada) throws TableroIncorrectoException {
+    public boolean esMovimientoLegal(Jugada jugada) {
         if (jugada == null) {
             return false;
         }
 
         // Verificar que la partida no ha terminado
-        boolean cumpleRegla = !estaFinalizadaPartida();
-
-        if (cumpleRegla) {
-            TableroConsultor<Tablero> consultor = new TableroConsultor<>(tablero);
-            Coordenada origen = jugada.origen().consultarCoordenada();
-            Coordenada destino = jugada.destino().consultarCoordenada();
-            // Las coordenadas, origen y destino, están en el tablero y son distintas
-            cumpleRegla = estaCoordenadaEnTablero(origen) && estaCoordenadaEnTablero(destino)
-                    && !origen.equals(destino);
-
+        try {
+            boolean cumpleRegla = !estaFinalizadaPartida();
             if (cumpleRegla) {
-                Pieza piezaOrigen = tablero.consultarCelda(origen).consultarPieza();
-                // Hay pieza en el origen y es del color del turno actual
-                cumpleRegla = piezaOrigen != null && piezaOrigen.consultarColor() == turnoActual;
+                TableroConsultor<Tablero> consultor = new TableroConsultor<>(tablero);
+                Coordenada origen = jugada.origen().consultarCoordenada();
+                Coordenada destino = jugada.destino().consultarCoordenada();
+                // Las coordenadas, origen y destino, están en el tablero y son distintas
+                cumpleRegla = estaCoordenadaEnTablero(origen) && estaCoordenadaEnTablero(destino)
+                        && !origen.equals(destino);
 
                 if (cumpleRegla) {
-                    int piezasHorizontal = consultor.consultarNumeroPiezasEnHorizontal(origen);
-                    int piezasVertical = consultor.consultarNumeroPiezasEnVertical(origen);
-                    int distanciaHorizontal = Math.abs(destino.columna() - origen.columna());
-                    int distanciaVertical = Math.abs(destino.fila() - origen.fila());
-                    // La distancia horizontal o vertical es igual al número de piezas en la
-                    // perpendicular
-                    cumpleRegla = ((distanciaVertical == piezasHorizontal) ||
-                            (distanciaHorizontal == piezasVertical)) &&
-                            consultor.calcularSentido(origen, destino) != null;
+                    Pieza piezaOrigen = tablero.consultarCelda(origen).consultarPieza();
+                    // Hay pieza en el origen y es del color del turno actual
+                    cumpleRegla = piezaOrigen != null && piezaOrigen.consultarColor() == turnoActual;
+
+                    if (cumpleRegla) {
+                        int piezasHorizontal = consultor.consultarNumeroPiezasEnHorizontal(origen);
+                        int piezasVertical = consultor.consultarNumeroPiezasEnVertical(origen);
+                        int distanciaHorizontal = Math.abs(destino.columna() - origen.columna());
+                        int distanciaVertical = Math.abs(destino.fila() - origen.fila());
+                        // La distancia horizontal o vertical es igual al número de piezas en la
+                        // perpendicular
+                        cumpleRegla = ((distanciaVertical == piezasHorizontal) ||
+                                (distanciaHorizontal == piezasVertical)) &&
+                                consultor.calcularSentido(origen, destino) != null;
+                    }
                 }
             }
-        }
 
-        return cumpleRegla;
+            return cumpleRegla;
+        } catch (TableroIncorrectoException exception) {
+            throw new RuntimeException();
+        }
     }
 
     /**
@@ -373,34 +377,38 @@ public class Arbitro {
      *
      * @return true si la partida ha finalizado, false en caso contrario.
      */
-    public boolean estaFinalizadaPartida() throws TableroIncorrectoException {
-        TableroConsultor<Tablero> consultor = new TableroConsultor<>(tablero);
-        boolean finalizada = false;
+    public boolean estaFinalizadaPartida() {
+        try {
+            TableroConsultor<Tablero> consultor = new TableroConsultor<>(tablero);
+            boolean finalizada = false;
 
-        if (consultor.estaReinaEnElCentro(Color.BLANCO)) {
-            turnoGanador = Color.BLANCO;
-            finalizada = true;
-        }
-
-        if (consultor.estaReinaEnElCentro(Color.NEGRO)) {
-            turnoGanador = Color.NEGRO;
-            finalizada = true;
-        }
-
-        if (!consultor.hayReina(Color.BLANCO) && !consultor.hayReina(Color.NEGRO)) {
-            turnoGanador = null;
-            finalizada = true;
-        } else {
-            if (!consultor.hayReina(Color.BLANCO)) {
-                turnoGanador = Color.NEGRO;
-                finalizada = true;
-            }
-            if (!consultor.hayReina(Color.NEGRO)) {
+            if (consultor.estaReinaEnElCentro(Color.BLANCO)) {
                 turnoGanador = Color.BLANCO;
                 finalizada = true;
             }
+
+            if (consultor.estaReinaEnElCentro(Color.NEGRO)) {
+                turnoGanador = Color.NEGRO;
+                finalizada = true;
+            }
+
+            if (!consultor.hayReina(Color.BLANCO) && !consultor.hayReina(Color.NEGRO)) {
+                turnoGanador = null;
+                finalizada = true;
+            } else {
+                if (!consultor.hayReina(Color.BLANCO)) {
+                    turnoGanador = Color.NEGRO;
+                    finalizada = true;
+                }
+                if (!consultor.hayReina(Color.NEGRO)) {
+                    turnoGanador = Color.BLANCO;
+                    finalizada = true;
+                }
+            }
+            return finalizada;
+        } catch (TableroIncorrectoException exception) {
+            throw new RuntimeException();
         }
-        return finalizada;
     }
 
     @Override

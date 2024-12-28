@@ -108,9 +108,7 @@ public class NoventaGrados {
 			mostrarErrorSeleccionandomodo();
 		} catch (RuntimeException exception) {
 			mostrarErrorInterno(exception);
-		}
-
-		finally {
+		} finally {
 			finalizarPartida();
 		}
 	}
@@ -401,6 +399,7 @@ public class NoventaGrados {
 
 	/**
 	 * Muestra el turno ganador de la partida en pantalla.
+	 * 
 	 */
 	private static void mostrarGanador() {
 		if (arbitro.estaFinalizadaPartida() && arbitro.consultarTurnoGanador() != null) {

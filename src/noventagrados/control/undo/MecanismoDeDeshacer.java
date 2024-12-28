@@ -29,6 +29,7 @@ public interface MecanismoDeDeshacer {
 
     /**
      * Deshace la última jugada grabada en el histórico.
+     * 
      */
     public void deshacerJugada();
 

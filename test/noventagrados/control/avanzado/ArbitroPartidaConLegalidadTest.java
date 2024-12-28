@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Timeout;
 
 import noventagrados.control.Arbitro;
 import noventagrados.control.TableroConsultor;
+import noventagrados.control.excepcion.TableroIncorrectoException;
 import noventagrados.modelo.Jugada;
 import noventagrados.modelo.Tablero;
 import noventagrados.util.Color;
@@ -75,10 +76,12 @@ public class ArbitroPartidaConLegalidadTest {
 	/**
 	 * Comprueba una partida simple con victoria de blancas en el centro sin
 	 * expulsiones del tablero.
+	 * 
+	 * @throws TableroIncorrectoException si el tablero es nulo
 	 */
 	@Test
 	@DisplayName("Comprueba que hay victoria de blancas en el centro sin expulsar del tablero a ninguna pieza.")
-	void probarPartidaSimpleConVictoriaDeBlancasEnElCentroSinExpulsarPiezas() {
+	void probarPartidaSimpleConVictoriaDeBlancasEnElCentroSinExpulsarPiezas() throws TableroIncorrectoException {
 
 		// given
 		Jugada jugada = fabricarJugada(tablero, 0, 3, 4, 3);
@@ -166,10 +169,12 @@ public class ArbitroPartidaConLegalidadTest {
 	 * 
 	 * Algunos de los movimientos implican empujes más complejos con huecos entre
 	 * piezas.
+	 * 
+	 * @throws TableroIncorrectoException si el tablero es nulo
 	 */
 	@Test
 	@DisplayName("Comprueba que hay victoria de negras en el centro sin expulsar del tablero a ninguna pieza.")
-	void probarPartidaSimpleConVictoriaDeNegrasEnElCentroSinExpulsarPiezas() {
+	void probarPartidaSimpleConVictoriaDeNegrasEnElCentroSinExpulsarPiezas() throws TableroIncorrectoException {
 
 		// given
 		Jugada jugada = fabricarJugada(tablero, 0, 1, 4, 1);

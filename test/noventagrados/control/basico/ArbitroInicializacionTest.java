@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
 
 import java.util.Arrays;
@@ -23,6 +24,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import noventagrados.control.Arbitro;
 import noventagrados.control.TableroConsultor;
+import noventagrados.control.excepcion.TableroIncorrectoException;
+import noventagrados.control.excepcion.TamañoIncorrectoException;
 import noventagrados.modelo.Celda;
 import noventagrados.modelo.Pieza;
 import noventagrados.modelo.Tablero;
@@ -91,6 +94,8 @@ public class ArbitroInicializacionTest {
 		/**
 		 * Comprobacion de inicialización correcta del tablero, sin colocar ninguna
 		 * pieza, con un tablero vacío y sin turno incialmente.
+		 * 
+		 * @throws TableroIncorrectoException si el tablero es nulo
 		 */
 		// @formatter:off
 		 /* Partimos de un tablero vacío como el que se muestra:	
@@ -108,7 +113,7 @@ public class ArbitroInicializacionTest {
 		 // @formatter:on
 		@DisplayName("Comprueba el estado inicial con un tablero vacío")
 		@Test
-		void comprobarEstadoInicialAntesDeRellenarTablero() {
+		void comprobarEstadoInicialAntesDeRellenarTablero() throws TableroIncorrectoException {
 			TableroConsultor<Tablero> tableroConsultor = new TableroConsultor<>(arbitro.consultarTablero());
 			assertAll("estado inicial ",
 					() -> assertThat(EL_NÚMERO_DE_JUGADAS_DEBERÍA_SER_CERO, arbitro.consultarNumeroJugada(), is(0)),
@@ -158,10 +163,12 @@ public class ArbitroInicializacionTest {
 
 		/**
 		 * Comprueba el número de piezas iniciales.
+		 * 
+		 * @throws TableroIncorrectoException si el tablero es nulo
 		 */
 		@Test
 		@DisplayName("Comprueba el número de piezas con la configuración inicial")
-		void probarNumeroDePiezas() {
+		void probarNumeroDePiezas() throws TableroIncorrectoException {
 			TableroConsultor<Tablero> tableroConsultor = new TableroConsultor<>(arbitro.consultarTablero());
 			assertAll("estado inicial tras colocar piezas ",
 					() -> assertThat(EL_NÚMERO_DE_JUGADAS_DEBERÍA_SER_CERO, arbitro.consultarNumeroJugada(), is(0)),
@@ -262,6 +269,9 @@ public class ArbitroInicializacionTest {
 
 		/**
 		 * Comprueba la colocación de todas las piezas en posición diferente.
+		 * 
+		 * @throws TamañoIncorrectoException si el tamaño de listas es incorrecto
+		 * @throws TableroIncorrectoException si el tablero es nulo
 		 */
 		// @formatter:off
 		/* Rellenaremos el tablero tal y como se muestra:	
@@ -279,7 +289,7 @@ public class ArbitroInicializacionTest {
 		 // @formatter:on
 		@Test
 		@DisplayName("Comprueba la colocación de todas las piezas en posición diferente y con turno cambiado.")
-		void probarColocandoTodasLasPiezasAdHoc() {
+		void probarColocandoTodasLasPiezasAdHoc() throws TamañoIncorrectoException, TableroIncorrectoException {
 			arbitro.colocarPiezas(Arrays.asList(
 					new Pieza[] { new Pieza(TipoPieza.PEON, Color.BLANCO), new Pieza(TipoPieza.PEON, Color.BLANCO),
 							new Pieza(TipoPieza.PEON, Color.BLANCO), new Pieza(TipoPieza.PEON, Color.BLANCO),
@@ -371,6 +381,31 @@ public class ArbitroInicializacionTest {
 
 					() -> assertThat("En esta caso empiezan negras.", arbitro.consultarTurno(), is(Color.NEGRO)));
 
+		}
+		
+		/**
+		 * Comprueba la colocación de piezas ad-hoc con listas de
+		 * distinto tamaño genera el lanzamiento de excepción.
+		 * 
+		 * @throws TamañoIncorrectoException excepción si los tamaños de ambas listas no coinciden
+		 */
+		@Test
+		@DisplayName("Comprueba lanzamiento de excepción con distinto tamaño en ambas listas.")
+		void probarLanzamientoExcepcionConTamañoDiferente() throws TamañoIncorrectoException {
+			assertThrows(TamañoIncorrectoException.class,
+		            ()->{
+		            	arbitro.colocarPiezas(Arrays.asList(
+		    					new Pieza[] { new Pieza(TipoPieza.PEON, Color.BLANCO), new Pieza(TipoPieza.PEON, Color.BLANCO),
+		    							new Pieza(TipoPieza.PEON, Color.BLANCO), new Pieza(TipoPieza.PEON, Color.BLANCO),
+		    							new Pieza(TipoPieza.PEON, Color.NEGRO), new Pieza(TipoPieza.PEON, Color.NEGRO),
+		    							new Pieza(TipoPieza.PEON, Color.NEGRO), new Pieza(TipoPieza.PEON, Color.NEGRO) }),
+
+		    					Arrays.asList(new Coordenada[] { new Coordenada(0, 1), new Coordenada(0, 3), new Coordenada(1, 0),
+		    							new Coordenada(3, 0), new Coordenada(3, 6), new Coordenada(5, 6), new Coordenada(6, 3),
+		    							new Coordenada(6, 5), new Coordenada(2, 2), new Coordenada(4, 4),
+
+		    					}), Color.NEGRO);
+		            });
 		}
 	}
 

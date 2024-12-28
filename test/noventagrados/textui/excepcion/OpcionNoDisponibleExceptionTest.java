@@ -25,10 +25,10 @@ public class OpcionNoDisponibleExceptionTest {
 	public void probarCorrectaHerencia() {
 		// se necesitan ambos asertos por la relaciones de herencia entre ambas clases
 		assertAll("incorrecta cláusula de herencia en la excepción",
-			() -> assertThat("La clase CoordenadasIncorrectasException debe heredar de Exception.", 
+			() -> assertThat("La clase OpcionNoDisponibleException debe heredar de Exception.", 
 					Exception.class.isAssignableFrom(OpcionNoDisponibleException.class), is(true)),
 			
-			() -> assertThat("La clase CoordenadasIncorrectasException NO debe heredar de RuntimeException.",
+			() -> assertThat("La clase OpcionNoDisponibleException NO debe heredar de RuntimeException.",
 					RuntimeException.class.isAssignableFrom(OpcionNoDisponibleException.class), is(false))
 			);			
 	} 
