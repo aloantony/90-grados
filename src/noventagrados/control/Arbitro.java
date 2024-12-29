@@ -13,10 +13,11 @@ import noventagrados.util.Sentido;
 import noventagrados.util.TipoPieza;
 
 /**
+ * Clase que representa el árbitro del juego Noventa Grados.
+ * Gestiona el estado del juego, validación de movimientos y condiciones
+ * de victoria.
+ * 
  * @author <a href="mailto:aab1027@alu.ubu.es">Antonio Alonso Briones</a>
- *         Clase que representa el árbitro del juego Noventa Grados.
- *         Gestiona el estado del juego, validación de movimientos y condiciones
- *         de victoria.
  */
 public class Arbitro {
 

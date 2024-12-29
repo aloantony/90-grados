@@ -7,10 +7,11 @@ import java.util.Objects;
 import noventagrados.util.Color;
 
 /**
+ * Clase que representa una celda en el tablero del juego Noventa
+ * Grados.
+ * Contiene una coordenada y, opcionalmente, una pieza.
+ * 
  * @author <a href="mailto:aab1027@alu.ubu.es">Antonio Alonso Briones</a>
- *         Clase que representa una celda en el tablero del juego Noventa
- *         Grados.
- *         Contiene una coordenada y, opcionalmente, una pieza.
  */
 public class Celda {
     private final Coordenada coordenada;
@@ -57,10 +58,11 @@ public class Celda {
      *
      * @return Pieza en la celda o null si está vacía.
      */
-    public Pieza consultarPieza()  {
-    	Pieza pieza = null;
-    	if(this.pieza != null) {
-    		pieza = this.pieza.clonar();}
+    public Pieza consultarPieza() {
+        Pieza pieza = null;
+        if (this.pieza != null) {
+            pieza = this.pieza.clonar();
+        }
         return pieza;
     }
 
@@ -96,21 +98,21 @@ public class Celda {
     }
 
     @Override
-	public int hashCode() {
-		return Objects.hash(coordenada, pieza);
-	}
+    public int hashCode() {
+        return Objects.hash(coordenada, pieza);
+    }
 
     @Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Celda other = (Celda) obj;
-		return Objects.equals(coordenada, other.coordenada) && Objects.equals(pieza, other.pieza);
-	}
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Celda other = (Celda) obj;
+        return Objects.equals(coordenada, other.coordenada) && Objects.equals(pieza, other.pieza);
+    }
 
     /**
      * Devuelve la representación en texto de la celda.

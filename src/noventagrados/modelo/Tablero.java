@@ -5,9 +5,10 @@ import java.util.Arrays;
 import noventagrados.util.Coordenada;
 
 /**
+ * Clase que representa el tablero del juego Noventa Grados.
+ * Contiene una matriz de celdas de 7x7.
+ * 
  * @author <a href="mailto:aab1027@alu.ubu.es">Antonio Alonso Briones</a>
- *         Clase que representa el tablero del juego Noventa Grados.
- *         Contiene una matriz de celdas de 7x7.
  */
 public class Tablero {
     private static final int TAMAÑO = 7;
@@ -170,24 +171,24 @@ public class Tablero {
     }
 
     @Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + Arrays.deepHashCode(celdas);
-		return result;
-	}
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + Arrays.deepHashCode(celdas);
+        return result;
+    }
 
     @Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Tablero other = (Tablero) obj;
-		return Arrays.deepEquals(celdas, other.celdas);
-	}
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Tablero other = (Tablero) obj;
+        return Arrays.deepEquals(celdas, other.celdas);
+    }
 
     /**
      * Devuelve la representación en texto del tablero.
