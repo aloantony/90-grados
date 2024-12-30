@@ -22,7 +22,7 @@ public class TableroConsultor {
     /**
      * Constructor de la clase TableroConsultor.
      *
-     * @param tablero Tablero sobre el que se realizarán las consultas (no nulo).
+     * @param tablero Tablero sobre el que se realizarán las consultas.
      */
     public TableroConsultor(Tablero tablero) {
         this.tablero = tablero;
@@ -31,8 +31,8 @@ public class TableroConsultor {
     /**
      * Calcula el sentido entre dos coordenadas.
      *
-     * @param origen  Coordenada de origen (no nula).
-     * @param destino Coordenada de destino (no nula).
+     * @param origen  Coordenada de origen.
+     * @param destino Coordenada de destino.
      * @return Sentido entre las coordenadas o null si no es válido.
      */
     public Sentido calcularSentido(Coordenada origen, Coordenada destino) {
@@ -51,8 +51,8 @@ public class TableroConsultor {
     /**
      * Retorna la distancia en horizontal entre dos coordenadas en la misma fila.
      *
-     * @param origen  Coordenada de origen (no nula).
-     * @param destino Coordenada de destino (no nula).
+     * @param origen  Coordenada de origen.
+     * @param destino Coordenada de destino.
      * @return Distancia o -1 si no están en la misma horizontal.
      */
     public int consultarDistanciaEnHorizontal(Coordenada origen, Coordenada destino) {
@@ -67,8 +67,8 @@ public class TableroConsultor {
     /**
      * Retorna la distancia en vertical entre dos coordenadas en la misma columna.
      *
-     * @param origen  Coordenada de origen (no nula).
-     * @param destino Coordenada de destino (no nula).
+     * @param origen  Coordenada de origen.
+     * @param destino Coordenada de destino.
      * @return Distancia o -1 si no están en la misma vertical.
      */
     public int consultarDistanciaEnVertical(Coordenada origen, Coordenada destino) {
@@ -82,8 +82,8 @@ public class TableroConsultor {
     /**
      * Retorna el número de piezas del tipo y color indicados en el tablero.
      *
-     * @param tipoPieza Tipo de pieza a contar (no nulo).
-     * @param color     Color de las piezas a contar (no nulo).
+     * @param tipoPieza Tipo de pieza a contar.
+     * @param color     Color de las piezas a contar.
      * @return Número de piezas encontradas.
      */
     public int consultarNumeroPiezas(TipoPieza tipoPieza, Color color) {
@@ -101,7 +101,7 @@ public class TableroConsultor {
     /**
      * Retorna el número de piezas en la misma horizontal de la coordenada dada.
      *
-     * @param coordenada Coordenada de referencia (no nula).
+     * @param coordenada Coordenada de referencia.
      * @return Número de piezas en la misma fila.
      */
     public int consultarNumeroPiezasEnHorizontal(Coordenada coordenada) {
@@ -119,7 +119,7 @@ public class TableroConsultor {
     /**
      * Retorna el número de piezas en la misma vertical de la coordenada dada.
      *
-     * @param coordenada Coordenada de referencia (no nula).
+     * @param coordenada Coordenada de referencia.
      * @return Número de piezas en la misma columna.
      */
     public int consultarNumeroPiezasEnVertical(Coordenada coordenada) {
@@ -137,7 +137,7 @@ public class TableroConsultor {
     /**
      * Verifica si la reina del color indicado está en la celda central.
      *
-     * @param color Color de la reina (no nulo).
+     * @param color Color de la reina.
      * @return true si la reina está en el centro, false en caso contrario.
      */
     public boolean estaReinaEnElCentro(Color color) {
@@ -150,7 +150,7 @@ public class TableroConsultor {
     /**
      * Verifica si la reina del color indicado está en el tablero.
      *
-     * @param color Color de la reina (no nulo).
+     * @param color Color de la reina,.
      * @return true si la reina está en el tablero, false en caso contrario.
      */
     public boolean hayReina(Color color) {
@@ -177,8 +177,8 @@ public class TableroConsultor {
     /**
      * Equals.
      *
-     * @param obj the obj
-     * @return true, if successful
+     * @param obj objeto
+     * @return verdadero si son iguales, falso en caso contrario
      */
     @Override
     public boolean equals(Object obj) {
@@ -195,7 +195,7 @@ public class TableroConsultor {
     /**
      * To string.
      *
-     * @return the string
+     * @return la cadena
      */
     @Override
     public String toString() {

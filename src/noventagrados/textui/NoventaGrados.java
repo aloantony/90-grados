@@ -25,7 +25,7 @@ import noventagrados.util.Coordenada;
  * @author <a href="mailto:aab1027@alu.ubu.es">Antonio Alonso Briones</a>
  * @since 1.0
  * @version 1.0
- * @see noventagrados.Celda
+ * @see noventagrados.modelo
  * @see noventagrados.control
  * @see noventagrados.util
  */

@@ -65,9 +65,9 @@ public class Arbitro {
      * Coloca piezas en el tablero según los arrays proporcionados e inicializa el
      * turno.
      * 
-     * @param piezas      Array de piezas a colocar (no nulo)
-     * @param coordenadas Array de coordenadas donde colocar las piezas (no nulo)
-     * @param turnoActual Color del turno inicial (no nulo)
+     * @param piezas      Array de piezas a colocar.
+     * @param coordenadas Array de coordenadas donde colocar las piezas.
+     * @param turnoActual Color del turno inicial.
      *                    tienen diferente longitud
      */
     public void colocarPiezas(Pieza[] piezas, Coordenada[] coordenadas, Color turnoActual) {
@@ -128,7 +128,7 @@ public class Arbitro {
     /**
      * Devuelve la caja que contiene las piezas expulsadas del color indicado.
      *
-     * @param color Color de la caja a consultar (no nulo).
+     * @param color Color de la caja a consultar.
      * @return La caja correspondiente.
      */
     public Caja consultarCaja(Color color) {
@@ -182,7 +182,7 @@ public class Arbitro {
      * Si se expulsan piezas, se añaden a la caja correspondiente.
      * Se asume que la jugada es legal.
      *
-     * @param jugada Jugada a realizar (no nula).
+     * @param jugada Jugada a realizar.
      */
     public void empujar(Jugada jugada) {
         TableroConsultor consultor = new TableroConsultor(tablero);
@@ -237,6 +237,14 @@ public class Arbitro {
         estaFinalizadaPartida();
     }
 
+    /**
+     * Método auxiliar para recolectar las piezas en una dirección.
+     *
+     * @param actual  Coordenada de origen.
+     * @param destino Coordenada de destino.
+     * @param sentido Sentido del movimiento.
+     * @return Array de piezas a reubicar.
+     */
     private Pieza[] Recolector(Coordenada actual, Coordenada destino, Sentido sentido) {
         Pieza[] listaPiezasAReubicar = new Pieza[tablero.consultarNumeroFilas()];
         int numPiezas = 0;
@@ -312,7 +320,7 @@ public class Arbitro {
     /**
      * Comprueba la legalidad de la jugada según las reglas del juego.
      *
-     * @param jugada Jugada a validar (no nula).
+     * @param jugada Jugada a validar.
      * @return true si la jugada es legal, false en caso contrario.
      */
     public boolean esMovimientoLegal(Jugada jugada) {
@@ -453,7 +461,7 @@ public class Arbitro {
                 + ", numeroJugada=" + numeroJugada + "]";
     }
 
-    /*
+    /**
      * Método main para probar la condición nueva de 2ª convocatoria
      * 
      * @param args argumentos de entrada en línea de comandos

@@ -29,6 +29,14 @@ public class Pieza {
         this.color = color;
     }
 
+    /**
+     * Crea una nueva pieza con los parámetros especificados.
+     *
+     * @param id        Identificador de la pieza
+     * @param tipoPieza Tipo de la pieza
+     * @param color     Color de la pieza
+     */
+
     public Pieza(int id, TipoPieza tipoPieza, Color color) {
         this.id = ++identificadorDeNuevasPiezas;
         this.tipoPieza = tipoPieza;
@@ -45,7 +53,7 @@ public class Pieza {
     }
 
     /**
-     * Devuelve el texto correspondiente al tipo de pieza y color (e.g., "PB").
+     * Devuelve el texto correspondiente al tipo de pieza y color (ejemplo: "PB").
      *
      * @return Representación textual de la pieza.
      */

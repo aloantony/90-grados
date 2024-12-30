@@ -23,7 +23,7 @@ public class Caja {
     /**
      * Constructor de la clase Caja.
      *
-     * @param color Color asignado a la caja (no nulo).
+     * @param color Color asignado a la caja.
      */
     public Caja(Color color) {
         this.color = color;
@@ -34,7 +34,7 @@ public class Caja {
     /**
      * Añade una pieza a la caja.
      *
-     * @param pieza Pieza a añadir (no nula).
+     * @param pieza Pieza a añadir.
      */
     public void añadir(Pieza pieza) {
         if (numPiezas != CAPACIDAD_MAXIMA) {
@@ -69,7 +69,7 @@ public class Caja {
     /**
      * Devuelve el número de piezas de un determinado tipo contenidas en la caja.
      *
-     * @param tipoPieza Tipo de pieza a contar (no nulo).
+     * @param tipoPieza Tipo de pieza a contar.
      * @return Número de piezas del tipo especificado.
      * @throws IllegalArgumentException si el tipo de pieza es nulo.
      */

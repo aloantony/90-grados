@@ -20,7 +20,7 @@ public class Celda {
     /**
      * Constructor de la clase Celda.
      *
-     * @param coordenada Coordenada asociada a la celda (no nula).
+     * @param coordenada Coordenada asociada a la celda.
      * @throws IllegalArgumentException si la coordenada es nula.
      */
     public Celda(Coordenada coordenada) {
