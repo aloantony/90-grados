@@ -1,15 +1,16 @@
 package noventagrados.util;
 
 /**
- * * @author <a href="mailto:aab1027@alu.ubu.es">Antonio Alonso Briones</a>
  * Enumeración que representa los tipos de piezas en el juego.
  * Asocia cada tipo de pieza con un carácter ('P' para peón, 'R' para reina).
  * 
- * @since
- * @version
+ * @author <a href="mailto:aab1027@alu.ubu.es">Antonio Alonso Briones</a>
  */
 public enum TipoPieza {
+    /** Representa una pieza de tipo Peón, usando el carácter 'P'. */
     PEON('P'),
+
+    /** Representa una pieza de tipo Reina, usando el carácter 'R'. */
     REINA('R');
 
     private final char caracter;

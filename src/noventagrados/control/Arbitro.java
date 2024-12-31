@@ -87,6 +87,7 @@ public class Arbitro {
      * @param piezas      Lista de piezas a colocar (no nula)
      * @param coordenadas Lista de coordenadas donde colocar las piezas (no nula)
      * @param turnoActual Color del turno inicial (no nulo)
+     * @throws TamañoIncorrectoException si las listas no tienen el mismo tamaño
      */
     public void colocarPiezas(List<Pieza> piezas, List<Coordenada> coordenadas, Color turnoActual)
             throws TamañoIncorrectoException {

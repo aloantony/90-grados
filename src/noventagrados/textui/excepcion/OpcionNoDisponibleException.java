@@ -5,7 +5,7 @@ package noventagrados.textui.excepcion;
  * 
  * @since 1.0
  * @version 1.0
- * @autor <a href="mailto:aab1027@alu.ubu.es">Antonio Alonso Briones</a>
+ * @author <a href="mailto:aab1027@alu.ubu.es">Antonio Alonso Briones</a>
  */
 public class OpcionNoDisponibleException extends Exception {
 

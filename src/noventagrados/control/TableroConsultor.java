@@ -28,6 +28,7 @@ public class TableroConsultor<T extends Tablero> {
      * Constructor de la clase TableroConsultor.
      *
      * @param tablero Tablero sobre el que se realizarán las consultas (no nulo).
+     * @throws TableroIncorrectoException si el tablero es nulo.
      */
     public TableroConsultor(T tablero) throws TableroIncorrectoException {
         if (tablero == null) {

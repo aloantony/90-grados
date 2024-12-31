@@ -9,7 +9,7 @@ import java.util.Date;
  * 
  * @since 1.0
  * @version 1.0.1
- * @autor <a href="mailto:aab1027@alu.ubu.es">Antonio Alonso Briones</a>
+ * @author <a href="mailto:aab1027@alu.ubu.es">Antonio Alonso Briones</a>
  */
 public interface MecanismoDeDeshacer {
 
@@ -47,5 +47,8 @@ public interface MecanismoDeDeshacer {
      */
     public Date obtenerFechaInicio();
 
+    /**
+     * Reinicia el histórico de jugadas.
+     */
     public void reiniciar();
 }

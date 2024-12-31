@@ -1,4 +1,5 @@
 noventagrados.control
+noventagrados.control.excepcion
 noventagrados.control.undo
 noventagrados.modelo
 noventagrados.textui

@@ -4,10 +4,11 @@ import noventagrados.util.Coordenada;
 import noventagrados.util.Color;
 
 /**
+ * Clase que representa una celda en el tablero del juego Noventa
+ * Grados.
+ * Contiene una coordenada y, opcionalmente, una pieza.
+ * 
  * @author <a href="mailto:aab1027@alu.ubu.es">Antonio Alonso Briones</a>
- *         Clase que representa una celda en el tablero del juego Noventa
- *         Grados.
- *         Contiene una coordenada y, opcionalmente, una pieza.
  * @since 1.0
  * @version 1.0
  */

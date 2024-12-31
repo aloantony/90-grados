@@ -9,11 +9,19 @@ import java.util.ArrayList;
  * 
  * @since 1.0
  * @version 1.0.1
- * @autor <a href="mailto:aab1027@alu.ubu.es">Antonio Alonso Briones</a>
+ * @author <a href="mailto:aab1027@alu.ubu.es">Antonio Alonso Briones</a>
+ * @param <Tipo> El tipo de objeto que se va a deshacer.
  */
-public abstract class MecanismoDeDeshacerAbstracto<Tipo> implements MecanismoDeDeshacer {
 
+public abstract class MecanismoDeDeshacerAbstracto<Tipo> implements MecanismoDeDeshacer {
+    /**
+     * La fecha en que se inició el mecanismo de deshacer.
+     */
     public Date fechaInicio;
+
+    /**
+     * Lista que almacena el historial de acciones que pueden ser deshechas.
+     */
     public List<Tipo> historico;
 
     /**

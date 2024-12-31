@@ -11,7 +11,7 @@ import java.util.Date;
  * 
  * @since 1.0
  * @version 1.0
- * @autor <a href="mailto:aab1027@alu.ubu.es">Antonio Alonso Briones</a>
+ * @author <a href="mailto:aab1027@alu.ubu.es">Antonio Alonso Briones</a>
  */
 public class MaquinaDelTiempoConJugadas extends MecanismoDeDeshacerAbstracto<Jugada> {
 
