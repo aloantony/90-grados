@@ -1,3 +1,8 @@
 "# 90-grados" 
+@author Antonio Alonso Briones.
 
-Antonio Alonso Briones.
+Comentarios:
+
+1º Empecé pensando en resolver la nueva regla comparando sentidos y coordenadas. No viable.
+2º Comparé tableros clonados, cumplía la regla pero no estrictamente en todos los casos.
+3º Comparé los id de la pieza en la coordenada origen del movimiento del turno anterior. Esta fue la solución definitiva.

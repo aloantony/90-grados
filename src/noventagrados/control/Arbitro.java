@@ -28,7 +28,8 @@ public class Arbitro {
     private Color turnoActual;
     private Color turnoGanador;
     private int numeroJugada;
-    private Coordenada coordenadaDestinoTurnoAnterior;
+    private Coordenada coordenadaOrigenPiezaOponenteTurnoAnterior;
+    private int idPiezaOponenteTurnoAnterior;
     private Sentido sentidoJugadaTurnoAnterior;
     private Tablero tableroAnteriorTurnoBlancas;
     private Tablero tableroAnteriorTurnoNegras;
@@ -191,6 +192,7 @@ public class Arbitro {
         Coordenada origen = jugada.origen().consultarCoordenada();
         Coordenada destino = jugada.destino().consultarCoordenada();
         Sentido sentido = consultor.calcularSentido(origen, destino);
+        Pieza pieza = tablero.consultarCelda(origen).consultarPieza();
 
         // Reubicar las piezas para similar el empuje
         Reubicador(origen, sentido, destino);
@@ -201,9 +203,9 @@ public class Arbitro {
         if (turnoActual == Color.NEGRO) {
             tableroAnteriorTurnoNegras = tablero.clonar();
         }
-        coordenadaDestinoTurnoAnterior = destino;
-        sentidoJugadaTurnoAnterior = sentido;
-        // Incrementar el número de jugadas
+
+        coordenadaOrigenPiezaOponenteTurnoAnterior = origen;
+        idPiezaOponenteTurnoAnterior = pieza.consultarIdentificacion();
         numeroJugada++;
     }
 
@@ -352,24 +354,52 @@ public class Arbitro {
                     cumpleRegla = ((distanciaVertical == consultor.consultarNumeroPiezasEnHorizontal(origen)) ||
                             (distanciaHorizontal == consultor.consultarNumeroPiezasEnVertical(origen))) &&
                             consultor.calcularSentido(origen, destino) != null;
+
                     if (cumpleRegla) {
-                        Tablero tableroTemporal = tablero.clonar();
-                        Arbitro arbitroTemporal = new Arbitro(tableroTemporal);
-                        if (turnoActual == Color.BLANCO) {
-                            arbitroTemporal.turnoActual = Color.BLANCO;
-                            arbitroTemporal.empujar(jugada);
-                            cumpleRegla = !tableroAnteriorTurnoBlancas.equals(tableroTemporal);
-                        }
-                        if (turnoActual == Color.NEGRO) {
-                            arbitroTemporal.turnoActual = Color.NEGRO;
-                            arbitroTemporal.empujar(jugada);
-                            cumpleRegla = !tableroAnteriorTurnoNegras.equals(tableroTemporal);
-                        }
+                        reglaSegundaConvocatoria(jugada);
                     }
                 }
             }
         }
 
+        return cumpleRegla;
+    }
+
+    /**
+     * Método auxiliar para comprobar la nueva regla de la segunda convocatoria.
+     * 
+     * @param jugada Jugada a validar
+     * @return true si cumple la regla, false en caso contrario
+     */
+    private boolean reglaSegundaConvocatoria(Jugada jugada) {
+        boolean cumpleRegla = true;
+        if (cumpleRegla) {
+            Tablero tableroTemporal = tablero.clonar();
+            Arbitro arbitroTemporal = new Arbitro(tableroTemporal);
+            if (turnoActual == Color.BLANCO) {
+                arbitroTemporal.turnoActual = Color.BLANCO;
+                arbitroTemporal.empujar(jugada);
+                // cumpleRegla = !tableroAnteriorTurnoBlancas.equals(tableroTemporal);
+            }
+            if (turnoActual == Color.NEGRO) {
+                arbitroTemporal.turnoActual = Color.NEGRO;
+                arbitroTemporal.empujar(jugada);
+                // cumpleRegla = !tableroAnteriorTurnoNegras.equals(tableroTemporal);
+            }
+            if (tableroTemporal.consultarCelda(coordenadaOrigenPiezaOponenteTurnoAnterior) == null) {
+                cumpleRegla = true;
+            }
+
+            else if (tableroTemporal.consultarCelda(coordenadaOrigenPiezaOponenteTurnoAnterior)
+                    .consultarPieza() == null) {
+                cumpleRegla = true;
+            }
+
+            else if (tableroTemporal.consultarCelda(coordenadaOrigenPiezaOponenteTurnoAnterior)
+                    .consultarPieza().consultarIdentificacion() != idPiezaOponenteTurnoAnterior)
+                ;
+            cumpleRegla = true;
+        }
         return cumpleRegla;
     }
 
@@ -430,9 +460,9 @@ public class Arbitro {
 
     @Override
     public int hashCode() {
-        return Objects.hash(cajaPiezasBlancas, cajaPiezasNegras, coordenadaDestinoTurnoAnterior, numeroJugada,
-                sentidoJugadaTurnoAnterior, tablero, tableroAnteriorTurnoBlancas, tableroAnteriorTurnoNegras,
-                turnoActual, turnoGanador);
+        return Objects.hash(cajaPiezasBlancas, cajaPiezasNegras, coordenadaOrigenPiezaOponenteTurnoAnterior,
+                idPiezaOponenteTurnoAnterior, numeroJugada, sentidoJugadaTurnoAnterior, tablero,
+                tableroAnteriorTurnoBlancas, tableroAnteriorTurnoNegras, turnoActual, turnoGanador);
     }
 
     @Override
@@ -446,7 +476,9 @@ public class Arbitro {
         Arbitro other = (Arbitro) obj;
         return Objects.equals(cajaPiezasBlancas, other.cajaPiezasBlancas)
                 && Objects.equals(cajaPiezasNegras, other.cajaPiezasNegras)
-                && Objects.equals(coordenadaDestinoTurnoAnterior, other.coordenadaDestinoTurnoAnterior)
+                && Objects.equals(coordenadaOrigenPiezaOponenteTurnoAnterior,
+                        other.coordenadaOrigenPiezaOponenteTurnoAnterior)
+                && idPiezaOponenteTurnoAnterior == other.idPiezaOponenteTurnoAnterior
                 && numeroJugada == other.numeroJugada && sentidoJugadaTurnoAnterior == other.sentidoJugadaTurnoAnterior
                 && Objects.equals(tablero, other.tablero)
                 && Objects.equals(tableroAnteriorTurnoBlancas, other.tableroAnteriorTurnoBlancas)
