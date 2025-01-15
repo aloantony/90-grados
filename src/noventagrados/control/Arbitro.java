@@ -95,28 +95,28 @@ public class Arbitro {
                 tablero.eliminarPieza(new Coordenada(fila, columna));
             }
         }
-
+        int id = 1;
         // Colocar las piezas blancas
         // Reina blanca en (0,0)
-        tablero.colocar(new Pieza(TipoPieza.REINA, Color.BLANCO), new Coordenada(0, 0));
+        tablero.colocar(new Pieza(id++, TipoPieza.REINA, Color.BLANCO), new Coordenada(0, 0));
         // Peones blancos
-        tablero.colocar(new Pieza(TipoPieza.PEON, Color.BLANCO), new Coordenada(0, 1));
-        tablero.colocar(new Pieza(TipoPieza.PEON, Color.BLANCO), new Coordenada(0, 2));
-        tablero.colocar(new Pieza(TipoPieza.PEON, Color.BLANCO), new Coordenada(0, 3));
-        tablero.colocar(new Pieza(TipoPieza.PEON, Color.BLANCO), new Coordenada(1, 0));
-        tablero.colocar(new Pieza(TipoPieza.PEON, Color.BLANCO), new Coordenada(2, 0));
-        tablero.colocar(new Pieza(TipoPieza.PEON, Color.BLANCO), new Coordenada(3, 0));
+        tablero.colocar(new Pieza(id++, TipoPieza.PEON, Color.BLANCO), new Coordenada(0, 1));
+        tablero.colocar(new Pieza(id++, TipoPieza.PEON, Color.BLANCO), new Coordenada(0, 2));
+        tablero.colocar(new Pieza(id++, TipoPieza.PEON, Color.BLANCO), new Coordenada(0, 3));
+        tablero.colocar(new Pieza(id++, TipoPieza.PEON, Color.BLANCO), new Coordenada(1, 0));
+        tablero.colocar(new Pieza(id++, TipoPieza.PEON, Color.BLANCO), new Coordenada(2, 0));
+        tablero.colocar(new Pieza(id++, TipoPieza.PEON, Color.BLANCO), new Coordenada(3, 0));
 
         // Colocar las piezas negras
         // Reina negra en (6,6)
-        tablero.colocar(new Pieza(TipoPieza.REINA, Color.NEGRO), new Coordenada(6, 6));
+        tablero.colocar(new Pieza(id++, TipoPieza.REINA, Color.NEGRO), new Coordenada(6, 6));
         // Peones negros
-        tablero.colocar(new Pieza(TipoPieza.PEON, Color.NEGRO), new Coordenada(6, 3));
-        tablero.colocar(new Pieza(TipoPieza.PEON, Color.NEGRO), new Coordenada(6, 4));
-        tablero.colocar(new Pieza(TipoPieza.PEON, Color.NEGRO), new Coordenada(6, 5));
-        tablero.colocar(new Pieza(TipoPieza.PEON, Color.NEGRO), new Coordenada(5, 6));
-        tablero.colocar(new Pieza(TipoPieza.PEON, Color.NEGRO), new Coordenada(4, 6));
-        tablero.colocar(new Pieza(TipoPieza.PEON, Color.NEGRO), new Coordenada(3, 6));
+        tablero.colocar(new Pieza(id++, TipoPieza.PEON, Color.NEGRO), new Coordenada(6, 3));
+        tablero.colocar(new Pieza(id++, TipoPieza.PEON, Color.NEGRO), new Coordenada(6, 4));
+        tablero.colocar(new Pieza(id++, TipoPieza.PEON, Color.NEGRO), new Coordenada(6, 5));
+        tablero.colocar(new Pieza(id++, TipoPieza.PEON, Color.NEGRO), new Coordenada(5, 6));
+        tablero.colocar(new Pieza(id++, TipoPieza.PEON, Color.NEGRO), new Coordenada(4, 6));
+        tablero.colocar(new Pieza(id++, TipoPieza.PEON, Color.NEGRO), new Coordenada(3, 6));
 
         // Inicializar el turno para el atacante (blancas)
         this.turnoActual = Color.BLANCO;
@@ -187,13 +187,14 @@ public class Arbitro {
      */
     public void empujar(Jugada jugada) {
         TableroConsultor consultor = new TableroConsultor(tablero);
+        System.out.println("Antes de empujar: " + this.idPiezaOponenteTurnoAnterior);
 
         // Obtener sentido del movimiento
         Coordenada origen = jugada.origen().consultarCoordenada();
         Coordenada destino = jugada.destino().consultarCoordenada();
         Sentido sentido = consultor.calcularSentido(origen, destino);
-        Pieza pieza = tablero.consultarCelda(origen).consultarPieza();
-
+        coordenadaOrigenPiezaOponenteTurnoAnterior = jugada.origen().consultarCoordenada();
+        idPiezaOponenteTurnoAnterior = tablero.consultarCelda(origen).consultarPieza().consultarIdentificacion();
         // Reubicar las piezas para similar el empuje
         Reubicador(origen, sentido, destino);
 
@@ -204,8 +205,8 @@ public class Arbitro {
             tableroAnteriorTurnoNegras = tablero.clonar();
         }
 
-        coordenadaOrigenPiezaOponenteTurnoAnterior = origen;
-        idPiezaOponenteTurnoAnterior = pieza.consultarIdentificacion();
+        System.out.println("Tras empujar: " + this.idPiezaOponenteTurnoAnterior);
+        System.out.println("Coordenada: " + coordenadaOrigenPiezaOponenteTurnoAnterior);
         numeroJugada++;
     }
 
@@ -356,12 +357,13 @@ public class Arbitro {
                             consultor.calcularSentido(origen, destino) != null;
 
                     if (cumpleRegla) {
-                        reglaSegundaConvocatoria(jugada);
+                        cumpleRegla = reglaSegundaConvocatoria(jugada);
+                        System.out.println("Valor cumpleRegla tras ejecución método auxiliar: " + cumpleRegla);
                     }
                 }
             }
         }
-
+        System.out.println("Valor cumpleRegla antes de devolverse: " + cumpleRegla);
         return cumpleRegla;
     }
 
@@ -372,34 +374,31 @@ public class Arbitro {
      * @return true si cumple la regla, false en caso contrario
      */
     private boolean reglaSegundaConvocatoria(Jugada jugada) {
+        System.out.println("Antes de empujar simulado: " + idPiezaOponenteTurnoAnterior);
         boolean cumpleRegla = true;
-        if (cumpleRegla) {
-            Tablero tableroTemporal = tablero.clonar();
-            Arbitro arbitroTemporal = new Arbitro(tableroTemporal);
-            if (turnoActual == Color.BLANCO) {
-                arbitroTemporal.turnoActual = Color.BLANCO;
-                arbitroTemporal.empujar(jugada);
-                // cumpleRegla = !tableroAnteriorTurnoBlancas.equals(tableroTemporal);
-            }
-            if (turnoActual == Color.NEGRO) {
-                arbitroTemporal.turnoActual = Color.NEGRO;
-                arbitroTemporal.empujar(jugada);
-                // cumpleRegla = !tableroAnteriorTurnoNegras.equals(tableroTemporal);
-            }
-            if (tableroTemporal.consultarCelda(coordenadaOrigenPiezaOponenteTurnoAnterior) == null) {
-                cumpleRegla = true;
-            }
+        Tablero tableroTemporal = tablero.clonar();
+        Arbitro arbitroTemporal = new Arbitro(tableroTemporal);
+        arbitroTemporal.turnoActual = turnoActual;
+        arbitroTemporal.empujar(jugada);
+        System.out.println("Después de empujar simulado: " + this.idPiezaOponenteTurnoAnterior);
+        arbitroTemporal.coordenadaOrigenPiezaOponenteTurnoAnterior = this.coordenadaOrigenPiezaOponenteTurnoAnterior;
+        arbitroTemporal.idPiezaOponenteTurnoAnterior = this.idPiezaOponenteTurnoAnterior;
 
-            else if (tableroTemporal.consultarCelda(coordenadaOrigenPiezaOponenteTurnoAnterior)
-                    .consultarPieza() == null) {
-                cumpleRegla = true;
-            }
-
-            else if (tableroTemporal.consultarCelda(coordenadaOrigenPiezaOponenteTurnoAnterior)
-                    .consultarPieza().consultarIdentificacion() != idPiezaOponenteTurnoAnterior)
-                ;
-            cumpleRegla = true;
-        }
+        // cumpleRegla = !tableroAnteriorTurnoBlancas.equals(tableroTemporal);
+        // tableroTemporal.colocar(new Pieza(idPiezaOponenteTurnoAnterior,
+        // tableroTemporal.consultarCelda(origen).consultarPieza().consultarTipoPieza(),
+        // tableroTemporal.consultarCelda(origen).consultarPieza().consultarColor()),
+        // coordenadaOrigenPiezaOponenteTurnoAnterior);
+        System.out.println("Coordenada origen del turno anterior: " + coordenadaOrigenPiezaOponenteTurnoAnterior);
+        System.out.println("Valor cumpleRegla antes última condición: " + cumpleRegla);
+        cumpleRegla = tableroTemporal.consultarCelda(coordenadaOrigenPiezaOponenteTurnoAnterior) == null
+                || tableroTemporal.consultarCelda(coordenadaOrigenPiezaOponenteTurnoAnterior).consultarPieza() == null
+                || (tableroTemporal.consultarCelda(coordenadaOrigenPiezaOponenteTurnoAnterior) != null
+                        && tableroTemporal.consultarCelda(coordenadaOrigenPiezaOponenteTurnoAnterior)
+                                .consultarPieza() != null
+                        && tableroTemporal.consultarCelda(coordenadaOrigenPiezaOponenteTurnoAnterior).consultarPieza()
+                                .consultarIdentificacion() != idPiezaOponenteTurnoAnterior);
+        System.out.println("Valor cumpleRegla después última condición: " + cumpleRegla);
         return cumpleRegla;
     }
 

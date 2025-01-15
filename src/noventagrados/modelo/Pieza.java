@@ -12,7 +12,7 @@ import noventagrados.util.TipoPieza;
  * @author <a href="mailto:aab1027@alu.ubu.es">Antonio Alonso Briones</a>
  */
 public class Pieza {
-    private int id;
+    private int id = 0;
     private final TipoPieza tipoPieza;
     private final Color color;
     private static int identificadorDeNuevasPiezas = 0;
@@ -38,7 +38,7 @@ public class Pieza {
      */
 
     public Pieza(int id, TipoPieza tipoPieza, Color color) {
-        this.id = ++identificadorDeNuevasPiezas;
+        this.id = id;
         this.tipoPieza = tipoPieza;
         this.color = color;
     }
